@@ -2083,6 +2083,190 @@
             color: var(--ink-muted);
         }
 
+        /* Role Visibility: User Mode (default) vs Admin Mode */
+        .admin-only {
+            display: none !important;
+        }
+
+        body.is-admin .admin-only {
+            display: flex !important;
+        }
+
+        body.is-admin .cloud-config-box.admin-only,
+        body.is-admin .menu-divider.admin-only {
+            display: block !important;
+        }
+
+        #appMainTitle {
+            cursor: default;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .admin-badge-pill {
+            display: none;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--brand-primary);
+            border: 1px solid var(--brand-primary-tint);
+            background: var(--brand-primary-soft);
+            padding: 1px 8px;
+            border-radius: var(--radius-full);
+        }
+
+        body.is-admin .admin-badge-pill {
+            display: inline-flex;
+        }
+
+        .admin-pin-input {
+            width: 100%;
+            height: 44px;
+            padding: 0 14px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--border-subtle);
+            background: var(--surface-input);
+            color: var(--ink-primary);
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 3px;
+            margin-bottom: 14px;
+            font-family: var(--font-mono), monospace;
+        }
+
+        .admin-login-error {
+            display: none;
+            font-size: 12.5px;
+            color: var(--danger);
+            margin-bottom: 12px;
+        }
+
+        .admin-login-error.visible {
+            display: block;
+        }
+
+        .wide-dialog-card {
+            max-width: 680px;
+            text-align: right;
+        }
+
+        .modal-scroll-list {
+            max-height: 55vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-left: 2px;
+        }
+
+        .req-card {
+            background: var(--surface-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-control);
+            padding: 12px;
+            text-align: right;
+        }
+
+        .req-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .req-type-tag {
+            font-size: 11.5px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .req-type-tag.add { color: var(--accent-emerald); border-color: var(--accent-emerald); }
+        .req-type-tag.edit { color: var(--brand-primary); border-color: var(--brand-primary); }
+        .req-type-tag.delete { color: var(--danger); border-color: var(--danger); }
+        .req-type-tag.approved { color: var(--accent-emerald); border-color: var(--accent-emerald); }
+        .req-type-tag.rejected { color: var(--danger); border-color: var(--danger); }
+
+        .req-meta {
+            font-size: 11.5px;
+            color: var(--ink-muted);
+            font-variant-numeric: tabular-nums lining-nums;
+        }
+
+        .req-diff-list {
+            font-size: 12.5px;
+            color: var(--ink-secondary);
+            line-height: 1.65;
+            margin: 6px 0 10px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 8px 10px;
+        }
+
+        .req-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-approve-req {
+            flex: 1;
+            height: 34px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--accent-emerald);
+            background: transparent;
+            color: var(--accent-emerald);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-approve-req:hover {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .btn-reject-req {
+            flex: 1;
+            height: 34px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--danger);
+            background: transparent;
+            color: var(--danger);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-reject-req:hover {
+            background: var(--danger-soft);
+        }
+
+        .audit-filter-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .audit-filter-row select,
+        .audit-filter-row input {
+            flex: 1;
+            min-width: 140px;
+            height: 36px;
+            padding: 0 10px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--border-subtle);
+            background: var(--surface-input);
+            color: var(--ink-primary);
+            font-size: 13px;
+        }
+
         .dialog-actions-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -2326,13 +2510,50 @@
                             <span>مزامنة بيانات السجل</span>
                         </button>
 
-                        <button type="button" id="openImportBtn" class="menu-item-action" role="menuitem">
+                        <button type="button" id="openImportBtn" class="menu-item-action admin-only" role="menuitem">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="17 8 12 3 7 8"></polyline>
                                 <line x1="12" y1="3" x2="12" y2="15"></line>
                             </svg>
                             <span>استيراد Excel/CSV للسحابة</span>
+                        </button>
+
+                        <button type="button" id="adminPullCloudBtn" class="menu-item-action admin-only" role="menuitem">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span>استيراد من السحابة</span>
+                        </button>
+
+                        <button type="button" id="exportDocsBtn" class="menu-item-action admin-only" role="menuitem">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="12" y1="18" x2="12" y2="12"></line>
+                                <polyline points="9 15 12 18 15 15"></polyline>
+                            </svg>
+                            <span>تصدير نسخة في المستندات</span>
+                        </button>
+
+                        <button type="button" id="openApprovalsBtn" class="menu-item-action admin-only" role="menuitem">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <polyline points="9 11 12 14 22 4"></polyline>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                            </svg>
+                            <span>طلبات التعديل المعلقة</span>
+                        </button>
+
+                        <button type="button" id="openAuditLogBtn" class="menu-item-action admin-only" role="menuitem">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="8" y1="13" x2="16" y2="13"></line>
+                                <line x1="8" y1="17" x2="16" y2="17"></line>
+                            </svg>
+                            <span>تقرير الحركات والتعديلات</span>
                         </button>
 
                         <button type="button" id="printTopBtn" class="menu-item-action" role="menuitem">
@@ -2363,13 +2584,33 @@
                             </svg>
                             <span id="themeToggleText">الوضع المظلم / الفاتح</span>
                         </button>
+
+                        <div class="menu-divider admin-only"></div>
+
+                        <button type="button" id="changeAdminPassBtn" class="menu-item-action admin-only" role="menuitem">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span>تغيير كلمة مرور المدير</span>
+                        </button>
+
+                        <button type="button" id="exitAdminModeBtn" class="menu-item-action admin-only" role="menuitem">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>خروج من وضع المدير</span>
+                        </button>
                     </div>
                 </div>
 
                 <div class="brand-info">
-                    <h1>السجل المدني</h1>
+                    <h1 id="appMainTitle">السجل المدني</h1>
                     <div class="brand-sub">
                         <span>تصميم أبو حازم</span>
+                        <span id="adminModeBadge" class="admin-badge-pill">وضع المدير</span>
                         <span id="offlineStatusTag" class="offline-pill">بدون نت</span>
                     </div>
                 </div>
@@ -2648,7 +2889,7 @@
                 </div>
             </div>
 
-            <div class="cloud-config-box">
+            <div class="cloud-config-box admin-only">
                 <button type="button" id="toggleCloudConfigBtn" class="cloud-config-toggle">
                     <span>إعدادات Firebase Firestore</span>
                     <span id="cloudStatusBadge" class="cloud-status-badge connected">مربوط</span>
@@ -2725,6 +2966,81 @@
                 </button>
                 <button type="button" id="closeImportBtn" class="btn-dialog-cancel">إغلاق</button>
             </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         5C. ADMIN LOGIN & PASSWORD MODALS
+         ===================================================================== -->
+    <div id="adminLoginBackdrop" class="backdrop-overlay center-overlay">
+        <div class="dialog-card">
+            <div class="dialog-icon-ring">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <h3>دخول وضع المدير</h3>
+            <p class="sub">أدخل كلمة مرور المدير لتفعيل خيارات الاستيراد والتصدير والإعدادات السحابية.</p>
+            <input type="password" id="adminPassInput" class="admin-pin-input" placeholder="••••••" autocomplete="off">
+            <div id="adminLoginError" class="admin-login-error">كلمة المرور غير صحيحة.</div>
+            <div class="dialog-actions-2">
+                <button type="button" id="submitAdminLoginBtn" class="btn-dialog-primary">دخول</button>
+                <button type="button" id="closeAdminLoginBtn" class="btn-dialog-cancel">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPassModalBackdrop" class="backdrop-overlay center-overlay">
+        <div class="dialog-card">
+            <h3>تغيير كلمة مرور المدير</h3>
+            <p class="sub">أدخل كلمة المرور الجديدة للمدير لحفظها على هذا الجهاز.</p>
+            <input type="password" id="newAdminPassInput" class="admin-pin-input" placeholder="كلمة المرور الجديدة" autocomplete="off">
+            <div id="adminPassError" class="admin-login-error">يرجى إدخال كلمة مرور لا تقل عن 4 أحرف.</div>
+            <div class="dialog-actions-2">
+                <button type="button" id="saveNewAdminPassBtn" class="btn-dialog-primary">حفظ</button>
+                <button type="button" id="closeAdminPassBtn" class="btn-dialog-cancel">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================================
+         5D. ADMIN APPROVALS & AUDIT LOG MODALS
+         ===================================================================== -->
+    <div id="approvalsModalBackdrop" class="backdrop-overlay center-overlay">
+        <div class="dialog-card wide-dialog-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                <h3 style="margin:0;">طلبات التعديل والإضافة المعلقة</h3>
+                <button type="button" id="refreshApprovalsBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
+            </div>
+            <p class="sub" style="margin-bottom:12px;">مراجعة التعديلات المرسلة من المستخدمين قبل اعتمادها في قاعدة البيانات الرئيسية.</p>
+            <div id="approvalsListBox" class="modal-scroll-list"></div>
+            <button type="button" id="closeApprovalsBtn" class="btn-dialog-cancel" style="width:100%;">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="auditLogModalBackdrop" class="backdrop-overlay center-overlay">
+        <div class="dialog-card wide-dialog-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap;">
+                <h3 style="margin:0;">تقرير الحركات والتعديلات</h3>
+                <div style="display:flex;gap:6px;">
+                    <button type="button" id="refreshAuditBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
+                    <button type="button" id="exportAuditCsvBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تصدير CSV</button>
+                </div>
+            </div>
+            <div class="audit-filter-row">
+                <select id="auditTypeFilter">
+                    <option value="all">كل الحركات</option>
+                    <option value="add">إضافة</option>
+                    <option value="edit">تعديل</option>
+                    <option value="delete">حذف</option>
+                    <option value="approved">اعتماد طلب</option>
+                    <option value="rejected">رفض طلب</option>
+                </select>
+                <input type="text" id="auditSearchInput" placeholder="بحث بالاسم أو الهوية...">
+            </div>
+            <div id="auditLogListBox" class="modal-scroll-list"></div>
+            <button type="button" id="closeAuditLogBtn" class="btn-dialog-cancel" style="width:100%;">إغلاق</button>
         </div>
     </div>
 
@@ -3204,6 +3520,88 @@
                     await batch.commit();
                 }
                 return true;
+            }
+
+            const PENDING_REQUESTS_QUEUE_KEY = 'civil_registry_pending_req_queue';
+            const LOCAL_AUDIT_LOG_KEY = 'civil_registry_audit_logs';
+            const PENDING_COLLECTION = 'pending_requests';
+            const AUDIT_COLLECTION = 'activity_logs';
+
+            function getLocalPendingQueue() {
+                try {
+                    const raw = localStorage.getItem(PENDING_REQUESTS_QUEUE_KEY);
+                    const arr = raw ? JSON.parse(raw) : [];
+                    return Array.isArray(arr) ? arr : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function saveLocalPendingQueue(arr) {
+                try {
+                    localStorage.setItem(PENDING_REQUESTS_QUEUE_KEY, JSON.stringify(arr));
+                } catch (e) {}
+            }
+
+            function getLocalAuditLogs() {
+                try {
+                    const raw = localStorage.getItem(LOCAL_AUDIT_LOG_KEY);
+                    const arr = raw ? JSON.parse(raw) : [];
+                    return Array.isArray(arr) ? arr : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function appendLocalAuditLog(entry) {
+                const logs = getLocalAuditLogs();
+                logs.unshift(entry);
+                if (logs.length > 500) logs.length = 500;
+                try {
+                    localStorage.setItem(LOCAL_AUDIT_LOG_KEY, JSON.stringify(logs));
+                } catch (e) {}
+            }
+
+            async function recordActivityLog({ actionType, nationalId, fullName, actorRole, summary, details = '' }) {
+                const entry = {
+                    logId: 'log_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+                    actionType,
+                    nationalId: toEnglishDigits(nationalId || ''),
+                    fullName: fullName || '',
+                    actorRole: actorRole || (isAdminMode ? 'admin' : 'user'),
+                    summary: summary || '',
+                    details: details || '',
+                    createdAt: new Date().toISOString()
+                };
+                appendLocalAuditLog(entry);
+                if (navigator.onLine) {
+                    try {
+                        const { fs } = getFirestoreInstance();
+                        await fs.collection(AUDIT_COLLECTION).doc(entry.logId).set(entry);
+                    } catch (e) {}
+                }
+                return entry;
+            }
+
+            async function submitPendingRequest(reqPayload) {
+                const reqObj = {
+                    ...reqPayload,
+                    requestId: 'req_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+                    status: 'pending',
+                    createdAt: new Date().toISOString(),
+                    reviewedAt: ''
+                };
+                if (navigator.onLine) {
+                    try {
+                        const { fs } = getFirestoreInstance();
+                        await fs.collection(PENDING_COLLECTION).doc(reqObj.requestId).set(reqObj);
+                        return { sent: true, reqObj };
+                    } catch (e) {}
+                }
+                const q = getLocalPendingQueue();
+                q.push(reqObj);
+                saveLocalPendingQueue(q);
+                return { sent: false, reqObj };
             }
 
             function initIndexedDB() {
@@ -3910,15 +4308,18 @@
                 const cloudReady = navigator.onLine && isCloudConfigured();
                 const ok = await askConfirmation({
                     title: isEdit ? 'تأكيد تعديل السجل' : 'تأكيد إضافة سجل جديد',
-                    message: cloudReady
-                        ? `الاسم: ${fullName} — رقم الهوية: ${nationalId}. سيتم حفظ البيانات محلياً ومزامنتها مع السحابة.`
-                        : `الاسم: ${fullName} — رقم الهوية: ${nationalId}. سيتم الحفظ محلياً الآن ورفعه للسحابة عند المزامنة.`,
+                    message: isAdminMode
+                        ? (cloudReady
+                            ? `الاسم: ${fullName} — رقم الهوية: ${nationalId}. سيتم الاعتماد والحفظ في السحابة مباشرة.`
+                            : `الاسم: ${fullName} — رقم الهوية: ${nationalId}. سيتم الحفظ محلياً الآن ورفعه عند المزامنة.`)
+                        : `الاسم: ${fullName} — رقم الهوية: ${nationalId}. سيتم الحفظ محلياً وإرسال طلب اعتماد للمدير.`,
                     confirmText: isEdit ? 'حفظ التعديل' : 'إضافة السجل',
                     isDanger: false
                 });
 
                 if (!ok) return;
 
+                const previousRecord = isEdit ? (allRecords.find(p => p.nationalId === originalId) || null) : null;
                 const recordData = {
                     fullName,
                     nationalId,
@@ -3937,20 +4338,7 @@
                     _normName: normalizeArabic(fullName)
                 };
 
-                let syncedToCloud = false;
-                if (navigator.onLine && isCloudConfigured()) {
-                    try {
-                        if (isEdit && originalId !== nationalId) {
-                            await cloudDeleteIds([originalId]);
-                        }
-                        await cloudUpsertBatch([recordData]);
-                        recordData.isLocal = false;
-                        syncedToCloud = true;
-                    } catch (err) {
-                        recordData.isLocal = true;
-                    }
-                }
-
+                // 1) الحفظ المحلي وتحديث الواجهة وإغلاق البطاقة فوراً
                 await dbSaveOne(recordData, isEdit ? originalId : null);
 
                 if (isEdit) {
@@ -3971,10 +4359,51 @@
                 closeFormModal();
                 updateGlobalCounters();
                 applySearchAndFilter(false, true);
-                if (syncedToCloud) {
-                    showToast(isEdit ? 'تم حفظ التعديلات ومزامنتها مع السحابة' : 'تمت إضافة السجل ومزامنته مع السحابة');
+
+                // 2) الإرسال للسحابة: المدير يعتمد مباشرة، والمستخدم يرسل طلب مراجعة
+                if (isAdminMode) {
+                    let syncedToCloud = false;
+                    if (navigator.onLine && isCloudConfigured()) {
+                        try {
+                            if (isEdit && originalId !== nationalId) {
+                                await cloudDeleteIds([originalId]);
+                            }
+                            await cloudUpsertBatch([recordData]);
+                            recordData.isLocal = false;
+                            await dbSaveOne(recordData);
+                            updateGlobalCounters();
+                            syncedToCloud = true;
+                        } catch (err) {}
+                    }
+                    await recordActivityLog({
+                        actionType: isEdit ? 'edit' : 'add',
+                        nationalId,
+                        fullName,
+                        actorRole: 'admin',
+                        summary: isEdit ? 'تعديل مباشر من المدير' : 'إضافة مباشرة من المدير'
+                    });
+                    showToast(syncedToCloud
+                        ? (isEdit ? 'تم حفظ التعديلات ومزامنتها مع السحابة' : 'تمت إضافة السجل ومزامنته مع السحابة')
+                        : (isEdit ? 'تم حفظ التعديلات محلياً (بانتظار المزامنة)' : 'تمت إضافة السجل محلياً (بانتظار المزامنة)'));
                 } else {
-                    showToast(isEdit ? 'تم حفظ التعديلات محلياً (بانتظار المزامنة)' : 'تمت إضافة السجل محلياً (بانتظار المزامنة)');
+                    const res = await submitPendingRequest({
+                        actionType: isEdit ? 'edit' : 'add',
+                        nationalId: isEdit ? originalId : nationalId,
+                        newNationalId: nationalId,
+                        fullName,
+                        beforeData: previousRecord ? personToCloudRow(previousRecord) : null,
+                        afterData: personToCloudRow(recordData)
+                    });
+                    await recordActivityLog({
+                        actionType: isEdit ? 'edit' : 'add',
+                        nationalId,
+                        fullName,
+                        actorRole: 'user',
+                        summary: isEdit ? 'طلب تعديل مرسل للمراجعة' : 'طلب إضافة مرسل للمراجعة'
+                    });
+                    showToast(res.sent
+                        ? 'تم الحفظ محلياً وإرسال الطلب لاعتماد المدير'
+                        : 'تم الحفظ محلياً (سيُرسل طلب الاعتماد عند توفر الإنترنت)');
                 }
             });
 
@@ -3996,22 +4425,48 @@
                 allRecords = allRecords.filter(p => p.nationalId !== targetId);
                 selectedIds.delete(targetId);
 
-                let cloudDeleted = false;
-                if (navigator.onLine && isCloudConfigured()) {
-                    try {
-                        await cloudDeleteIds([targetId]);
-                        cloudDeleted = true;
-                    } catch (e) {
-                        addPendingDeletes([targetId]);
-                    }
-                } else if (isCloudConfigured()) {
-                    addPendingDeletes([targetId]);
-                }
-
                 closeFormModal();
                 updateGlobalCounters();
                 applySearchAndFilter(false, true);
-                showToast(cloudDeleted ? 'تم حذف السجل من الجهاز والسحابة' : 'تم حذف السجل محلياً');
+
+                if (isAdminMode) {
+                    let cloudDeleted = false;
+                    if (navigator.onLine && isCloudConfigured()) {
+                        try {
+                            await cloudDeleteIds([targetId]);
+                            cloudDeleted = true;
+                        } catch (e) {
+                            addPendingDeletes([targetId]);
+                        }
+                    } else if (isCloudConfigured()) {
+                        addPendingDeletes([targetId]);
+                    }
+                    await recordActivityLog({
+                        actionType: 'delete',
+                        nationalId: targetId,
+                        fullName: targetPerson.fullName,
+                        actorRole: 'admin',
+                        summary: 'حذف مباشر من المدير'
+                    });
+                    showToast(cloudDeleted ? 'تم حذف السجل من الجهاز والسحابة' : 'تم حذف السجل محلياً');
+                } else {
+                    const res = await submitPendingRequest({
+                        actionType: 'delete',
+                        nationalId: targetId,
+                        newNationalId: targetId,
+                        fullName: targetPerson.fullName,
+                        beforeData: personToCloudRow(targetPerson),
+                        afterData: null
+                    });
+                    await recordActivityLog({
+                        actionType: 'delete',
+                        nationalId: targetId,
+                        fullName: targetPerson.fullName,
+                        actorRole: 'user',
+                        summary: 'طلب حذف مرسل للمراجعة'
+                    });
+                    showToast(res.sent ? 'تم الحذف محلياً وإرسال طلب الحذف للمدير' : 'تم الحذف محلياً (سيُرسل الطلب عند المزامنة)');
+                }
             });
 
             document.getElementById('bulkDeleteBtn').addEventListener('click', async () => {
@@ -4239,27 +4694,40 @@
                     const { fs, collectionName } = getFirestoreInstance();
                     const colRef = fs.collection(collectionName);
 
-                    // 1) تنفيذ الحذوفات المعلقة على السحابة
-                    const pendingDeletes = getPendingDeletes();
                     let pushedDeletes = 0;
-                    if (pendingDeletes.length > 0) {
-                        await cloudDeleteIds(pendingDeletes);
-                        pushedDeletes = pendingDeletes.length;
-                        setPendingDeletes([]);
-                    }
-
-                    // 2) رفع السجلات المضافة أو المعدلة محلياً (isLocal === true)
-                    const localRecords = allRecords.filter(r => r.isLocal);
                     let pushedRecords = 0;
-                    if (localRecords.length > 0) {
-                        await cloudUpsertBatch(localRecords, (done, total) => {
-                            const pct = Math.min(35, Math.round((done / total) * 35));
-                            syncProgressFill.style.width = `${pct}%`;
-                            syncProgressLabel.textContent = `جاري رفع التعديلات المحلية: ${toEnglishDigits(done)} / ${toEnglishDigits(total)}`;
-                        });
-                        localRecords.forEach(item => { item.isLocal = false; });
-                        await dbSaveMany(localRecords);
-                        pushedRecords = localRecords.length;
+
+                    if (isAdminMode) {
+                        // 1) المدير: تنفيذ الحذوفات المعلقة على السحابة
+                        const pendingDeletes = getPendingDeletes();
+                        if (pendingDeletes.length > 0) {
+                            await cloudDeleteIds(pendingDeletes);
+                            pushedDeletes = pendingDeletes.length;
+                            setPendingDeletes([]);
+                        }
+
+                        // 2) المدير: رفع السجلات المضافة أو المعدلة محلياً مباشرة
+                        const localRecords = allRecords.filter(r => r.isLocal);
+                        if (localRecords.length > 0) {
+                            await cloudUpsertBatch(localRecords, (done, total) => {
+                                const pct = Math.min(35, Math.round((done / total) * 35));
+                                syncProgressFill.style.width = `${pct}%`;
+                                syncProgressLabel.textContent = `جاري رفع التعديلات المحلية: ${toEnglishDigits(done)} / ${toEnglishDigits(total)}`;
+                            });
+                            localRecords.forEach(item => { item.isLocal = false; });
+                            await dbSaveMany(localRecords);
+                            pushedRecords = localRecords.length;
+                        }
+                    } else {
+                        // المستخدم العادي: إرسال طلبات المراجعة المعلقة فقط دون الكتابة في القاعدة الرئيسية
+                        const queuedReqs = getLocalPendingQueue();
+                        if (queuedReqs.length > 0) {
+                            for (const reqItem of queuedReqs) {
+                                await fs.collection(PENDING_COLLECTION).doc(reqItem.requestId).set(reqItem);
+                            }
+                            pushedRecords = queuedReqs.length;
+                            saveLocalPendingQueue([]);
+                        }
                     }
 
                     // 3) جلب كافة السجلات من Firestore بالصفحات (1000 سجل لكل دفعة)
@@ -4653,6 +5121,494 @@
             }
 
             // -----------------------------------------------------------------
+            // J3. User / Admin Mode (5-Tap on Title) & Export to Documents
+            // -----------------------------------------------------------------
+            const ADMIN_PASS_KEY = 'civil_registry_admin_pass';
+            const DEFAULT_ADMIN_PASS = '123456';
+            let isAdminMode = false;
+            let titleTapCount = 0;
+            let titleTapTimer = null;
+
+            const appMainTitle = document.getElementById('appMainTitle');
+            const adminLoginBackdrop = document.getElementById('adminLoginBackdrop');
+            const adminPassInput = document.getElementById('adminPassInput');
+            const adminLoginError = document.getElementById('adminLoginError');
+            const submitAdminLoginBtn = document.getElementById('submitAdminLoginBtn');
+            const closeAdminLoginBtn = document.getElementById('closeAdminLoginBtn');
+
+            const adminPassModalBackdrop = document.getElementById('adminPassModalBackdrop');
+            const newAdminPassInput = document.getElementById('newAdminPassInput');
+            const adminPassError = document.getElementById('adminPassError');
+            const saveNewAdminPassBtn = document.getElementById('saveNewAdminPassBtn');
+            const closeAdminPassBtn = document.getElementById('closeAdminPassBtn');
+
+            const adminPullCloudBtn = document.getElementById('adminPullCloudBtn');
+            const exportDocsBtn = document.getElementById('exportDocsBtn');
+            const changeAdminPassBtn = document.getElementById('changeAdminPassBtn');
+            const exitAdminModeBtn = document.getElementById('exitAdminModeBtn');
+
+            function getAdminPassword() {
+                try {
+                    return localStorage.getItem(ADMIN_PASS_KEY) || DEFAULT_ADMIN_PASS;
+                } catch (e) {
+                    return DEFAULT_ADMIN_PASS;
+                }
+            }
+
+            function setAdminMode(enabled) {
+                isAdminMode = Boolean(enabled);
+                document.body.classList.toggle('is-admin', isAdminMode);
+            }
+
+            // Always start in normal User Mode on page load
+            setAdminMode(false);
+
+            function openAdminLoginModal() {
+                if (adminPassInput) adminPassInput.value = '';
+                if (adminLoginError) adminLoginError.classList.remove('visible');
+                adminLoginBackdrop.classList.add('visible');
+                setTimeout(() => { if (adminPassInput) adminPassInput.focus(); }, 100);
+            }
+
+            function closeAdminLoginModal() {
+                adminLoginBackdrop.classList.remove('visible');
+            }
+
+            if (appMainTitle) {
+                appMainTitle.addEventListener('click', () => {
+                    titleTapCount++;
+                    clearTimeout(titleTapTimer);
+                    titleTapTimer = setTimeout(() => {
+                        titleTapCount = 0;
+                    }, 2200);
+
+                    if (titleTapCount >= 5) {
+                        titleTapCount = 0;
+                        clearTimeout(titleTapTimer);
+                        if (isAdminMode) {
+                            showToast('أنت بالفعل في وضع المدير');
+                        } else {
+                            openAdminLoginModal();
+                        }
+                    }
+                });
+            }
+
+            function tryAdminLogin() {
+                const entered = (adminPassInput.value || '').trim();
+                if (entered === getAdminPassword()) {
+                    setAdminMode(true);
+                    closeAdminLoginModal();
+                    showToast('تم تفعيل وضع المدير بنجاح');
+                } else {
+                    adminLoginError.classList.add('visible');
+                    adminPassInput.select();
+                }
+            }
+
+            if (submitAdminLoginBtn) submitAdminLoginBtn.addEventListener('click', tryAdminLogin);
+            if (closeAdminLoginBtn) closeAdminLoginBtn.addEventListener('click', closeAdminLoginModal);
+            if (adminPassInput) {
+                adminPassInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        tryAdminLogin();
+                    }
+                });
+            }
+
+            if (exitAdminModeBtn) {
+                exitAdminModeBtn.addEventListener('click', () => {
+                    setAdminMode(false);
+                    showToast('تم العودة إلى واجهة المستخدم العادي');
+                });
+            }
+
+            if (changeAdminPassBtn) {
+                changeAdminPassBtn.addEventListener('click', () => {
+                    if (newAdminPassInput) newAdminPassInput.value = '';
+                    if (adminPassError) adminPassError.classList.remove('visible');
+                    adminPassModalBackdrop.classList.add('visible');
+                    setTimeout(() => { if (newAdminPassInput) newAdminPassInput.focus(); }, 100);
+                });
+            }
+
+            if (closeAdminPassBtn) {
+                closeAdminPassBtn.addEventListener('click', () => {
+                    adminPassModalBackdrop.classList.remove('visible');
+                });
+            }
+
+            if (saveNewAdminPassBtn) {
+                saveNewAdminPassBtn.addEventListener('click', () => {
+                    const nextPass = (newAdminPassInput.value || '').trim();
+                    if (nextPass.length < 4) {
+                        adminPassError.classList.add('visible');
+                        return;
+                    }
+                    try {
+                        localStorage.setItem(ADMIN_PASS_KEY, nextPass);
+                    } catch (e) {}
+                    adminPassModalBackdrop.classList.remove('visible');
+                    showToast('تم تحديث كلمة مرور المدير بنجاح');
+                });
+            }
+
+            if (adminPullCloudBtn) {
+                adminPullCloudBtn.addEventListener('click', () => {
+                    openSyncModal();
+                    if (cloudConfigFields) cloudConfigFields.classList.add('open');
+                });
+            }
+
+            if (exportDocsBtn) {
+                exportDocsBtn.addEventListener('click', async () => {
+                    if (!allRecords || allRecords.length === 0) {
+                        showToast('لا توجد سجلات لتصديرها حالياً');
+                        return;
+                    }
+
+                    const ok = await askConfirmation({
+                        title: 'تصدير نسخة احتياطية',
+                        message: `سيتم تصدير ${toEnglishDigits(allRecords.length)} سجل لحفظها في مجلد المستندات / التنزيلات على جهازك.`,
+                        confirmText: 'تصدير الآن',
+                        isDanger: false
+                    });
+                    if (!ok) return;
+
+                    const dateTag = toEnglishDigits(new Date().toISOString().slice(0, 10));
+                    const headers = [
+                        'الاسم الكامل', 'رقم الهوية', 'الجنس', 'تاريخ الميلاد',
+                        'الحالة الاجتماعية', 'اسم الأم', 'اسم الزوجة', 'رقم هوية الزوجة',
+                        'عدد أفراد الأسرة', 'رقم الجوال', 'هاتف بديل', 'العنوان التفصيلي', 'ملاحظات'
+                    ];
+
+                    if (typeof XLSX !== 'undefined') {
+                        const rows = allRecords.map(p => [
+                            p.fullName || '',
+                            toEnglishDigits(p.nationalId || ''),
+                            p.gender || '',
+                            toEnglishDigits(p.birthDate || ''),
+                            p.maritalStatus || '',
+                            p.motherName || '',
+                            p.wifeName || '',
+                            toEnglishDigits(p.wifeNationalId || ''),
+                            parseInt(toEnglishDigits(p.familyCount || '0'), 10) || 0,
+                            toEnglishDigits(p.mobile || ''),
+                            toEnglishDigits(p.altPhone || ''),
+                            p.address || '',
+                            p.notes || ''
+                        ]);
+                        const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+                        const wb = XLSX.utils.book_new();
+                        XLSX.utils.book_append_sheet(wb, ws, 'السجل المدني');
+                        XLSX.writeFile(wb, `نسخة_السجل_المدني_${dateTag}.xlsx`);
+                        showToast('تم تصدير نسخة Excel بنجاح');
+                    } else {
+                        const escCsv = (val) => '"' + String(val || '').replace(/"/g, '""') + '"';
+                        const lines = [headers.map(escCsv).join(',')];
+                        allRecords.forEach(p => {
+                            lines.push([
+                                p.fullName || '',
+                                toEnglishDigits(p.nationalId || ''),
+                                p.gender || '',
+                                toEnglishDigits(p.birthDate || ''),
+                                p.maritalStatus || '',
+                                p.motherName || '',
+                                p.wifeName || '',
+                                toEnglishDigits(p.wifeNationalId || ''),
+                                toEnglishDigits(p.familyCount || '0'),
+                                toEnglishDigits(p.mobile || ''),
+                                toEnglishDigits(p.altPhone || ''),
+                                p.address || '',
+                                p.notes || ''
+                            ].map(escCsv).join(','));
+                        });
+                        const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `نسخة_السجل_المدني_${dateTag}.csv`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        URL.revokeObjectURL(url);
+                        showToast('تم تصدير نسخة CSV بنجاح');
+                    }
+                });
+            }
+
+            // -----------------------------------------------------------------
+            // J4. Admin Approvals Screen (Maker-Checker) & Permanent Audit Log
+            // -----------------------------------------------------------------
+            const openApprovalsBtn = document.getElementById('openApprovalsBtn');
+            const approvalsModalBackdrop = document.getElementById('approvalsModalBackdrop');
+            const approvalsListBox = document.getElementById('approvalsListBox');
+            const refreshApprovalsBtn = document.getElementById('refreshApprovalsBtn');
+            const closeApprovalsBtn = document.getElementById('closeApprovalsBtn');
+
+            const openAuditLogBtn = document.getElementById('openAuditLogBtn');
+            const auditLogModalBackdrop = document.getElementById('auditLogModalBackdrop');
+            const auditLogListBox = document.getElementById('auditLogListBox');
+            const auditTypeFilter = document.getElementById('auditTypeFilter');
+            const auditSearchInput = document.getElementById('auditSearchInput');
+            const refreshAuditBtn = document.getElementById('refreshAuditBtn');
+            const exportAuditCsvBtn = document.getElementById('exportAuditCsvBtn');
+            const closeAuditLogBtn = document.getElementById('closeAuditLogBtn');
+
+            let cachedAuditLogs = [];
+
+            const FIELD_LABELS_AR = {
+                full_name: 'الاسم الكامل',
+                national_id: 'رقم الهوية',
+                gender: 'الجنس',
+                birth_date: 'تاريخ الميلاد',
+                marital_status: 'الحالة الاجتماعية',
+                mother_name: 'اسم الأم',
+                wife_name: 'اسم الزوجة',
+                wife_national_id: 'رقم هوية الزوجة',
+                family_count: 'عدد أفراد الأسرة',
+                mobile: 'رقم الجوال',
+                alt_phone: 'هاتف بديل',
+                address: 'العنوان',
+                notes: 'ملاحظات'
+            };
+
+            function formatActionLabel(type) {
+                return {
+                    add: 'طلب إضافة',
+                    edit: 'طلب تعديل',
+                    delete: 'طلب حذف',
+                    approved: 'اعتماد طلب',
+                    rejected: 'رفض طلب'
+                }[type] || type;
+            }
+
+            function buildDiffHtml(req) {
+                if (req.actionType === 'delete') {
+                    return `<div>طلب حذف السجل نهائياً من قاعدة البيانات.</div>`;
+                }
+                if (req.actionType === 'add' && req.afterData) {
+                    return `<div>سجل جديد: ${escapeHtml(req.afterData.full_name || '')} — الجوال: ${escapeHtml(toEnglishDigits(req.afterData.mobile || '-'))}</div>`;
+                }
+                if (req.actionType === 'edit' && req.afterData) {
+                    const before = req.beforeData || {};
+                    const after = req.afterData || {};
+                    const diffs = [];
+                    Object.keys(FIELD_LABELS_AR).forEach(key => {
+                        const oldV = String(before[key] ?? '').trim();
+                        const newV = String(after[key] ?? '').trim();
+                        if (oldV !== newV) {
+                            diffs.push(`<div>• <b>${FIELD_LABELS_AR[key]}</b>: "${escapeHtml(oldV || 'فارغ')}" ← "${escapeHtml(newV || 'فارغ')}"</div>`);
+                        }
+                    });
+                    return diffs.length ? diffs.join('') : '<div>لا توجد تغييرات جوهرية في الحقول.</div>';
+                }
+                return '';
+            }
+
+            async function loadPendingApprovals() {
+                approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">جاري تحميل الطلبات المعلقة...</div>';
+                try {
+                    const { fs } = getFirestoreInstance();
+                    const snap = await fs.collection(PENDING_COLLECTION).where('status', '==', 'pending').get();
+                    const items = snap.docs.map(d => d.data()).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+                    if (items.length === 0) {
+                        approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات تعديل أو إضافة معلقة حالياً.</div>';
+                        return;
+                    }
+
+                    approvalsListBox.innerHTML = '';
+                    items.forEach(req => {
+                        const card = document.createElement('div');
+                        card.className = 'req-card';
+                        const dateStr = toEnglishDigits((req.createdAt || '').replace('T', ' ').slice(0, 16));
+                        card.innerHTML = `
+                            <div class="req-card-head">
+                                <div>
+                                    <span class="req-type-tag ${escapeHtml(req.actionType)}">${escapeHtml(formatActionLabel(req.actionType))}</span>
+                                    <strong style="margin-right:6px;font-size:13.5px;">${escapeHtml(req.fullName || '')}</strong>
+                                </div>
+                                <span class="req-meta">هوية: ${escapeHtml(toEnglishDigits(req.newNationalId || req.nationalId))} | ${escapeHtml(dateStr)}</span>
+                            </div>
+                            <div class="req-diff-list">${buildDiffHtml(req)}</div>
+                            <div class="req-actions">
+                                <button type="button" class="btn-approve-req" data-req-id="${escapeHtml(req.requestId)}">قبول واعتماد</button>
+                                <button type="button" class="btn-reject-req" data-req-id="${escapeHtml(req.requestId)}">رفض الطلب</button>
+                            </div>
+                        `;
+
+                        card.querySelector('.btn-approve-req').addEventListener('click', () => handleApprovalDecision(req, true, card));
+                        card.querySelector('.btn-reject-req').addEventListener('click', () => handleApprovalDecision(req, false, card));
+                        approvalsListBox.appendChild(card);
+                    });
+                } catch (err) {
+                    approvalsListBox.innerHTML = `<div class="req-meta" style="color:var(--danger);text-align:center;padding:16px;">${escapeHtml(err.message || 'تعذر جلب الطلبات.')}</div>`;
+                }
+            }
+
+            async function handleApprovalDecision(req, approve, cardEl) {
+                try {
+                    const { fs, collectionName } = getFirestoreInstance();
+                    const colRef = fs.collection(collectionName);
+                    const targetId = toEnglishDigits(req.nationalId || '').replace(/[^\d]/g, '');
+                    const newId = toEnglishDigits(req.newNationalId || req.nationalId || '').replace(/[^\d]/g, '');
+
+                    if (approve) {
+                        if (req.actionType === 'delete') {
+                            if (targetId) await colRef.doc(targetId).delete();
+                            await dbDeleteIds([targetId]);
+                            allRecords = allRecords.filter(p => p.nationalId !== targetId);
+                        } else if (req.afterData) {
+                            if (req.actionType === 'edit' && targetId && newId && targetId !== newId) {
+                                await colRef.doc(targetId).delete();
+                                await dbDeleteIds([targetId]);
+                                allRecords = allRecords.filter(p => p.nationalId !== targetId);
+                            }
+                            await colRef.doc(newId).set(req.afterData, { merge: true });
+                            const personObj = cloudRowToPerson(req.afterData, newId);
+                            await dbSaveOne(personObj);
+                            const idx = allRecords.findIndex(p => p.nationalId === newId);
+                            if (idx !== -1) allRecords[idx] = personObj;
+                            else allRecords.unshift(personObj);
+                        }
+                    }
+
+                    await fs.collection(PENDING_COLLECTION).doc(req.requestId).update({
+                        status: approve ? 'approved' : 'rejected',
+                        reviewedAt: new Date().toISOString()
+                    });
+
+                    await recordActivityLog({
+                        actionType: approve ? 'approved' : 'rejected',
+                        nationalId: newId || targetId,
+                        fullName: req.fullName,
+                        actorRole: 'admin',
+                        summary: `${approve ? 'تم قبول' : 'تم رفض'} ${formatActionLabel(req.actionType)}`
+                    });
+
+                    cardEl.remove();
+                    updateGlobalCounters();
+                    applySearchAndFilter(false, activeFilter !== 'all' || searchUnifiedInput.value.trim() !== '');
+                    if (!approvalsListBox.children.length) {
+                        approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات معلقة حالياً.</div>';
+                    }
+                    showToast(approve ? 'تم اعتماد الطلب وتحديث قاعدة البيانات' : 'تم رفض الطلب');
+                } catch (err) {
+                    showToast(err.message || 'تعذر تنفيذ القرار');
+                }
+            }
+
+            if (openApprovalsBtn) {
+                openApprovalsBtn.addEventListener('click', () => {
+                    approvalsModalBackdrop.classList.add('visible');
+                    loadPendingApprovals();
+                });
+            }
+            if (refreshApprovalsBtn) refreshApprovalsBtn.addEventListener('click', loadPendingApprovals);
+            if (closeApprovalsBtn) closeApprovalsBtn.addEventListener('click', () => approvalsModalBackdrop.classList.remove('visible'));
+
+            function renderAuditLogs() {
+                const typeVal = auditTypeFilter ? auditTypeFilter.value : 'all';
+                const q = normalizeArabic(auditSearchInput ? auditSearchInput.value : '');
+                const filtered = cachedAuditLogs.filter(item => {
+                    if (typeVal !== 'all' && item.actionType !== typeVal) return false;
+                    if (q) {
+                        const hay = normalizeArabic((item.fullName || '') + ' ' + (item.nationalId || '') + ' ' + (item.summary || ''));
+                        if (!hay.includes(q)) return false;
+                    }
+                    return true;
+                });
+
+                if (filtered.length === 0) {
+                    auditLogListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد حركات مطابقة في السجل.</div>';
+                    return;
+                }
+
+                auditLogListBox.innerHTML = '';
+                filtered.slice(0, 200).forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'req-card';
+                    const dateStr = toEnglishDigits((item.createdAt || '').replace('T', ' ').slice(0, 16));
+                    const actorAr = item.actorRole === 'admin' ? 'مدير' : 'مستخدم';
+                    card.innerHTML = `
+                        <div class="req-card-head">
+                            <div>
+                                <span class="req-type-tag ${escapeHtml(item.actionType)}">${escapeHtml(formatActionLabel(item.actionType))}</span>
+                                <strong style="margin-right:6px;font-size:13px;">${escapeHtml(item.fullName || '-')}</strong>
+                            </div>
+                            <span class="req-meta">${escapeHtml(actorAr)} | ${escapeHtml(dateStr)}</span>
+                        </div>
+                        <div class="req-meta">هوية: ${escapeHtml(toEnglishDigits(item.nationalId || '-'))} — ${escapeHtml(item.summary || '')}</div>
+                    `;
+                    auditLogListBox.appendChild(card);
+                });
+            }
+
+            async function loadAuditLogs() {
+                const localLogs = getLocalAuditLogs();
+                const mergedMap = new Map();
+                localLogs.forEach(l => { if (l.logId) mergedMap.set(l.logId, l); });
+
+                if (navigator.onLine) {
+                    try {
+                        const { fs } = getFirestoreInstance();
+                        const snap = await fs.collection(AUDIT_COLLECTION).orderBy('createdAt', 'desc').limit(200).get();
+                        snap.docs.forEach(d => {
+                            const data = d.data();
+                            if (data && data.logId) mergedMap.set(data.logId, data);
+                        });
+                    } catch (e) {}
+                }
+
+                cachedAuditLogs = Array.from(mergedMap.values()).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+                renderAuditLogs();
+            }
+
+            if (openAuditLogBtn) {
+                openAuditLogBtn.addEventListener('click', () => {
+                    auditLogModalBackdrop.classList.add('visible');
+                    loadAuditLogs();
+                });
+            }
+            if (refreshAuditBtn) refreshAuditBtn.addEventListener('click', loadAuditLogs);
+            if (closeAuditLogBtn) closeAuditLogBtn.addEventListener('click', () => auditLogModalBackdrop.classList.remove('visible'));
+            if (auditTypeFilter) auditTypeFilter.addEventListener('change', renderAuditLogs);
+            if (auditSearchInput) auditSearchInput.addEventListener('input', renderAuditLogs);
+
+            if (exportAuditCsvBtn) {
+                exportAuditCsvBtn.addEventListener('click', () => {
+                    if (!cachedAuditLogs.length) {
+                        showToast('لا توجد حركات لتصديرها');
+                        return;
+                    }
+                    const esc = v => '"' + String(v || '').replace(/"/g, '""') + '"';
+                    const lines = [['التاريخ', 'نوع الحركة', 'المنفذ', 'الاسم', 'رقم الهوية', 'التفاصيل'].map(esc).join(',')];
+                    cachedAuditLogs.forEach(l => {
+                        lines.push([
+                            toEnglishDigits(l.createdAt || ''),
+                            formatActionLabel(l.actionType),
+                            l.actorRole === 'admin' ? 'مدير' : 'مستخدم',
+                            l.fullName || '',
+                            toEnglishDigits(l.nationalId || ''),
+                            l.summary || ''
+                        ].map(esc).join(','));
+                    });
+                    const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `تقرير_الحركات_${toEnglishDigits(new Date().toISOString().slice(0, 10))}.csv`;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    URL.revokeObjectURL(url);
+                    showToast('تم تصدير تقرير الحركات بنجاح');
+                });
+            }
+
+            // -----------------------------------------------------------------
             // K. Mobile Navigation & Smart Back Button Trap
             // -----------------------------------------------------------------
             let lastBackPressTime = 0;
@@ -4692,6 +5648,28 @@
                 if (importModalBackdrop && importModalBackdrop.classList.contains('visible')) {
                     pushNavigationTrap();
                     closeImportModal();
+                    return;
+                }
+
+                // 3c. إذا كانت نافذة دخول المدير أو تغيير كلمة المرور مفتوحة
+                if (adminLoginBackdrop && adminLoginBackdrop.classList.contains('visible')) {
+                    pushNavigationTrap();
+                    closeAdminLoginModal();
+                    return;
+                }
+                if (adminPassModalBackdrop && adminPassModalBackdrop.classList.contains('visible')) {
+                    pushNavigationTrap();
+                    adminPassModalBackdrop.classList.remove('visible');
+                    return;
+                }
+                if (approvalsModalBackdrop && approvalsModalBackdrop.classList.contains('visible')) {
+                    pushNavigationTrap();
+                    approvalsModalBackdrop.classList.remove('visible');
+                    return;
+                }
+                if (auditLogModalBackdrop && auditLogModalBackdrop.classList.contains('visible')) {
+                    pushNavigationTrap();
+                    auditLogModalBackdrop.classList.remove('visible');
                     return;
                 }
 
