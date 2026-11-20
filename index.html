@@ -2147,6 +2147,26 @@
             display: block;
         }
 
+        .menu-badge-count {
+            margin-right: auto;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            border-radius: var(--radius-full);
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-variant-numeric: tabular-nums lining-nums;
+        }
+
+        .menu-badge-count.visible {
+            display: inline-flex;
+        }
+
         .wide-dialog-card {
             max-width: 680px;
             text-align: right;
@@ -2451,8 +2471,6 @@
             }
         }
     </style>
-    <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -2544,6 +2562,7 @@
                                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
                             </svg>
                             <span>طلبات التعديل المعلقة</span>
+                            <span id="pendingApprovalsBadge" class="menu-badge-count">0</span>
                         </button>
 
                         <button type="button" id="openAuditLogBtn" class="menu-item-action admin-only" role="menuitem">
@@ -3346,6 +3365,11 @@
             const LEGACY_LS_KEY = 'civil_registry_data';
             const CLOUD_CONFIG_KEY = 'civil_registry_firebase_cfg';
             const PENDING_DELETES_KEY = 'civil_registry_pending_deletes';
+            const LAST_SYNC_KEY = 'civil_registry_last_sync_at';
+            const PENDING_REQUESTS_QUEUE_KEY = 'civil_registry_pending_req_queue';
+            const LOCAL_AUDIT_LOG_KEY = 'civil_registry_audit_logs';
+            const PENDING_COLLECTION = 'pending_requests';
+            const AUDIT_COLLECTION = 'activity_logs';
             const PAGE_SIZE = 20;
 
             const DEFAULT_FIREBASE_CONFIG = {
@@ -3359,14 +3383,13 @@
             };
 
             let db = null;
-            let firestoreDb = null;
-            let activeFirebaseProjectId = '';
             let allRecords = [];
             let currentFiltered = [];
             let currentPage = 1;
             let activeFilter = 'all';
             let selectedIds = new Set();
             let lastLoadedFromSync = 0;
+            let isDeltaSyncRunning = false;
 
             function getCloudConfig() {
                 try {
@@ -3397,28 +3420,173 @@
                 return Boolean(cfg.projectId && cfg.apiKey && cfg.collectionName);
             }
 
-            function getFirestoreInstance() {
-                if (typeof firebase === 'undefined' || !firebase.firestore) {
-                    throw new Error('مكتبة Firebase غير محملة. تأكد من الاتصال بالإنترنت وأعد تحميل الصفحة.');
+            function getLastSyncTime() {
+                try { return localStorage.getItem(LAST_SYNC_KEY) || ''; } catch (e) { return ''; }
+            }
+
+            function setLastSyncTime(iso) {
+                try { if (iso) localStorage.setItem(LAST_SYNC_KEY, iso); } catch (e) {}
+            }
+
+            // ---- Firestore REST API Value Converters ----
+            function toFsVal(v) {
+                if (v === null || v === undefined) return { nullValue: null };
+                if (typeof v === 'boolean') return { booleanValue: v };
+                if (typeof v === 'number') {
+                    return Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v };
                 }
+                if (Array.isArray(v)) {
+                    return { arrayValue: { values: v.map(toFsVal) } };
+                }
+                if (typeof v === 'object') {
+                    const fields = {};
+                    Object.keys(v).forEach(k => {
+                        if (v[k] !== undefined) fields[k] = toFsVal(v[k]);
+                    });
+                    return { mapValue: { fields } };
+                }
+                return { stringValue: String(v) };
+            }
+
+            function toFsFields(obj) {
+                const fields = {};
+                Object.keys(obj).forEach(k => {
+                    if (obj[k] !== undefined) fields[k] = toFsVal(obj[k]);
+                });
+                return fields;
+            }
+
+            function fromFsVal(fv) {
+                if (!fv || typeof fv !== 'object') return '';
+                if ('stringValue' in fv) return fv.stringValue;
+                if ('integerValue' in fv) return Number(fv.integerValue);
+                if ('doubleValue' in fv) return Number(fv.doubleValue);
+                if ('booleanValue' in fv) return Boolean(fv.booleanValue);
+                if ('nullValue' in fv) return null;
+                if ('timestampValue' in fv) return fv.timestampValue;
+                if ('mapValue' in fv) return fromFsDocFields((fv.mapValue && fv.mapValue.fields) || {});
+                if ('arrayValue' in fv) return ((fv.arrayValue && fv.arrayValue.values) || []).map(fromFsVal);
+                return '';
+            }
+
+            function fromFsDocFields(fields) {
+                const out = {};
+                if (!fields) return out;
+                Object.keys(fields).forEach(k => {
+                    out[k] = fromFsVal(fields[k]);
+                });
+                return out;
+            }
+
+            function fsBaseUrl(cfg) {
+                return `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(cfg.projectId)}/databases/(default)/documents`;
+            }
+
+            function fsDocName(cfg, collection, docId) {
+                return `projects/${cfg.projectId}/databases/(default)/documents/${collection}/${docId}`;
+            }
+
+            function parseFsError(status, bodyText) {
+                if (status === 403) {
+                    return 'تم رفض الوصول من Firestore (403). تأكد من أن قواعد الأمان (Firestore Rules) تسمح بالقراءة والكتابة.';
+                }
+                if (status === 404) {
+                    return 'المشروع أو قاعدة البيانات غير موجودة (404).';
+                }
+                try {
+                    const j = JSON.parse(bodyText);
+                    if (j && j.error && j.error.message) return `خطأ Firebase (${status}): ${j.error.message}`;
+                } catch (e) {}
+                return `خطأ Firebase (${status})`;
+            }
+
+            async function fsSetDoc(collection, docId, dataObj) {
                 const cfg = getCloudConfig();
-                if (!firestoreDb || activeFirebaseProjectId !== cfg.projectId) {
-                    const appName = 'civilRegistry_' + cfg.projectId;
-                    let app = firebase.apps.find(a => a.name === appName);
-                    if (!app) {
-                        app = firebase.initializeApp({
-                            apiKey: cfg.apiKey,
-                            authDomain: `${cfg.projectId}.firebaseapp.com`,
-                            projectId: cfg.projectId,
-                            storageBucket: `${cfg.projectId}.firebasestorage.app`,
-                            messagingSenderId: cfg.messagingSenderId,
-                            appId: cfg.appId
-                        }, appName);
-                    }
-                    firestoreDb = app.firestore();
-                    activeFirebaseProjectId = cfg.projectId;
+                const url = `${fsBaseUrl(cfg)}/${encodeURIComponent(collection)}/${encodeURIComponent(docId)}?key=${encodeURIComponent(cfg.apiKey)}`;
+                const res = await fetch(url, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fields: toFsFields(dataObj) })
+                });
+                if (!res.ok) {
+                    const txt = await res.text().catch(() => '');
+                    throw new Error(parseFsError(res.status, txt));
                 }
-                return { fs: firestoreDb, collectionName: cfg.collectionName };
+                return await res.json();
+            }
+
+            async function fsDeleteDoc(collection, docId) {
+                const cfg = getCloudConfig();
+                const url = `${fsBaseUrl(cfg)}/${encodeURIComponent(collection)}/${encodeURIComponent(docId)}?key=${encodeURIComponent(cfg.apiKey)}`;
+                const res = await fetch(url, { method: 'DELETE' });
+                if (!res.ok && res.status !== 404) {
+                    const txt = await res.text().catch(() => '');
+                    throw new Error(parseFsError(res.status, txt));
+                }
+                return true;
+            }
+
+            async function fsCommitWrites(writes) {
+                if (!writes.length) return true;
+                const cfg = getCloudConfig();
+                const url = `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(cfg.projectId)}/databases/(default)/documents:commit?key=${encodeURIComponent(cfg.apiKey)}`;
+                const chunkSize = 450;
+                for (let i = 0; i < writes.length; i += chunkSize) {
+                    const chunk = writes.slice(i, i + chunkSize);
+                    const res = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ writes: chunk })
+                    });
+                    if (!res.ok) {
+                        const txt = await res.text().catch(() => '');
+                        throw new Error(parseFsError(res.status, txt));
+                    }
+                }
+                return true;
+            }
+
+            async function fsRunQuery(structuredQuery) {
+                const cfg = getCloudConfig();
+                const url = `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(cfg.projectId)}/databases/(default)/documents:runQuery?key=${encodeURIComponent(cfg.apiKey)}`;
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ structuredQuery })
+                });
+                if (!res.ok) {
+                    const txt = await res.text().catch(() => '');
+                    throw new Error(parseFsError(res.status, txt));
+                }
+                const arr = await res.json();
+                const docs = [];
+                if (Array.isArray(arr)) {
+                    for (const item of arr) {
+                        if (item && item.document) {
+                            const nameParts = item.document.name.split('/');
+                            const id = nameParts[nameParts.length - 1];
+                            docs.push({ id, data: fromFsDocFields(item.document.fields) });
+                        }
+                    }
+                }
+                return docs;
+            }
+
+            async function fsListPage(collection, pageSize = 300, pageToken = '') {
+                const cfg = getCloudConfig();
+                let url = `${fsBaseUrl(cfg)}/${encodeURIComponent(collection)}?pageSize=${pageSize}&key=${encodeURIComponent(cfg.apiKey)}`;
+                if (pageToken) url += `&pageToken=${encodeURIComponent(pageToken)}`;
+                const res = await fetch(url);
+                if (!res.ok) {
+                    const txt = await res.text().catch(() => '');
+                    throw new Error(parseFsError(res.status, txt));
+                }
+                const json = await res.json();
+                const docs = (json.documents || []).map(d => {
+                    const parts = d.name.split('/');
+                    return { id: parts[parts.length - 1], data: fromFsDocFields(d.fields) };
+                });
+                return { docs, nextPageToken: json.nextPageToken || '' };
             }
 
             function getPendingDeletes() {
@@ -3486,19 +3654,23 @@
 
             async function cloudUpsertBatch(records, onProgress = null) {
                 if (!records.length) return true;
-                const { fs, collectionName } = getFirestoreInstance();
-                const colRef = fs.collection(collectionName);
+                const cfg = getCloudConfig();
                 const batchSize = 450;
                 let done = 0;
                 for (let i = 0; i < records.length; i += batchSize) {
                     const chunk = records.slice(i, i + batchSize);
-                    const batch = fs.batch();
+                    const writes = [];
                     for (const rec of chunk) {
                         const docId = toEnglishDigits(rec.nationalId).replace(/[^\d]/g, '');
                         if (!docId) continue;
-                        batch.set(colRef.doc(docId), personToCloudRow(rec), { merge: true });
+                        writes.push({
+                            update: {
+                                name: fsDocName(cfg, cfg.collectionName, docId),
+                                fields: toFsFields(personToCloudRow(rec))
+                            }
+                        });
                     }
-                    await batch.commit();
+                    if (writes.length) await fsCommitWrites(writes);
                     done += chunk.length;
                     if (onProgress) onProgress(done, records.length);
                 }
@@ -3507,25 +3679,17 @@
 
             async function cloudDeleteIds(ids) {
                 if (!ids.length) return true;
-                const { fs, collectionName } = getFirestoreInstance();
-                const colRef = fs.collection(collectionName);
-                const batchSize = 450;
-                for (let i = 0; i < ids.length; i += batchSize) {
-                    const chunk = ids.slice(i, i + batchSize);
-                    const batch = fs.batch();
-                    for (const id of chunk) {
-                        const cleanId = toEnglishDigits(id).replace(/[^\d]/g, '');
-                        if (cleanId) batch.delete(colRef.doc(cleanId));
+                const cfg = getCloudConfig();
+                const writes = [];
+                for (const id of ids) {
+                    const cleanId = toEnglishDigits(id).replace(/[^\d]/g, '');
+                    if (cleanId) {
+                        writes.push({ delete: fsDocName(cfg, cfg.collectionName, cleanId) });
                     }
-                    await batch.commit();
                 }
+                if (writes.length) await fsCommitWrites(writes);
                 return true;
             }
-
-            const PENDING_REQUESTS_QUEUE_KEY = 'civil_registry_pending_req_queue';
-            const LOCAL_AUDIT_LOG_KEY = 'civil_registry_audit_logs';
-            const PENDING_COLLECTION = 'pending_requests';
-            const AUDIT_COLLECTION = 'activity_logs';
 
             function getLocalPendingQueue() {
                 try {
@@ -3576,8 +3740,7 @@
                 appendLocalAuditLog(entry);
                 if (navigator.onLine) {
                     try {
-                        const { fs } = getFirestoreInstance();
-                        await fs.collection(AUDIT_COLLECTION).doc(entry.logId).set(entry);
+                        await fsSetDoc(AUDIT_COLLECTION, entry.logId, entry);
                     } catch (e) {}
                 }
                 return entry;
@@ -3593,15 +3756,100 @@
                 };
                 if (navigator.onLine) {
                     try {
-                        const { fs } = getFirestoreInstance();
-                        await fs.collection(PENDING_COLLECTION).doc(reqObj.requestId).set(reqObj);
-                        return { sent: true, reqObj };
-                    } catch (e) {}
+                        await fsSetDoc(PENDING_COLLECTION, reqObj.requestId, reqObj);
+                        return { sent: true, reqObj, error: '' };
+                    } catch (e) {
+                        const q = getLocalPendingQueue();
+                        q.push(reqObj);
+                        saveLocalPendingQueue(q);
+                        return { sent: false, reqObj, error: e.message || 'تعذر الإرسال للسحابة' };
+                    }
                 }
                 const q = getLocalPendingQueue();
                 q.push(reqObj);
                 saveLocalPendingQueue(q);
-                return { sent: false, reqObj };
+                return { sent: false, reqObj, error: 'لا يوجد إنترنت' };
+            }
+
+            // مزامنة تفاضلية سريعة (Delta Sync) لجلب التعديلات الجديدة خلال أجزاء من الثانية
+            async function quickDeltaSync(silent = true) {
+                if (!navigator.onLine || !isCloudConfigured() || isDeltaSyncRunning) return 0;
+                const lastSync = getLastSyncTime();
+                if (!lastSync || allRecords.length === 0) return 0;
+                isDeltaSyncRunning = true;
+                try {
+                    const cfg = getCloudConfig();
+                    const docs = await fsRunQuery({
+                        from: [{ collectionId: cfg.collectionName }],
+                        where: {
+                            fieldFilter: {
+                                field: { fieldPath: 'updated_at' },
+                                op: 'GREATER_THAN',
+                                value: { stringValue: lastSync }
+                            }
+                        },
+                        limit: 500
+                    });
+                    if (docs.length > 0) {
+                        const recordMap = new Map(allRecords.map(p => [p.nationalId, p]));
+                        const toPersist = [];
+                        let maxUpdated = lastSync;
+                        for (const item of docs) {
+                            if (item.data && item.data.updated_at && item.data.updated_at > maxUpdated) {
+                                maxUpdated = item.data.updated_at;
+                            }
+                            const personObj = cloudRowToPerson(item.data, item.id);
+                            if (!personObj.fullName || !personObj.nationalId) continue;
+                            const existing = recordMap.get(personObj.nationalId);
+                            if (existing && existing.isLocal) continue;
+                            toPersist.push(personObj);
+                            recordMap.set(personObj.nationalId, personObj);
+                        }
+                        if (toPersist.length > 0) {
+                            await dbSaveMany(toPersist);
+                            allRecords = Array.from(recordMap.values());
+                            updateGlobalCounters();
+                            if (searchUnifiedInput && searchUnifiedInput.value.trim()) {
+                                applySearchAndFilter(false, true);
+                            }
+                        }
+                        setLastSyncTime(maxUpdated);
+                        if (!silent) showToast(`تم تحديث ${toEnglishDigits(toPersist.length)} سجل من السحابة`);
+                        return toPersist.length;
+                    }
+                    return 0;
+                } catch (e) {
+                    return 0;
+                } finally {
+                    isDeltaSyncRunning = false;
+                }
+            }
+
+            async function refreshPendingBadgeCount() {
+                const badge = document.getElementById('pendingApprovalsBadge');
+                if (!badge) return;
+                if (!isAdminMode || !navigator.onLine) {
+                    badge.classList.remove('visible');
+                    return;
+                }
+                try {
+                    const docs = await fsRunQuery({
+                        from: [{ collectionId: PENDING_COLLECTION }],
+                        where: {
+                            fieldFilter: {
+                                field: { fieldPath: 'status' },
+                                op: 'EQUAL',
+                                value: { stringValue: 'pending' }
+                            }
+                        },
+                        limit: 100
+                    });
+                    const count = docs.length;
+                    badge.textContent = toEnglishDigits(count);
+                    badge.classList.toggle('visible', count > 0);
+                } catch (e) {
+                    badge.classList.remove('visible');
+                }
             }
 
             function initIndexedDB() {
@@ -4363,6 +4611,7 @@
                 // 2) الإرسال للسحابة: المدير يعتمد مباشرة، والمستخدم يرسل طلب مراجعة
                 if (isAdminMode) {
                     let syncedToCloud = false;
+                    let cloudErr = '';
                     if (navigator.onLine && isCloudConfigured()) {
                         try {
                             if (isEdit && originalId !== nationalId) {
@@ -4371,9 +4620,12 @@
                             await cloudUpsertBatch([recordData]);
                             recordData.isLocal = false;
                             await dbSaveOne(recordData);
+                            setLastSyncTime(new Date().toISOString());
                             updateGlobalCounters();
                             syncedToCloud = true;
-                        } catch (err) {}
+                        } catch (err) {
+                            cloudErr = err.message || '';
+                        }
                     }
                     await recordActivityLog({
                         actionType: isEdit ? 'edit' : 'add',
@@ -4382,9 +4634,13 @@
                         actorRole: 'admin',
                         summary: isEdit ? 'تعديل مباشر من المدير' : 'إضافة مباشرة من المدير'
                     });
-                    showToast(syncedToCloud
-                        ? (isEdit ? 'تم حفظ التعديلات ومزامنتها مع السحابة' : 'تمت إضافة السجل ومزامنته مع السحابة')
-                        : (isEdit ? 'تم حفظ التعديلات محلياً (بانتظار المزامنة)' : 'تمت إضافة السجل محلياً (بانتظار المزامنة)'));
+                    if (syncedToCloud) {
+                        showToast(isEdit ? 'تم حفظ التعديلات ومزامنتها مع السحابة' : 'تمت إضافة السجل ومزامنته مع السحابة');
+                    } else if (cloudErr) {
+                        showToast('حُفظ محلياً فقط: ' + cloudErr);
+                    } else {
+                        showToast(isEdit ? 'تم حفظ التعديلات محلياً (بانتظار المزامنة)' : 'تمت إضافة السجل محلياً (بانتظار المزامنة)');
+                    }
                 } else {
                     const res = await submitPendingRequest({
                         actionType: isEdit ? 'edit' : 'add',
@@ -4401,9 +4657,11 @@
                         actorRole: 'user',
                         summary: isEdit ? 'طلب تعديل مرسل للمراجعة' : 'طلب إضافة مرسل للمراجعة'
                     });
-                    showToast(res.sent
-                        ? 'تم الحفظ محلياً وإرسال الطلب لاعتماد المدير'
-                        : 'تم الحفظ محلياً (سيُرسل طلب الاعتماد عند توفر الإنترنت)');
+                    if (res.sent) {
+                        showToast('تم الحفظ محلياً وإرسال الطلب لاعتماد المدير');
+                    } else {
+                        showToast(`حُفظ محلياً (${res.error || 'سيُرسل عند المزامنة'})`);
+                    }
                 }
             });
 
@@ -4638,11 +4896,11 @@
                     syncReportBox.classList.remove('visible', 'error');
 
                     try {
-                        const { fs, collectionName: col } = getFirestoreInstance();
-                        const snap = await fs.collection(col).limit(1).get();
-                        syncReportBox.textContent = snap.empty
-                            ? `تم الاتصال بمشروع Firebase (${projectId}) بنجاح! المجموعة "${col}" جاهزة وفارغة حالياً.`
-                            : `تم الاتصال بمشروع Firebase (${projectId}) بنجاح! توجد بيانات جاهزة في المجموعة "${col}".`;
+                        const cfg = getCloudConfig();
+                        const { docs } = await fsListPage(cfg.collectionName, 1, '');
+                        syncReportBox.textContent = docs.length === 0
+                            ? `تم الاتصال بمشروع Firebase (${projectId}) بنجاح! المجموعة "${cfg.collectionName}" جاهزة وفارغة حالياً.`
+                            : `تم الاتصال بمشروع Firebase (${projectId}) بنجاح! توجد بيانات جاهزة في المجموعة "${cfg.collectionName}".`;
                         syncReportBox.classList.remove('error');
                         syncReportBox.classList.add('visible');
                         cloudConfigFields.classList.remove('open');
@@ -4691,14 +4949,11 @@
                 syncProgressLabel.textContent = 'جاري الاتصال بـ Firebase Firestore...';
 
                 try {
-                    const { fs, collectionName } = getFirestoreInstance();
-                    const colRef = fs.collection(collectionName);
-
+                    const cfg = getCloudConfig();
                     let pushedDeletes = 0;
                     let pushedRecords = 0;
 
                     if (isAdminMode) {
-                        // 1) المدير: تنفيذ الحذوفات المعلقة على السحابة
                         const pendingDeletes = getPendingDeletes();
                         if (pendingDeletes.length > 0) {
                             await cloudDeleteIds(pendingDeletes);
@@ -4706,7 +4961,6 @@
                             setPendingDeletes([]);
                         }
 
-                        // 2) المدير: رفع السجلات المضافة أو المعدلة محلياً مباشرة
                         const localRecords = allRecords.filter(r => r.isLocal);
                         if (localRecords.length > 0) {
                             await cloudUpsertBatch(localRecords, (done, total) => {
@@ -4719,39 +4973,51 @@
                             pushedRecords = localRecords.length;
                         }
                     } else {
-                        // المستخدم العادي: إرسال طلبات المراجعة المعلقة فقط دون الكتابة في القاعدة الرئيسية
                         const queuedReqs = getLocalPendingQueue();
                         if (queuedReqs.length > 0) {
-                            for (const reqItem of queuedReqs) {
-                                await fs.collection(PENDING_COLLECTION).doc(reqItem.requestId).set(reqItem);
-                            }
+                            const writes = queuedReqs.map(reqItem => ({
+                                update: {
+                                    name: fsDocName(cfg, PENDING_COLLECTION, reqItem.requestId),
+                                    fields: toFsFields(reqItem)
+                                }
+                            }));
+                            await fsCommitWrites(writes);
                             pushedRecords = queuedReqs.length;
                             saveLocalPendingQueue([]);
                         }
                     }
 
-                    // 3) جلب كافة السجلات من Firestore بالصفحات (1000 سجل لكل دفعة)
-                    const pageSize = 1000;
-                    let lastDoc = null;
-                    const allRemoteRows = [];
-
-                    while (true) {
-                        let query = colRef.orderBy(firebase.firestore.FieldPath.documentId()).limit(pageSize);
-                        if (lastDoc) query = query.startAfter(lastDoc);
-                        const snap = await query.get();
-                        if (snap.empty) break;
-
-                        snap.docs.forEach(doc => {
-                            allRemoteRows.push({ id: doc.id, data: doc.data() });
+                    // 3) مزامنة تفاضلية سريعة إذا كانت البيانات موجودة محلياً، أو جلب كامل لأول مرة
+                    let allRemoteRows = [];
+                    const lastSync = getLastSyncTime();
+                    if (allRecords.length > 0 && lastSync) {
+                        syncProgressLabel.textContent = 'جاري جلب التحديثات الجديدة بسرعة...';
+                        allRemoteRows = await fsRunQuery({
+                            from: [{ collectionId: cfg.collectionName }],
+                            where: {
+                                fieldFilter: {
+                                    field: { fieldPath: 'updated_at' },
+                                    op: 'GREATER_THAN',
+                                    value: { stringValue: lastSync }
+                                }
+                            },
+                            limit: 1000
                         });
-
-                        lastDoc = snap.docs[snap.docs.length - 1];
-                        const pct = Math.min(92, 35 + Math.min(55, Math.round(allRemoteRows.length / 500)));
-                        syncProgressFill.style.width = `${pct}%`;
-                        syncProgressLabel.textContent = `جاري الجلب من Firestore: ${toEnglishDigits(allRemoteRows.length)} سجل`;
-
-                        if (snap.docs.length < pageSize) break;
                     }
+
+                    if (allRemoteRows.length === 0 && (allRecords.length === 0 || !lastSync)) {
+                        let pageToken = '';
+                        while (true) {
+                            const page = await fsListPage(cfg.collectionName, 300, pageToken);
+                            if (page.docs.length) allRemoteRows.push(...page.docs);
+                            const pct = Math.min(92, 35 + Math.min(55, Math.round(allRemoteRows.length / 400)));
+                            syncProgressFill.style.width = `${pct}%`;
+                            syncProgressLabel.textContent = `جاري الجلب من Firestore: ${toEnglishDigits(allRemoteRows.length)} سجل`;
+                            if (!page.nextPageToken || page.docs.length === 0) break;
+                            pageToken = page.nextPageToken;
+                        }
+                    }
+                    setLastSyncTime(new Date().toISOString());
 
                     syncProgressFill.style.width = '96%';
                     syncProgressLabel.textContent = 'جاري حفظ البيانات في الذاكرة المحلية...';
@@ -5199,6 +5465,8 @@
                 if (entered === getAdminPassword()) {
                     setAdminMode(true);
                     closeAdminLoginModal();
+                    refreshPendingBadgeCount();
+                    quickDeltaSync(true);
                     showToast('تم تفعيل وضع المدير بنجاح');
                 } else {
                     adminLoginError.classList.add('visible');
@@ -5410,9 +5678,18 @@
             async function loadPendingApprovals() {
                 approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">جاري تحميل الطلبات المعلقة...</div>';
                 try {
-                    const { fs } = getFirestoreInstance();
-                    const snap = await fs.collection(PENDING_COLLECTION).where('status', '==', 'pending').get();
-                    const items = snap.docs.map(d => d.data()).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+                    const docs = await fsRunQuery({
+                        from: [{ collectionId: PENDING_COLLECTION }],
+                        where: {
+                            fieldFilter: {
+                                field: { fieldPath: 'status' },
+                                op: 'EQUAL',
+                                value: { stringValue: 'pending' }
+                            }
+                        },
+                        limit: 200
+                    });
+                    const items = docs.map(d => d.data).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
                     if (items.length === 0) {
                         approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات تعديل أو إضافة معلقة حالياً.</div>';
@@ -5450,24 +5727,24 @@
 
             async function handleApprovalDecision(req, approve, cardEl) {
                 try {
-                    const { fs, collectionName } = getFirestoreInstance();
-                    const colRef = fs.collection(collectionName);
+                    const cfg = getCloudConfig();
                     const targetId = toEnglishDigits(req.nationalId || '').replace(/[^\d]/g, '');
                     const newId = toEnglishDigits(req.newNationalId || req.nationalId || '').replace(/[^\d]/g, '');
 
                     if (approve) {
                         if (req.actionType === 'delete') {
-                            if (targetId) await colRef.doc(targetId).delete();
+                            if (targetId) await fsDeleteDoc(cfg.collectionName, targetId);
                             await dbDeleteIds([targetId]);
                             allRecords = allRecords.filter(p => p.nationalId !== targetId);
                         } else if (req.afterData) {
                             if (req.actionType === 'edit' && targetId && newId && targetId !== newId) {
-                                await colRef.doc(targetId).delete();
+                                await fsDeleteDoc(cfg.collectionName, targetId);
                                 await dbDeleteIds([targetId]);
                                 allRecords = allRecords.filter(p => p.nationalId !== targetId);
                             }
-                            await colRef.doc(newId).set(req.afterData, { merge: true });
-                            const personObj = cloudRowToPerson(req.afterData, newId);
+                            const updatedPayload = { ...req.afterData, updated_at: new Date().toISOString() };
+                            await fsSetDoc(cfg.collectionName, newId, updatedPayload);
+                            const personObj = cloudRowToPerson(updatedPayload, newId);
                             await dbSaveOne(personObj);
                             const idx = allRecords.findIndex(p => p.nationalId === newId);
                             if (idx !== -1) allRecords[idx] = personObj;
@@ -5475,10 +5752,12 @@
                         }
                     }
 
-                    await fs.collection(PENDING_COLLECTION).doc(req.requestId).update({
+                    await fsSetDoc(PENDING_COLLECTION, req.requestId, {
+                        ...req,
                         status: approve ? 'approved' : 'rejected',
                         reviewedAt: new Date().toISOString()
                     });
+                    refreshPendingBadgeCount();
 
                     await recordActivityLog({
                         actionType: approve ? 'approved' : 'rejected',
@@ -5553,10 +5832,9 @@
 
                 if (navigator.onLine) {
                     try {
-                        const { fs } = getFirestoreInstance();
-                        const snap = await fs.collection(AUDIT_COLLECTION).orderBy('createdAt', 'desc').limit(200).get();
-                        snap.docs.forEach(d => {
-                            const data = d.data();
+                        const page = await fsListPage(AUDIT_COLLECTION, 200, '');
+                        page.docs.forEach(d => {
+                            const data = d.data;
                             if (data && data.logId) mergedMap.set(data.logId, data);
                         });
                     } catch (e) {}
@@ -5727,6 +6005,13 @@
                         _normName: item._normName || normalizeArabic(item.fullName)
                     }));
                     updateGlobalCounters();
+                    quickDeltaSync(true);
+                    setInterval(() => {
+                        if (document.visibilityState === 'visible') {
+                            quickDeltaSync(true);
+                            if (isAdminMode) refreshPendingBadgeCount();
+                        }
+                    }, 45000);
                 } catch (err) {
                     showToast('تعذر فتح قاعدة البيانات المحلية');
                 }
