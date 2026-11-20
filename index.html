@@ -1667,6 +1667,7 @@
         .drawer-body {
             padding: 18px 22px;
             overflow-y: auto;
+            overscroll-behavior: contain;
             flex: 1;
         }
 
@@ -1731,6 +1732,24 @@
 
         .field-wrap:last-child {
             margin-bottom: 0;
+        }
+
+        .field-wrap.field-inline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .field-wrap.field-inline label {
+            width: 110px;
+            flex-shrink: 0;
+            margin-bottom: 0;
+            text-align: right;
+        }
+
+        .field-wrap.field-inline input {
+            flex: 1;
+            min-width: 0;
         }
 
         .field-wrap label {
@@ -2167,9 +2186,118 @@
             display: inline-flex;
         }
 
+        .jh-settings-btn {
+            position: relative;
+        }
+
+        .jh-unread-dot {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #EF4444;
+            border: 1.5px solid var(--surface-card);
+            display: none;
+            pointer-events: none;
+        }
+
+        .jh-unread-dot.visible {
+            display: block;
+        }
+
+        .menu-unread-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #EF4444;
+            margin-right: auto;
+            display: none;
+            flex-shrink: 0;
+        }
+
+        .menu-unread-dot.visible {
+            display: inline-block;
+        }
+
         .wide-dialog-card {
             max-width: 680px;
             text-align: right;
+        }
+
+        .fullscreen-dialog-card {
+            width: 100%;
+            max-width: 920px;
+            height: 92vh;
+            max-height: 92vh;
+            display: flex;
+            flex-direction: column;
+            text-align: right;
+            padding: 20px;
+        }
+
+        .fullscreen-dialog-card .modal-scroll-list {
+            flex: 1;
+            max-height: none;
+            overflow-y: auto;
+            overscroll-behavior: contain;
+        }
+
+        .req-type-tag.pending {
+            color: var(--accent-amber);
+            border-color: var(--accent-amber);
+        }
+
+        .req-type-tag.accepted {
+            color: var(--accent-emerald);
+            border-color: var(--accent-emerald);
+        }
+
+        .req-admin-note-box {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-right: 3px solid var(--brand-primary);
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size: 12.5px;
+            color: var(--ink-primary);
+            margin-bottom: 10px;
+        }
+
+        .admin-note-textarea {
+            width: 100%;
+            min-height: 54px;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            background: var(--surface-card);
+            color: var(--ink-primary);
+            font-size: 13px;
+            margin-bottom: 8px;
+            resize: vertical;
+        }
+
+        .admin-note-textarea:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+        }
+
+        .btn-neutral-req {
+            height: 34px;
+            padding: 0 12px;
+            border-radius: var(--radius-control);
+            border: 1px solid var(--border-strong);
+            background: var(--surface-card);
+            color: var(--ink-secondary);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-neutral-req:hover {
+            background: var(--surface-hover);
+            color: var(--ink-primary);
         }
 
         .modal-scroll-list {
@@ -2484,6 +2612,7 @@
                 <div class="settings-menu-wrap" id="jhMenuWrapper">
                     <button type="button" id="jhSettingsBtn" class="jh-settings-btn" title="قائمة الإجراءات والإعدادات" aria-haspopup="true" aria-expanded="false">
                         <span>JH</span>
+                        <span id="jhUnreadDot" class="jh-unread-dot" aria-hidden="true"></span>
                     </button>
 
                     <!-- Smart First-Visit Callout for JH Button -->
@@ -2491,7 +2620,7 @@
                         <div class="jh-hint-pulse-dot"></div>
                         <div class="jh-hint-content">
                             <div class="jh-hint-title">قائمة الإجراءات والإعدادات</div>
-                            <div class="jh-hint-desc">تجد هنا خيارات إضافة سجل، مزامنة البيانات، الطباعة، وتبديل المظهر.</div>
+                            <div class="jh-hint-desc">تجد هنا خيارات إضافة سجل، الطباعة، وتبديل المظهر.</div>
                         </div>
                         <button type="button" id="dismissJhHintBtn" class="jh-hint-close" title="إغلاق التلميح">
                             <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -2518,52 +2647,28 @@
                             <span>إضافة سجل</span>
                         </button>
 
-                        <button type="button" id="openSyncBtn" class="menu-item-action" role="menuitem">
+                        <button type="button" id="openMyRequestsBtn" class="menu-item-action" role="menuitem">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M21 2v6h-6"></path>
-                                <path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path>
-                                <path d="M3 22v-6h6"></path>
-                                <path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path>
+                                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path>
+                                <rect x="9" y="3" width="6" height="4" rx="1"></rect>
+                                <line x1="9" y1="12" x2="15" y2="12"></line>
+                                <line x1="9" y1="16" x2="13" y2="16"></line>
                             </svg>
-                            <span>مزامنة بيانات السجل</span>
-                        </button>
-
-                        <button type="button" id="openImportBtn" class="menu-item-action admin-only" role="menuitem">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="17 8 12 3 7 8"></polyline>
-                                <line x1="12" y1="3" x2="12" y2="15"></line>
-                            </svg>
-                            <span>استيراد Excel/CSV للسحابة</span>
-                        </button>
-
-                        <button type="button" id="adminPullCloudBtn" class="menu-item-action admin-only" role="menuitem">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                <polyline points="7 10 12 15 17 10"></polyline>
-                                <line x1="12" y1="15" x2="12" y2="3"></line>
-                            </svg>
-                            <span>استيراد من السحابة</span>
+                            <span id="openMyRequestsBtnLabel">طلباتي</span>
+                            <span id="myRequestsUnreadDot" class="menu-unread-dot" aria-hidden="true"></span>
+                            <span id="pendingApprovalsBadge" class="menu-badge-count admin-only">0</span>
                         </button>
 
                         <button type="button" id="exportDocsBtn" class="menu-item-action admin-only" role="menuitem">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                                <polyline points="14 2 14 8 20 8"></polyline>
-                                <line x1="12" y1="18" x2="12" y2="12"></line>
-                                <polyline points="9 15 12 18 15 15"></polyline>
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
                             </svg>
-                            <span>تصدير نسخة في المستندات</span>
+                            <span>حفظ نسخة احتياطية</span>
                         </button>
 
-                        <button type="button" id="openApprovalsBtn" class="menu-item-action admin-only" role="menuitem">
-                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                                <polyline points="9 11 12 14 22 4"></polyline>
-                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                            </svg>
-                            <span>طلبات التعديل المعلقة</span>
-                            <span id="pendingApprovalsBadge" class="menu-badge-count">0</span>
-                        </button>
+
 
                         <button type="button" id="openAuditLogBtn" class="menu-item-action admin-only" role="menuitem">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -2583,6 +2688,8 @@
                             </svg>
                             <span>طباعة</span>
                         </button>
+
+
 
                         <div class="menu-divider"></div>
 
@@ -2633,6 +2740,16 @@
                         <span id="offlineStatusTag" class="offline-pill">بدون نت</span>
                     </div>
                 </div>
+            </div>
+            <div class="header-controls admin-only">
+                <button type="button" id="headerExitAdminBtn" class="btn-outline-ink" style="height:36px;padding:0 12px;font-size:13px;color:var(--danger);border-color:var(--danger-border);background:var(--danger-soft);" title="خروج من وضع المدير">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    <span>خروج</span>
+                </button>
             </div>
         </header>
     </div>
@@ -2716,7 +2833,7 @@
                 </svg>
             </div>
             <h3 id="emptyTitle">ابدأ بالبحث في السجل المدني</h3>
-            <p id="emptyDesc">أدخل الاسم أو رقم الهوية في شريط البحث، أو اختر "مزامنة بيانات السجل" من قائمة (JH) للربط والمزامنة مع قاعدة البيانات السحابية.</p>
+            <p id="emptyDesc">أدخل الاسم أو رقم الهوية في شريط البحث للعثور على السجلات المطلوبة.</p>
         </div>
 
         <!-- Digital Identity Pass Cards -->
@@ -2783,11 +2900,11 @@
 
                     <div class="form-group-card tone-teal">
                         <div class="form-group-title">البيانات الأساسية</div>
-                        <div class="field-wrap">
+                        <div class="field-wrap field-inline">
                             <label for="inpFullName">الاسم الكامل</label>
                             <input type="text" id="inpFullName" placeholder="أدخل الاسم الكامل..." required>
                         </div>
-                        <div class="field-wrap">
+                        <div class="field-wrap field-inline">
                             <label for="inpNationalId">رقم الهوية</label>
                             <input type="text" id="inpNationalId" inputmode="numeric" placeholder="أدخل رقم الهوية..." required>
                         </div>
@@ -2824,7 +2941,7 @@
 
                     <div class="form-group-card tone-indigo">
                         <div class="form-group-title">بيانات الأسرة</div>
-                        <div class="field-wrap">
+                        <div class="field-wrap field-inline">
                             <label for="inpMotherName">اسم الأم</label>
                             <input type="text" id="inpMotherName" placeholder="أدخل اسم الأم...">
                         </div>
@@ -2861,7 +2978,6 @@
                     <div class="form-group-card tone-amber">
                         <div class="form-group-title">ملاحظات إضافية</div>
                         <div class="field-wrap">
-                            <label for="inpNotes">ملاحظات</label>
                             <textarea id="inpNotes" rows="2" placeholder="أدخل أي ملاحظات..."></textarea>
                         </div>
                     </div>
@@ -2870,7 +2986,6 @@
 
             <div class="drawer-footer">
                 <button type="button" id="saveFormBtn" class="btn-save-record">حفظ البيانات</button>
-                <button type="button" id="deleteSingleBtn" class="btn-delete-record">حذف</button>
                 <button type="button" id="cancelFormBtn" class="btn-cancel-drawer">إلغاء</button>
             </div>
         </div>
@@ -2920,7 +3035,7 @@
                     </div>
                     <div class="field-wrap">
                         <label for="inpFirebaseCollection">اسم المجموعة (Collection)</label>
-                        <input type="text" id="inpFirebaseCollection" placeholder="civil_registry" autocomplete="off">
+                        <input type="text" id="inpFirebaseCollection" placeholder="civil_updates" autocomplete="off">
                     </div>
                     <div class="cloud-config-actions">
                         <button type="button" id="saveAndTestCloudBtn" class="btn-cloud-test">حفظ واختبار الاتصال</button>
@@ -3027,14 +3142,34 @@
          5D. ADMIN APPROVALS & AUDIT LOG MODALS
          ===================================================================== -->
     <div id="approvalsModalBackdrop" class="backdrop-overlay center-overlay">
-        <div class="dialog-card wide-dialog-card">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                <h3 style="margin:0;">طلبات التعديل والإضافة المعلقة</h3>
-                <button type="button" id="refreshApprovalsBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
+        <div class="dialog-card fullscreen-dialog-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap;">
+                <h3 style="margin:0;">الطلبات</h3>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <select id="approvalsStatusFilter" style="height:34px;padding:0 10px;border-radius:var(--radius-control);border:1px solid var(--border-subtle);background:var(--surface-input);color:var(--ink-primary);font-size:12.5px;">
+                        <option value="all">كل الطلبات</option>
+                        <option value="pending">قيد المراجعة</option>
+                        <option value="accepted">مقبولة</option>
+                        <option value="rejected">مرفوضة</option>
+                    </select>
+                    <button type="button" id="refreshApprovalsBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
+                </div>
             </div>
-            <p class="sub" style="margin-bottom:12px;">مراجعة التعديلات المرسلة من المستخدمين قبل اعتمادها في قاعدة البيانات الرئيسية.</p>
+            <p class="sub" style="margin-bottom:12px;">مراجعة التعديلات الواردة من المستخدمين، مع إمكانية كتابة رسالة توضيح والقبول أو الرفض أو التنظيف اليدوي.</p>
             <div id="approvalsListBox" class="modal-scroll-list"></div>
-            <button type="button" id="closeApprovalsBtn" class="btn-dialog-cancel" style="width:100%;">إغلاق</button>
+            <button type="button" id="closeApprovalsBtn" class="btn-dialog-cancel" style="width:100%;flex-shrink:0;">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="myRequestsModalBackdrop" class="backdrop-overlay center-overlay">
+        <div class="dialog-card fullscreen-dialog-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;">
+                <h3 style="margin:0;">طلباتي</h3>
+                <button type="button" id="refreshMyRequestsBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
+            </div>
+            <p class="sub" style="margin-bottom:12px;">سجل جميع الطلبات المرسلة من هذا الجهاز وحالة مراجعتها من الإدارة.</p>
+            <div id="myRequestsListBox" class="modal-scroll-list"></div>
+            <button type="button" id="closeMyRequestsBtn" class="btn-dialog-cancel" style="width:100%;flex-shrink:0;">إغلاق</button>
         </div>
     </div>
 
@@ -3044,7 +3179,6 @@
                 <h3 style="margin:0;">تقرير الحركات والتعديلات</h3>
                 <div style="display:flex;gap:6px;">
                     <button type="button" id="refreshAuditBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
-                    <button type="button" id="exportAuditCsvBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تصدير CSV</button>
                 </div>
             </div>
             <div class="audit-filter-row">
@@ -3112,8 +3246,9 @@
     </div>
 
     <!-- =====================================================================
-         8. APPLICATION ENGINE
+         8. APPLICATION ENGINE & EXTERNAL DATA
          ===================================================================== -->
+    <script src="data.js"></script>
     <script>
         (function () {
             'use strict';
@@ -3230,7 +3365,7 @@
                     const CACHE_NAME = 'civil-registry-offline-v4';
                     self.addEventListener('install', (e) => {
                         self.skipWaiting();
-                        e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([location.href]).catch(() => {})));
+                        e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([location.href, 'data.js']).catch(() => {})));
                     });
                     self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
                     self.addEventListener('fetch', (e) => {
@@ -3368,9 +3503,51 @@
             const LAST_SYNC_KEY = 'civil_registry_last_sync_at';
             const PENDING_REQUESTS_QUEUE_KEY = 'civil_registry_pending_req_queue';
             const LOCAL_AUDIT_LOG_KEY = 'civil_registry_audit_logs';
-            const PENDING_COLLECTION = 'pending_requests';
+            const DEVICE_ID_KEY = 'civil_registry_sender_device_id';
+            const MY_REQUESTS_CACHE_KEY = 'civil_registry_my_requests_cache';
+            const PENDING_COLLECTION = 'pending_edits';
+
+            function getSenderDeviceId() {
+                try {
+                    let id = localStorage.getItem(DEVICE_ID_KEY);
+                    if (!id) {
+                        id = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+                        localStorage.setItem(DEVICE_ID_KEY, id);
+                    }
+                    return id;
+                } catch (e) {
+                    if (!window.__memDeviceId) {
+                        window.__memDeviceId = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+                    }
+                    return window.__memDeviceId;
+                }
+            }
+
+            function getMyRequestsCache() {
+                try {
+                    const raw = localStorage.getItem(MY_REQUESTS_CACHE_KEY);
+                    const arr = raw ? JSON.parse(raw) : [];
+                    return Array.isArray(arr) ? arr : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function saveMyRequestsCache(arr) {
+                try {
+                    localStorage.setItem(MY_REQUESTS_CACHE_KEY, JSON.stringify(arr.slice(0, 200)));
+                } catch (e) {}
+            }
+
+            function upsertMyRequestCache(reqObj) {
+                const list = getMyRequestsCache();
+                const idx = list.findIndex(x => x.requestId === reqObj.requestId);
+                if (idx !== -1) list[idx] = reqObj;
+                else list.unshift(reqObj);
+                saveMyRequestsCache(list);
+            }
             const AUDIT_COLLECTION = 'activity_logs';
-            const PAGE_SIZE = 20;
+            const PAGE_SIZE = 10;
 
             const DEFAULT_FIREBASE_CONFIG = {
                 apiKey: "AIzaSyAts7ke18fSHl7PuBQLIJRDVmSSTZj_8uA",
@@ -3379,7 +3556,7 @@
                 storageBucket: "allname-d0436.firebasestorage.app",
                 messagingSenderId: "848309496436",
                 appId: "1:848309496436:web:4e104240a7d374c68bff21",
-                collectionName: "civil_registry"
+                collectionName: "civil_updates"
             };
 
             let db = null;
@@ -3410,7 +3587,7 @@
                 try {
                     localStorage.setItem(CLOUD_CONFIG_KEY, JSON.stringify({
                         projectId: (projectId || DEFAULT_FIREBASE_CONFIG.projectId).trim(),
-                        collectionName: (collectionName || DEFAULT_FIREBASE_CONFIG.collectionName).trim() || 'civil_registry'
+                        collectionName: (collectionName || DEFAULT_FIREBASE_CONFIG.collectionName).trim() || 'civil_updates'
                     }));
                 } catch (e) {}
             }
@@ -3492,6 +3669,9 @@
                 }
                 if (status === 404) {
                     return 'المشروع أو قاعدة البيانات غير موجودة (404).';
+                }
+                if (status === 429) {
+                    return 'تم تجاوز الحصة اليومية المجانية لـ Firebase (20,000 كتابة / 50,000 قراءة يومياً). تتجدد الحصة تلقائياً خلال 24 ساعة.';
                 }
                 try {
                     const j = JSON.parse(bodyText);
@@ -3626,6 +3806,7 @@
                     alt_phone: toEnglishDigits(p.altPhone || '').replace(/[^\d]/g, ''),
                     address: p.address || '',
                     notes: p.notes || '',
+                    action: 'upsert',
                     updated_at: new Date().toISOString()
                 };
             }
@@ -3652,8 +3833,8 @@
                 };
             }
 
-            async function cloudUpsertBatch(records, onProgress = null) {
-                if (!records.length) return true;
+            async function cloudUpsertBatch(records, onProgress = null, onChunkCommitted = null) {
+                if (!records.length) return 0;
                 const cfg = getCloudConfig();
                 const batchSize = 450;
                 let done = 0;
@@ -3672,19 +3853,30 @@
                     }
                     if (writes.length) await fsCommitWrites(writes);
                     done += chunk.length;
+                    if (onChunkCommitted) await onChunkCommitted(chunk);
                     if (onProgress) onProgress(done, records.length);
                 }
-                return true;
+                return done;
             }
 
             async function cloudDeleteIds(ids) {
                 if (!ids.length) return true;
                 const cfg = getCloudConfig();
                 const writes = [];
+                const nowIso = new Date().toISOString();
                 for (const id of ids) {
                     const cleanId = toEnglishDigits(id).replace(/[^\d]/g, '');
                     if (cleanId) {
-                        writes.push({ delete: fsDocName(cfg, cfg.collectionName, cleanId) });
+                        writes.push({
+                            update: {
+                                name: fsDocName(cfg, cfg.collectionName, cleanId),
+                                fields: toFsFields({
+                                    national_id: cleanId,
+                                    action: 'delete',
+                                    updated_at: nowIso
+                                })
+                            }
+                        });
                     }
                 }
                 if (writes.length) await fsCommitWrites(writes);
@@ -3750,10 +3942,16 @@
                 const reqObj = {
                     ...reqPayload,
                     requestId: 'req_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+                    senderDeviceId: getSenderDeviceId(),
                     status: 'pending',
+                    adminNote: '',
+                    isRead: true,
+                    hiddenByUser: false,
+                    hiddenByAdmin: false,
                     createdAt: new Date().toISOString(),
                     reviewedAt: ''
                 };
+                upsertMyRequestCache(reqObj);
                 if (navigator.onLine) {
                     try {
                         await fsSetDoc(PENDING_COLLECTION, reqObj.requestId, reqObj);
@@ -3771,33 +3969,58 @@
                 return { sent: false, reqObj, error: 'لا يوجد إنترنت' };
             }
 
-            // مزامنة تفاضلية سريعة (Delta Sync) لجلب التعديلات الجديدة خلال أجزاء من الثانية
+            // مزامنة التغييرات من civil_updates فقط (إضافة / تعديل / حذف) وتطبيقها على IndexedDB
             async function quickDeltaSync(silent = true) {
                 if (!navigator.onLine || !isCloudConfigured() || isDeltaSyncRunning) return 0;
-                const lastSync = getLastSyncTime();
-                if (!lastSync || allRecords.length === 0) return 0;
                 isDeltaSyncRunning = true;
                 try {
                     const cfg = getCloudConfig();
-                    const docs = await fsRunQuery({
-                        from: [{ collectionId: cfg.collectionName }],
-                        where: {
-                            fieldFilter: {
-                                field: { fieldPath: 'updated_at' },
-                                op: 'GREATER_THAN',
-                                value: { stringValue: lastSync }
-                            }
-                        },
-                        limit: 500
-                    });
+                    const lastSync = getLastSyncTime();
+                    let docs = [];
+
+                    if (lastSync) {
+                        docs = await fsRunQuery({
+                            from: [{ collectionId: cfg.collectionName }],
+                            where: {
+                                fieldFilter: {
+                                    field: { fieldPath: 'updated_at' },
+                                    op: 'GREATER_THAN',
+                                    value: { stringValue: lastSync }
+                                }
+                            },
+                            limit: 500
+                        });
+                    } else {
+                        let pageToken = '';
+                        while (true) {
+                            const page = await fsListPage(cfg.collectionName, 300, pageToken);
+                            if (page.docs.length) docs.push(...page.docs);
+                            if (!page.nextPageToken || page.docs.length === 0) break;
+                            pageToken = page.nextPageToken;
+                        }
+                    }
+
                     if (docs.length > 0) {
                         const recordMap = new Map(allRecords.map(p => [p.nationalId, p]));
                         const toPersist = [];
-                        let maxUpdated = lastSync;
+                        const toDeleteIds = [];
+                        let maxUpdated = lastSync || new Date().toISOString();
+
                         for (const item of docs) {
                             if (item.data && item.data.updated_at && item.data.updated_at > maxUpdated) {
                                 maxUpdated = item.data.updated_at;
                             }
+                            const targetId = toEnglishDigits((item.data && item.data.national_id) || item.id || '').replace(/[^\d]/g, '');
+                            if (!targetId) continue;
+
+                            if (item.data && item.data.action === 'delete') {
+                                const existing = recordMap.get(targetId);
+                                if (existing && existing.isLocal) continue;
+                                recordMap.delete(targetId);
+                                toDeleteIds.push(targetId);
+                                continue;
+                            }
+
                             const personObj = cloudRowToPerson(item.data, item.id);
                             if (!personObj.fullName || !personObj.nationalId) continue;
                             const existing = recordMap.get(personObj.nationalId);
@@ -3805,8 +4028,12 @@
                             toPersist.push(personObj);
                             recordMap.set(personObj.nationalId, personObj);
                         }
-                        if (toPersist.length > 0) {
-                            await dbSaveMany(toPersist);
+
+                        if (toDeleteIds.length > 0) await dbDeleteIds(toDeleteIds);
+                        if (toPersist.length > 0) await dbSaveMany(toPersist);
+
+                        const changedCount = toPersist.length + toDeleteIds.length;
+                        if (changedCount > 0) {
                             allRecords = Array.from(recordMap.values());
                             updateGlobalCounters();
                             if (searchUnifiedInput && searchUnifiedInput.value.trim()) {
@@ -3814,14 +4041,62 @@
                             }
                         }
                         setLastSyncTime(maxUpdated);
-                        if (!silent) showToast(`تم تحديث ${toEnglishDigits(toPersist.length)} سجل من السحابة`);
-                        return toPersist.length;
+                        if (!silent && changedCount > 0) {
+                            showToast(`تم تطبيق ${toEnglishDigits(changedCount)} تحديث من السحابة`);
+                        }
+                        return changedCount;
+                    } else if (!lastSync) {
+                        setLastSyncTime(new Date().toISOString());
                     }
                     return 0;
                 } catch (e) {
                     return 0;
                 } finally {
                     isDeltaSyncRunning = false;
+                }
+            }
+
+            function setMyRequestsUnreadUI(hasUnread) {
+                const jhDot = document.getElementById('jhUnreadDot');
+                const menuDot = document.getElementById('myRequestsUnreadDot');
+                if (jhDot) jhDot.classList.toggle('visible', hasUnread);
+                if (menuDot) menuDot.classList.toggle('visible', hasUnread);
+            }
+
+            async function checkMyRequestsUnread() {
+                const deviceId = getSenderDeviceId();
+                const localUnread = getMyRequestsCache().some(r =>
+                    !r.hiddenByUser && r.isRead === false && (r.status === 'accepted' || r.status === 'approved' || r.status === 'rejected')
+                );
+                if (!navigator.onLine || !isCloudConfigured()) {
+                    setMyRequestsUnreadUI(localUnread);
+                    return;
+                }
+                try {
+                    const docs = await fsRunQuery({
+                        from: [{ collectionId: PENDING_COLLECTION }],
+                        where: {
+                            fieldFilter: {
+                                field: { fieldPath: 'senderDeviceId' },
+                                op: 'EQUAL',
+                                value: { stringValue: deviceId }
+                            }
+                        },
+                        limit: 100
+                    });
+                    let hasUnread = false;
+                    docs.forEach(d => {
+                        const r = d.data;
+                        if (r && r.requestId) {
+                            upsertMyRequestCache(r);
+                            if (!r.hiddenByUser && r.isRead === false && (r.status === 'accepted' || r.status === 'approved' || r.status === 'rejected')) {
+                                hasUnread = true;
+                            }
+                        }
+                    });
+                    setMyRequestsUnreadUI(hasUnread || localUnread);
+                } catch (e) {
+                    setMyRequestsUnreadUI(localUnread);
                 }
             }
 
@@ -3844,12 +4119,92 @@
                         },
                         limit: 100
                     });
-                    const count = docs.length;
+                    const count = docs.filter(d => !d.data || !d.data.hiddenByAdmin).length;
                     badge.textContent = toEnglishDigits(count);
                     badge.classList.toggle('visible', count > 0);
                 } catch (e) {
                     badge.classList.remove('visible');
                 }
+            }
+
+            async function smartCloudSearch(rawQuery, engDigits, isPureDigits) {
+                if (!navigator.onLine || !isCloudConfigured()) return [];
+                const cfg = getCloudConfig();
+                const col = cfg.collectionName;
+
+                async function queryPrefix(field, prefix) {
+                    if (!prefix) return [];
+                    return await fsRunQuery({
+                        from: [{ collectionId: col }],
+                        where: {
+                            compositeFilter: {
+                                op: 'AND',
+                                filters: [
+                                    {
+                                        fieldFilter: {
+                                            field: { fieldPath: field },
+                                            op: 'GREATER_THAN_OR_EQUAL',
+                                            value: { stringValue: prefix }
+                                        }
+                                    },
+                                    {
+                                        fieldFilter: {
+                                            field: { fieldPath: field },
+                                            op: 'LESS_THAN_OR_EQUAL',
+                                            value: { stringValue: prefix + '\uf8ff' }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        orderBy: [{ field: { fieldPath: field }, direction: 'ASCENDING' }],
+                        limit: 10
+                    });
+                }
+
+                let docs = [];
+                if (isPureDigits) {
+                    docs = await queryPrefix('national_id', engDigits);
+                } else {
+                    const cleanName = rawQuery.replace(/\s+/g, ' ').trim();
+                    docs = await queryPrefix('full_name', cleanName);
+                    if (docs.length === 0) {
+                        const altA = cleanName.replace(/^[أإآ]/, 'ا');
+                        const altHamza = cleanName.replace(/^ا/, 'أ');
+                        if (altA !== cleanName) {
+                            docs = await queryPrefix('full_name', altA);
+                        } else if (altHamza !== cleanName) {
+                            docs = await queryPrefix('full_name', altHamza);
+                        }
+                    }
+                }
+
+                if (!docs.length) return [];
+
+                const recordMap = new Map(allRecords.map(p => [p.nationalId, p]));
+                const toCache = [];
+                const matched = [];
+
+                for (const d of docs) {
+                    const personObj = cloudRowToPerson(d.data, d.id);
+                    if (!personObj.fullName || !personObj.nationalId) continue;
+                    const existing = recordMap.get(personObj.nationalId);
+                    if (existing && existing.isLocal) {
+                        matched.push(existing);
+                        continue;
+                    }
+                    toCache.push(personObj);
+                    recordMap.set(personObj.nationalId, personObj);
+                    matched.push(personObj);
+                }
+
+                if (toCache.length > 0) {
+                    await dbSaveMany(toCache);
+                    allRecords = Array.from(recordMap.values());
+                    updateGlobalCounters();
+                }
+
+                return matched;
             }
 
             function initIndexedDB() {
@@ -3981,21 +4336,7 @@
                 });
             }
 
-            const totalPillWrap = document.querySelector('.total-pill');
-            if (totalPillWrap) {
-                totalPillWrap.style.cursor = 'pointer';
-                totalPillWrap.title = 'مزامنة وتفاصيل السجلات';
-                totalPillWrap.addEventListener('click', () => {
-                    if (jhDropdownMenu) {
-                        jhDropdownMenu.classList.remove('open');
-                        if (jhSettingsBtn) {
-                            jhSettingsBtn.classList.remove('active');
-                            jhSettingsBtn.setAttribute('aria-expanded', 'false');
-                        }
-                    }
-                    openSyncModal();
-                });
-            }
+
 
             // -----------------------------------------------------------------
             // G. Search, View Switcher & 20-Per-Page Pagination
@@ -4121,7 +4462,7 @@
                 return 50 + (firstTokenPos > 0 ? Math.min(firstTokenPos, 9) : 0);
             }
 
-            function applySearchAndFilter(resetPage = true, explicitSearch = false) {
+            async function applySearchAndFilter(resetPage = true, explicitSearch = false) {
                 if (resetPage) currentPage = 1;
 
                 const rawQuery = (searchUnifiedInput.value || '').trim();
@@ -4143,34 +4484,55 @@
                 const normQueryName = normalizeArabic(rawQuery);
                 const tokens = normQueryName ? normQueryName.split(' ').filter(Boolean) : [];
 
-                currentFiltered = allRecords.filter(person => {
-                    if (activeFilter === 'local' && !person.isLocal) return false;
-                    if (activeFilter === 'married' && person.maritalStatus !== 'متزوج') return false;
-                    if (activeFilter === 'single' && person.maritalStatus !== 'أعزب') return false;
+                function runLocalFilter() {
+                    return allRecords.filter(person => {
+                        if (activeFilter === 'local' && !person.isLocal) return false;
+                        if (activeFilter === 'married' && person.maritalStatus !== 'متزوج') return false;
+                        if (activeFilter === 'single' && person.maritalStatus !== 'أعزب') return false;
 
-                    if (hasTextQuery) {
-                        if (isPureDigits) {
-                            if (!person.nationalId.includes(engDigits)) return false;
-                        } else {
-                            const targetName = person._normName || normalizeArabic(person.fullName);
-                            let matchesName = tokens.length > 0;
-                            for (let i = 0; i < tokens.length; i++) {
-                                if (!targetName.includes(tokens[i])) {
-                                    matchesName = false;
-                                    break;
+                        if (hasTextQuery) {
+                            if (isPureDigits) {
+                                if (!person.nationalId.includes(engDigits)) return false;
+                            } else {
+                                const targetName = person._normName || normalizeArabic(person.fullName);
+                                let matchesName = tokens.length > 0;
+                                for (let i = 0; i < tokens.length; i++) {
+                                    if (!targetName.includes(tokens[i])) {
+                                        matchesName = false;
+                                        break;
+                                    }
                                 }
-                            }
-                            if (!matchesName) {
-                                if (engDigits.length >= 3 && person.nationalId.includes(engDigits)) {
-                                    // Matched ID portion
-                                } else {
-                                    return false;
+                                if (!matchesName) {
+                                    if (engDigits.length >= 3 && person.nationalId.includes(engDigits)) {
+                                        // Matched ID portion
+                                    } else {
+                                        return false;
+                                    }
                                 }
                             }
                         }
+                        return true;
+                    });
+                }
+
+                currentFiltered = runLocalFilter();
+
+                // البحث السحابي الذكي (limit 10) إذا كانت القاعدة المحلية فارغة أو لم يُعثر على نتائج محلياً
+                if (explicitSearch && currentFiltered.length === 0 && navigator.onLine && isCloudConfigured()) {
+                    try {
+                        resultsToolbar.classList.add('visible');
+                        resultsCountLabel.textContent = 'جاري البحث في السحابة...';
+                        const cloudMatches = await smartCloudSearch(rawQuery, engDigits, isPureDigits);
+                        if (cloudMatches.length > 0) {
+                            currentFiltered = runLocalFilter();
+                            if (currentFiltered.length === 0) {
+                                currentFiltered = cloudMatches;
+                            }
+                        }
+                    } catch (err) {
+                        showToast(err.message || 'تعذر البحث في السحابة');
                     }
-                    return true;
-                });
+                }
 
                 // ترتيب نتائج البحث حسب أولوية تطابق بداية الاسم والتسلسل اللفظي
                 if (!isPureDigits && tokens.length > 0) {
@@ -4206,7 +4568,7 @@
                     paginationBar.classList.remove('visible');
                     emptyStateBox.style.display = 'block';
                     emptyTitle.textContent = 'ابدأ بالبحث في السجل المدني';
-                    emptyDesc.textContent = 'أدخل الاسم أو رقم الهوية في شريط البحث، أو اختر "مزامنة بيانات السجل" من قائمة (JH) لجلب البيانات.';
+                    emptyDesc.textContent = 'أدخل الاسم أو رقم الهوية في شريط البحث للعثور على السجلات المطلوبة.';
                     cardsList.style.display = 'none';
                     tableViewWrap.style.display = 'none';
                     updateBulkBar();
@@ -4459,7 +4821,6 @@
             const formModalTitle = document.getElementById('formModalTitle');
             const formErrorAlert = document.getElementById('formErrorAlert');
             const citizenForm = document.getElementById('citizenForm');
-            const deleteSingleBtn = document.getElementById('deleteSingleBtn');
 
             function showFormAlert(msg) {
                 formErrorAlert.textContent = toEnglishDigits(msg);
@@ -4482,7 +4843,7 @@
                 hideFormAlert();
                 document.getElementById('editingOriginalId').value = '';
                 formModalTitle.textContent = 'إضافة سجل جديد';
-                deleteSingleBtn.classList.remove('visible');
+                document.body.style.overflow = 'hidden';
                 formModalBackdrop.classList.add('visible');
             }
 
@@ -4508,12 +4869,13 @@
                 document.getElementById('inpAddress').value = person.address || '';
                 document.getElementById('inpNotes').value = person.notes || '';
 
-                deleteSingleBtn.classList.add('visible');
+                document.body.style.overflow = 'hidden';
                 formModalBackdrop.classList.add('visible');
             }
 
             function closeFormModal() {
                 formModalBackdrop.classList.remove('visible');
+                document.body.style.overflow = '';
             }
 
             document.getElementById('openAddBtn').addEventListener('click', openAddRecordModal);
@@ -4665,67 +5027,7 @@
                 }
             });
 
-            deleteSingleBtn.addEventListener('click', async () => {
-                const targetId = document.getElementById('editingOriginalId').value.trim();
-                const targetPerson = allRecords.find(p => p.nationalId === targetId);
-                if (!targetPerson) return;
 
-                const ok = await askConfirmation({
-                    title: 'تأكيد حذف السجل',
-                    message: `هل تريد حذف سجل "${targetPerson.fullName}" (هوية: ${targetPerson.nationalId}) نهائياً من الجهاز؟`,
-                    confirmText: 'حذف السجل',
-                    isDanger: true
-                });
-
-                if (!ok) return;
-
-                await dbDeleteIds([targetId]);
-                allRecords = allRecords.filter(p => p.nationalId !== targetId);
-                selectedIds.delete(targetId);
-
-                closeFormModal();
-                updateGlobalCounters();
-                applySearchAndFilter(false, true);
-
-                if (isAdminMode) {
-                    let cloudDeleted = false;
-                    if (navigator.onLine && isCloudConfigured()) {
-                        try {
-                            await cloudDeleteIds([targetId]);
-                            cloudDeleted = true;
-                        } catch (e) {
-                            addPendingDeletes([targetId]);
-                        }
-                    } else if (isCloudConfigured()) {
-                        addPendingDeletes([targetId]);
-                    }
-                    await recordActivityLog({
-                        actionType: 'delete',
-                        nationalId: targetId,
-                        fullName: targetPerson.fullName,
-                        actorRole: 'admin',
-                        summary: 'حذف مباشر من المدير'
-                    });
-                    showToast(cloudDeleted ? 'تم حذف السجل من الجهاز والسحابة' : 'تم حذف السجل محلياً');
-                } else {
-                    const res = await submitPendingRequest({
-                        actionType: 'delete',
-                        nationalId: targetId,
-                        newNationalId: targetId,
-                        fullName: targetPerson.fullName,
-                        beforeData: personToCloudRow(targetPerson),
-                        afterData: null
-                    });
-                    await recordActivityLog({
-                        actionType: 'delete',
-                        nationalId: targetId,
-                        fullName: targetPerson.fullName,
-                        actorRole: 'user',
-                        summary: 'طلب حذف مرسل للمراجعة'
-                    });
-                    showToast(res.sent ? 'تم الحذف محلياً وإرسال طلب الحذف للمدير' : 'تم الحذف محلياً (سيُرسل الطلب عند المزامنة)');
-                }
-            });
 
             document.getElementById('bulkDeleteBtn').addEventListener('click', async () => {
                 const count = selectedIds.size;
@@ -4834,6 +5136,8 @@
                 triggerLandscapePrint(chosen);
             });
 
+
+
             // -----------------------------------------------------------------
             // J. Central Sync Modal, Firebase Firestore Sync & Excel/CSV Import
             // -----------------------------------------------------------------
@@ -4929,8 +5233,7 @@
                 syncModalBackdrop.classList.remove('visible');
             }
 
-            const openSyncBtn = document.getElementById('openSyncBtn');
-            if (openSyncBtn) openSyncBtn.addEventListener('click', openSyncModal);
+
             closeSyncBtn.addEventListener('click', closeSyncModal);
 
             startSyncBtn.addEventListener('click', async () => {
@@ -5029,7 +5332,22 @@
                     let protectedLocal = 0;
                     const toPersist = [];
 
+                    const toDeleteFromCloud = [];
                     for (const item of allRemoteRows) {
+                        const rawId = toEnglishDigits((item.data && item.data.national_id) || item.id || '').replace(/[^\d]/g, '');
+                        if (item.data && item.data.action === 'delete' && rawId) {
+                            const existing = recordMap.get(rawId);
+                            if (existing && existing.isLocal) {
+                                protectedLocal++;
+                                continue;
+                            }
+                            if (existing) {
+                                recordMap.delete(rawId);
+                                toDeleteFromCloud.push(rawId);
+                            }
+                            continue;
+                        }
+
                         const personObj = cloudRowToPerson(item.data, item.id);
                         if (!personObj.fullName || !personObj.nationalId) continue;
 
@@ -5049,11 +5367,16 @@
                         }
                     }
 
+                    if (toDeleteFromCloud.length > 0) {
+                        await dbDeleteIds(toDeleteFromCloud);
+                    }
                     if (toPersist.length > 0) {
                         const dbChunkSize = 2000;
                         for (let i = 0; i < toPersist.length; i += dbChunkSize) {
                             await dbSaveMany(toPersist.slice(i, i + dbChunkSize));
                         }
+                    }
+                    if (toPersist.length > 0 || toDeleteFromCloud.length > 0) {
                         allRecords = Array.from(recordMap.values());
                     }
 
@@ -5090,7 +5413,7 @@
             // J2. Excel / CSV Import & Cloud Upload Engine
             // -----------------------------------------------------------------
             const importModalBackdrop = document.getElementById('importModalBackdrop');
-            const openImportBtn = document.getElementById('openImportBtn');
+
             const closeImportBtn = document.getElementById('closeImportBtn');
             const importDropzone = document.getElementById('importDropzone');
             const importFileInput = document.getElementById('importFileInput');
@@ -5122,7 +5445,7 @@
                 importModalBackdrop.classList.remove('visible');
             }
 
-            if (openImportBtn) openImportBtn.addEventListener('click', openImportModal);
+
             if (closeImportBtn) closeImportBtn.addEventListener('click', closeImportModal);
             if (importDropzone) {
                 importDropzone.addEventListener('click', () => importFileInput.click());
@@ -5352,16 +5675,20 @@
                         let uploadedToCloud = 0;
                         if (navigator.onLine) {
                             importProgressLabel.textContent = 'جاري الرفع إلى Firebase Firestore...';
-                            await cloudUpsertBatch(parsedImportRecords, (done, tot) => {
-                                const pct = Math.min(98, Math.max(10, Math.round((done / tot) * 100)));
-                                importProgressFill.style.width = `${pct}%`;
-                                importProgressLabel.textContent = `جاري الرفع للسحابة: ${toEnglishDigits(done)} / ${toEnglishDigits(tot)}`;
-                            });
-                            parsedImportRecords.forEach(p => { p.isLocal = false; });
-                            for (let i = 0; i < total; i += dbChunkSize) {
-                                await dbSaveMany(parsedImportRecords.slice(i, i + dbChunkSize));
-                            }
-                            uploadedToCloud = total;
+                            await cloudUpsertBatch(
+                                parsedImportRecords,
+                                (done, tot) => {
+                                    const pct = Math.min(98, Math.max(10, Math.round((done / tot) * 100)));
+                                    importProgressFill.style.width = `${pct}%`;
+                                    importProgressLabel.textContent = `جاري الرفع للسحابة: ${toEnglishDigits(done)} / ${toEnglishDigits(tot)}`;
+                                },
+                                async (committedChunk) => {
+                                    committedChunk.forEach(p => { p.isLocal = false; });
+                                    await dbSaveMany(committedChunk);
+                                    uploadedToCloud += committedChunk.length;
+                                }
+                            );
+                            setLastSyncTime(new Date().toISOString());
                         }
 
                         importProgressFill.style.width = '100%';
@@ -5408,7 +5735,7 @@
             const saveNewAdminPassBtn = document.getElementById('saveNewAdminPassBtn');
             const closeAdminPassBtn = document.getElementById('closeAdminPassBtn');
 
-            const adminPullCloudBtn = document.getElementById('adminPullCloudBtn');
+
             const exportDocsBtn = document.getElementById('exportDocsBtn');
             const changeAdminPassBtn = document.getElementById('changeAdminPassBtn');
             const exitAdminModeBtn = document.getElementById('exitAdminModeBtn');
@@ -5424,6 +5751,8 @@
             function setAdminMode(enabled) {
                 isAdminMode = Boolean(enabled);
                 document.body.classList.toggle('is-admin', isAdminMode);
+                const lbl = document.getElementById('openMyRequestsBtnLabel');
+                if (lbl) lbl.textContent = isAdminMode ? 'الطلبات' : 'طلباتي';
             }
 
             // Always start in normal User Mode on page load
@@ -5485,11 +5814,16 @@
                 });
             }
 
+            const headerExitAdminBtn = document.getElementById('headerExitAdminBtn');
+            function handleExitAdminMode() {
+                setAdminMode(false);
+                showToast('تم العودة إلى واجهة المستخدم العادي');
+            }
             if (exitAdminModeBtn) {
-                exitAdminModeBtn.addEventListener('click', () => {
-                    setAdminMode(false);
-                    showToast('تم العودة إلى واجهة المستخدم العادي');
-                });
+                exitAdminModeBtn.addEventListener('click', handleExitAdminMode);
+            }
+            if (headerExitAdminBtn) {
+                headerExitAdminBtn.addEventListener('click', handleExitAdminMode);
             }
 
             if (changeAdminPassBtn) {
@@ -5522,12 +5856,7 @@
                 });
             }
 
-            if (adminPullCloudBtn) {
-                adminPullCloudBtn.addEventListener('click', () => {
-                    openSyncModal();
-                    if (cloudConfigFields) cloudConfigFields.classList.add('open');
-                });
-            }
+
 
             if (exportDocsBtn) {
                 exportDocsBtn.addEventListener('click', async () => {
@@ -5609,11 +5938,17 @@
             // -----------------------------------------------------------------
             // J4. Admin Approvals Screen (Maker-Checker) & Permanent Audit Log
             // -----------------------------------------------------------------
-            const openApprovalsBtn = document.getElementById('openApprovalsBtn');
             const approvalsModalBackdrop = document.getElementById('approvalsModalBackdrop');
             const approvalsListBox = document.getElementById('approvalsListBox');
+            const approvalsStatusFilter = document.getElementById('approvalsStatusFilter');
             const refreshApprovalsBtn = document.getElementById('refreshApprovalsBtn');
             const closeApprovalsBtn = document.getElementById('closeApprovalsBtn');
+
+            const openMyRequestsBtn = document.getElementById('openMyRequestsBtn');
+            const myRequestsModalBackdrop = document.getElementById('myRequestsModalBackdrop');
+            const myRequestsListBox = document.getElementById('myRequestsListBox');
+            const refreshMyRequestsBtn = document.getElementById('refreshMyRequestsBtn');
+            const closeMyRequestsBtn = document.getElementById('closeMyRequestsBtn');
 
             const openAuditLogBtn = document.getElementById('openAuditLogBtn');
             const auditLogModalBackdrop = document.getElementById('auditLogModalBackdrop');
@@ -5621,7 +5956,7 @@
             const auditTypeFilter = document.getElementById('auditTypeFilter');
             const auditSearchInput = document.getElementById('auditSearchInput');
             const refreshAuditBtn = document.getElementById('refreshAuditBtn');
-            const exportAuditCsvBtn = document.getElementById('exportAuditCsvBtn');
+
             const closeAuditLogBtn = document.getElementById('closeAuditLogBtn');
 
             let cachedAuditLogs = [];
@@ -5647,8 +5982,10 @@
                     add: 'طلب إضافة',
                     edit: 'طلب تعديل',
                     delete: 'طلب حذف',
-                    approved: 'اعتماد طلب',
-                    rejected: 'رفض طلب'
+                    pending: 'قيد المراجعة',
+                    accepted: 'مقبول',
+                    approved: 'مقبول',
+                    rejected: 'مرفوض'
                 }[type] || type;
             }
 
@@ -5675,49 +6012,106 @@
                 return '';
             }
 
+            function getStatusLabelAr(st) {
+                if (st === 'accepted' || st === 'approved') return 'مقبول';
+                if (st === 'rejected') return 'مرفوض';
+                return 'قيد المراجعة';
+            }
+
+            function getStatusClass(st) {
+                if (st === 'accepted' || st === 'approved') return 'accepted';
+                if (st === 'rejected') return 'rejected';
+                return 'pending';
+            }
+
             async function loadPendingApprovals() {
-                approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">جاري تحميل الطلبات المعلقة...</div>';
+                approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">جاري تحميل طلبات التعديل...</div>';
                 try {
-                    const docs = await fsRunQuery({
-                        from: [{ collectionId: PENDING_COLLECTION }],
-                        where: {
-                            fieldFilter: {
-                                field: { fieldPath: 'status' },
-                                op: 'EQUAL',
-                                value: { stringValue: 'pending' }
-                            }
-                        },
-                        limit: 200
-                    });
-                    const items = docs.map(d => d.data).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+                    const page = await fsListPage(PENDING_COLLECTION, 300, '');
+                    const filterVal = approvalsStatusFilter ? approvalsStatusFilter.value : 'all';
+                    let items = (page.docs || [])
+                        .map(d => d.data)
+                        .filter(r => r && !r.hiddenByAdmin)
+                        .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+                    if (filterVal !== 'all') {
+                        items = items.filter(r => {
+                            const st = r.status === 'approved' ? 'accepted' : (r.status || 'pending');
+                            return st === filterVal;
+                        });
+                    }
 
                     if (items.length === 0) {
-                        approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات تعديل أو إضافة معلقة حالياً.</div>';
+                        approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات مطابقة حالياً.</div>';
                         return;
                     }
 
                     approvalsListBox.innerHTML = '';
                     items.forEach(req => {
+                        const st = req.status === 'approved' ? 'accepted' : (req.status || 'pending');
                         const card = document.createElement('div');
                         card.className = 'req-card';
                         const dateStr = toEnglishDigits((req.createdAt || '').replace('T', ' ').slice(0, 16));
+                        const initialNote = req.adminNote ? req.adminNote : 'تم مراجعة الطلب';
+
                         card.innerHTML = `
                             <div class="req-card-head">
-                                <div>
+                                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                                     <span class="req-type-tag ${escapeHtml(req.actionType)}">${escapeHtml(formatActionLabel(req.actionType))}</span>
-                                    <strong style="margin-right:6px;font-size:13.5px;">${escapeHtml(req.fullName || '')}</strong>
+                                    <span class="req-type-tag ${escapeHtml(getStatusClass(st))}">${escapeHtml(getStatusLabelAr(st))}</span>
+                                    <strong style="font-size:13.5px;">${escapeHtml(req.fullName || '')}</strong>
                                 </div>
                                 <span class="req-meta">هوية: ${escapeHtml(toEnglishDigits(req.newNationalId || req.nationalId))} | ${escapeHtml(dateStr)}</span>
                             </div>
                             <div class="req-diff-list">${buildDiffHtml(req)}</div>
+                            <textarea class="admin-note-textarea" placeholder="رسالة توضيح أو شكر للمستخدم...">${escapeHtml(initialNote)}</textarea>
                             <div class="req-actions">
-                                <button type="button" class="btn-approve-req" data-req-id="${escapeHtml(req.requestId)}">قبول واعتماد</button>
-                                <button type="button" class="btn-reject-req" data-req-id="${escapeHtml(req.requestId)}">رفض الطلب</button>
+                                <button type="button" class="btn-approve-req">قبول الطلب</button>
+                                <button type="button" class="btn-reject-req">رفض الطلب</button>
+                                <button type="button" class="btn-neutral-req btn-admin-archive-del">حذف</button>
                             </div>
                         `;
 
-                        card.querySelector('.btn-approve-req').addEventListener('click', () => handleApprovalDecision(req, true, card));
-                        card.querySelector('.btn-reject-req').addEventListener('click', () => handleApprovalDecision(req, false, card));
+                        const noteEl = card.querySelector('.admin-note-textarea');
+                        card.querySelector('.btn-approve-req').addEventListener('click', () => {
+                            const currentTxt = (noteEl.value || '').trim();
+                            if (!currentTxt || currentTxt === 'تم مراجعة الطلب' || currentTxt === 'البيانات المرسلة لم تكن مؤكدة') {
+                                noteEl.value = 'تم قبول الطلب';
+                            }
+                            handleApprovalDecision(req, true, noteEl.value.trim(), card);
+                        });
+                        card.querySelector('.btn-reject-req').addEventListener('click', () => {
+                            const currentTxt = (noteEl.value || '').trim();
+                            if (!currentTxt || currentTxt === 'تم مراجعة الطلب' || currentTxt === 'تم قبول الطلب') {
+                                noteEl.value = 'البيانات المرسلة لم تكن مؤكدة';
+                            }
+                            handleApprovalDecision(req, false, noteEl.value.trim(), card);
+                        });
+
+                        card.querySelector('.btn-admin-archive-del').addEventListener('click', async () => {
+                            const ok = await askConfirmation({
+                                title: 'حذف من سجل المدير',
+                                message: `هل تريد إزالة طلب "${req.fullName || ''}" من قائمة المدير؟ (سيبقى محفوظاً لدى المستخدم في قسم طلباتي)`,
+                                confirmText: 'حذف من سجل المدير',
+                                isDanger: true
+                            });
+                            if (!ok) return;
+                            try {
+                                await fsSetDoc(PENDING_COLLECTION, req.requestId, {
+                                    ...req,
+                                    hiddenByAdmin: true
+                                });
+                                card.remove();
+                                refreshPendingBadgeCount();
+                                if (!approvalsListBox.children.length) {
+                                    approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات مطابقة حالياً.</div>';
+                                }
+                                showToast('تم حذف الطلب من سجل المدير');
+                            } catch (err) {
+                                showToast(err.message || 'تعذر الحذف من السحابة');
+                            }
+                        });
+
                         approvalsListBox.appendChild(card);
                     });
                 } catch (err) {
@@ -5725,24 +6119,43 @@
                 }
             }
 
-            async function handleApprovalDecision(req, approve, cardEl) {
+            async function handleApprovalDecision(req, approve, adminNoteText, cardEl) {
+                const ok = await askConfirmation({
+                    title: approve ? 'تأكيد قبول الطلب' : 'تأكيد رفض الطلب',
+                    message: `${approve ? 'سيتم اعتماد التعديلات في قاعدة البيانات' : 'سيتم رفض الطلب دون تعديل السجل'} وإرسال الرسالة للمستخدم: "${adminNoteText}"`,
+                    confirmText: approve ? 'قبول الطلب' : 'رفض الطلب',
+                    isDanger: !approve
+                });
+                if (!ok) return;
+
                 try {
                     const cfg = getCloudConfig();
                     const targetId = toEnglishDigits(req.nationalId || '').replace(/[^\d]/g, '');
                     const newId = toEnglishDigits(req.newNationalId || req.nationalId || '').replace(/[^\d]/g, '');
 
                     if (approve) {
+                        const nowIso = new Date().toISOString();
                         if (req.actionType === 'delete') {
-                            if (targetId) await fsDeleteDoc(cfg.collectionName, targetId);
+                            if (targetId) {
+                                await fsSetDoc(cfg.collectionName, targetId, {
+                                    national_id: targetId,
+                                    action: 'delete',
+                                    updated_at: nowIso
+                                });
+                            }
                             await dbDeleteIds([targetId]);
                             allRecords = allRecords.filter(p => p.nationalId !== targetId);
                         } else if (req.afterData) {
                             if (req.actionType === 'edit' && targetId && newId && targetId !== newId) {
-                                await fsDeleteDoc(cfg.collectionName, targetId);
+                                await fsSetDoc(cfg.collectionName, targetId, {
+                                    national_id: targetId,
+                                    action: 'delete',
+                                    updated_at: nowIso
+                                });
                                 await dbDeleteIds([targetId]);
                                 allRecords = allRecords.filter(p => p.nationalId !== targetId);
                             }
-                            const updatedPayload = { ...req.afterData, updated_at: new Date().toISOString() };
+                            const updatedPayload = { ...req.afterData, action: 'upsert', updated_at: nowIso };
                             await fsSetDoc(cfg.collectionName, newId, updatedPayload);
                             const personObj = cloudRowToPerson(updatedPayload, newId);
                             await dbSaveOne(personObj);
@@ -5754,7 +6167,9 @@
 
                     await fsSetDoc(PENDING_COLLECTION, req.requestId, {
                         ...req,
-                        status: approve ? 'approved' : 'rejected',
+                        status: approve ? 'accepted' : 'rejected',
+                        adminNote: adminNoteText || (approve ? 'تم قبول الطلب' : 'البيانات المرسلة لم تكن مؤكدة'),
+                        isRead: false,
                         reviewedAt: new Date().toISOString()
                     });
                     refreshPendingBadgeCount();
@@ -5764,29 +6179,176 @@
                         nationalId: newId || targetId,
                         fullName: req.fullName,
                         actorRole: 'admin',
-                        summary: `${approve ? 'تم قبول' : 'تم رفض'} ${formatActionLabel(req.actionType)}`
+                        summary: `${approve ? 'تم قبول' : 'تم رفض'} ${formatActionLabel(req.actionType)}: ${adminNoteText}`
                     });
 
-                    cardEl.remove();
                     updateGlobalCounters();
                     applySearchAndFilter(false, activeFilter !== 'all' || searchUnifiedInput.value.trim() !== '');
-                    if (!approvalsListBox.children.length) {
-                        approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات معلقة حالياً.</div>';
-                    }
-                    showToast(approve ? 'تم اعتماد الطلب وتحديث قاعدة البيانات' : 'تم رفض الطلب');
+                    await loadPendingApprovals();
+                    showToast(approve ? 'تم قبول الطلب واعتماد البيانات' : 'تم رفض الطلب وحفظ التوضيح');
                 } catch (err) {
                     showToast(err.message || 'تعذر تنفيذ القرار');
                 }
             }
 
-            if (openApprovalsBtn) {
-                openApprovalsBtn.addEventListener('click', () => {
-                    approvalsModalBackdrop.classList.add('visible');
-                    loadPendingApprovals();
+            function closeApprovalsModal() {
+                approvalsModalBackdrop.classList.remove('visible');
+                document.body.style.overflow = '';
+            }
+
+
+            if (approvalsStatusFilter) approvalsStatusFilter.addEventListener('change', loadPendingApprovals);
+            if (refreshApprovalsBtn) refreshApprovalsBtn.addEventListener('click', loadPendingApprovals);
+            if (closeApprovalsBtn) closeApprovalsBtn.addEventListener('click', closeApprovalsModal);
+
+            // ---- User "طلباتي" Modal ----
+            function openEditModalFromRequest(req) {
+                const d = req.afterData || req.beforeData || {};
+                hideFormAlert();
+                const natId = toEnglishDigits(d.national_id || req.newNationalId || req.nationalId || '').replace(/[^\d]/g, '');
+                document.getElementById('editingOriginalId').value = natId;
+                formModalTitle.textContent = 'تعديل الطلب';
+                document.getElementById('inpFullName').value = d.full_name || req.fullName || '';
+                document.getElementById('inpNationalId').value = natId;
+                document.getElementById('inpGender').value = d.gender || 'ذكر';
+                document.getElementById('inpBirthDate').value = toEnglishDigits(d.birth_date || '');
+                document.getElementById('inpMaritalStatus').value = d.marital_status || 'أعزب';
+                document.getElementById('inpFamilyCount').value = toEnglishDigits(d.family_count !== undefined && d.family_count !== null ? String(d.family_count) : '0');
+                document.getElementById('inpMotherName').value = d.mother_name || '';
+                document.getElementById('inpWifeName').value = d.wife_name || '';
+                document.getElementById('inpWifeNationalId').value = toEnglishDigits(d.wife_national_id || '');
+                document.getElementById('inpMobile').value = toEnglishDigits(d.mobile || '');
+                document.getElementById('inpAltPhone').value = toEnglishDigits(d.alt_phone || '');
+                document.getElementById('inpAddress').value = d.address || '';
+                document.getElementById('inpNotes').value = d.notes || '';
+                document.body.style.overflow = 'hidden';
+                formModalBackdrop.classList.add('visible');
+            }
+
+            async function loadMyRequests() {
+                myRequestsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">جاري تحميل طلباتك...</div>';
+                const deviceId = getSenderDeviceId();
+                const mergedMap = new Map();
+                getMyRequestsCache().forEach(r => {
+                    if (r && r.requestId) mergedMap.set(r.requestId, r);
+                });
+
+                if (navigator.onLine && isCloudConfigured()) {
+                    try {
+                        const docs = await fsRunQuery({
+                            from: [{ collectionId: PENDING_COLLECTION }],
+                            where: {
+                                fieldFilter: {
+                                    field: { fieldPath: 'senderDeviceId' },
+                                    op: 'EQUAL',
+                                    value: { stringValue: deviceId }
+                                }
+                            },
+                            limit: 200
+                        });
+                        for (const d of docs) {
+                            const r = d.data;
+                            if (!r || !r.requestId) continue;
+                            if (r.isRead === false && (r.status === 'accepted' || r.status === 'approved' || r.status === 'rejected')) {
+                                r.isRead = true;
+                                fsSetDoc(PENDING_COLLECTION, r.requestId, r).catch(() => {});
+                            }
+                            mergedMap.set(r.requestId, r);
+                        }
+                    } catch (e) {}
+                }
+
+                const allMine = Array.from(mergedMap.values());
+                saveMyRequestsCache(allMine);
+                setMyRequestsUnreadUI(false);
+
+                const visibleItems = allMine
+                    .filter(r => !r.hiddenByUser)
+                    .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+                if (visibleItems.length === 0) {
+                    myRequestsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لم تقم بإرسال أي طلبات من هذا الجهاز بعد.</div>';
+                    return;
+                }
+
+                myRequestsListBox.innerHTML = '';
+                visibleItems.forEach(req => {
+                    const st = req.status === 'approved' ? 'accepted' : (req.status || 'pending');
+                    const d = req.afterData || req.beforeData || {};
+                    const dateStr = toEnglishDigits((req.createdAt || '').replace('T', ' ').slice(0, 16).replace('T', ' '));
+                    const card = document.createElement('div');
+                    card.className = 'req-card';
+                    card.innerHTML = `
+                        <div class="req-card-head">
+                            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                                <span class="req-type-tag ${escapeHtml(getStatusClass(st))}">${escapeHtml(getStatusLabelAr(st))}</span>
+                                <span class="req-type-tag ${escapeHtml(req.actionType)}">${escapeHtml(formatActionLabel(req.actionType))}</span>
+                                <strong style="font-size:13.5px;">${escapeHtml(req.fullName || d.full_name || '')}</strong>
+                            </div>
+                            <span class="req-meta">هوية: ${escapeHtml(toEnglishDigits(req.newNationalId || req.nationalId || d.national_id || ''))} | ${escapeHtml(dateStr)}</span>
+                        </div>
+                        <div class="req-diff-list">
+                            <div>الجوال: ${escapeHtml(toEnglishDigits(d.mobile || '-'))} | الأفراد: ${escapeHtml(toEnglishDigits(d.family_count !== undefined && d.family_count !== null ? String(d.family_count) : '0'))} | الحالة: ${escapeHtml(d.marital_status || '-')}</div>
+                            ${d.address ? `<div>العنوان: ${escapeHtml(d.address)}</div>` : ''}
+                        </div>
+                        ${req.adminNote ? `<div class="req-admin-note-box"><b>رد الإدارة:</b> ${escapeHtml(req.adminNote)}</div>` : ''}
+                        <div class="req-actions">
+                            ${st === 'accepted' ? `<button type="button" class="btn-approve-req btn-edit-accepted-req">تعديل الطلب</button>` : ''}
+                            <button type="button" class="btn-reject-req btn-delete-my-req">حذف</button>
+                        </div>
+                    `;
+
+                    const editBtn = card.querySelector('.btn-edit-accepted-req');
+                    if (editBtn) {
+                        editBtn.addEventListener('click', () => {
+                            closeMyRequestsModal();
+                            openEditModalFromRequest(req);
+                        });
+                    }
+
+                    card.querySelector('.btn-delete-my-req').addEventListener('click', async () => {
+                        const ok = await askConfirmation({
+                            title: 'حذف الطلب من قائمتي',
+                            message: `هل تريد حذف طلب "${req.fullName || ''}" من قائمة طلباتك؟`,
+                            confirmText: 'حذف',
+                            isDanger: true
+                        });
+                        if (!ok) return;
+                        req.hiddenByUser = true;
+                        upsertMyRequestCache(req);
+                        if (navigator.onLine && isCloudConfigured()) {
+                            fsSetDoc(PENDING_COLLECTION, req.requestId, req).catch(() => {});
+                        }
+                        card.remove();
+                        if (!myRequestsListBox.children.length) {
+                            myRequestsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لم تقم بإرسال أي طلبات من هذا الجهاز بعد.</div>';
+                        }
+                        showToast('تم حذف الطلب من قائمتك');
+                    });
+
+                    myRequestsListBox.appendChild(card);
                 });
             }
-            if (refreshApprovalsBtn) refreshApprovalsBtn.addEventListener('click', loadPendingApprovals);
-            if (closeApprovalsBtn) closeApprovalsBtn.addEventListener('click', () => approvalsModalBackdrop.classList.remove('visible'));
+
+            function closeMyRequestsModal() {
+                myRequestsModalBackdrop.classList.remove('visible');
+                document.body.style.overflow = '';
+            }
+
+            if (openMyRequestsBtn) {
+                openMyRequestsBtn.addEventListener('click', () => {
+                    document.body.style.overflow = 'hidden';
+                    if (isAdminMode) {
+                        approvalsModalBackdrop.classList.add('visible');
+                        loadPendingApprovals();
+                    } else {
+                        myRequestsModalBackdrop.classList.add('visible');
+                        loadMyRequests();
+                    }
+                });
+            }
+            if (refreshMyRequestsBtn) refreshMyRequestsBtn.addEventListener('click', loadMyRequests);
+            if (closeMyRequestsBtn) closeMyRequestsBtn.addEventListener('click', closeMyRequestsModal);
 
             function renderAuditLogs() {
                 const typeVal = auditTypeFilter ? auditTypeFilter.value : 'all';
@@ -5855,36 +6417,7 @@
             if (auditTypeFilter) auditTypeFilter.addEventListener('change', renderAuditLogs);
             if (auditSearchInput) auditSearchInput.addEventListener('input', renderAuditLogs);
 
-            if (exportAuditCsvBtn) {
-                exportAuditCsvBtn.addEventListener('click', () => {
-                    if (!cachedAuditLogs.length) {
-                        showToast('لا توجد حركات لتصديرها');
-                        return;
-                    }
-                    const esc = v => '"' + String(v || '').replace(/"/g, '""') + '"';
-                    const lines = [['التاريخ', 'نوع الحركة', 'المنفذ', 'الاسم', 'رقم الهوية', 'التفاصيل'].map(esc).join(',')];
-                    cachedAuditLogs.forEach(l => {
-                        lines.push([
-                            toEnglishDigits(l.createdAt || ''),
-                            formatActionLabel(l.actionType),
-                            l.actorRole === 'admin' ? 'مدير' : 'مستخدم',
-                            l.fullName || '',
-                            toEnglishDigits(l.nationalId || ''),
-                            l.summary || ''
-                        ].map(esc).join(','));
-                    });
-                    const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `تقرير_الحركات_${toEnglishDigits(new Date().toISOString().slice(0, 10))}.csv`;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    URL.revokeObjectURL(url);
-                    showToast('تم تصدير تقرير الحركات بنجاح');
-                });
-            }
+
 
             // -----------------------------------------------------------------
             // K. Mobile Navigation & Smart Back Button Trap
@@ -5942,7 +6475,12 @@
                 }
                 if (approvalsModalBackdrop && approvalsModalBackdrop.classList.contains('visible')) {
                     pushNavigationTrap();
-                    approvalsModalBackdrop.classList.remove('visible');
+                    closeApprovalsModal();
+                    return;
+                }
+                if (myRequestsModalBackdrop && myRequestsModalBackdrop.classList.contains('visible')) {
+                    pushNavigationTrap();
+                    closeMyRequestsModal();
                     return;
                 }
                 if (auditLogModalBackdrop && auditLogModalBackdrop.classList.contains('visible')) {
@@ -5998,20 +6536,44 @@
                     initNavigationTrap();
                     await initIndexedDB();
                     await migrateFromLocalStorage();
-                    const stored = await dbFetchAll();
+                    let stored = await dbFetchAll();
+
+                    // استيراد تلقائي وصامت من data.js عند أول فتح (IndexedDB فارغة)
+                    if (stored.length === 0 && Array.isArray(window.INITIAL_CIVIL_DATA) && window.INITIAL_CIVIL_DATA.length > 0) {
+                        const initialItems = window.INITIAL_CIVIL_DATA
+                            .filter(item => item && item.fullName && item.nationalId)
+                            .map(item => ({
+                                ...item,
+                                nationalId: toEnglishDigits(item.nationalId).replace(/[^\d]/g, ''),
+                                wifeNationalId: toEnglishDigits(item.wifeNationalId || '').replace(/[^\d]/g, ''),
+                                familyCount: toEnglishDigits(item.familyCount || '0') || '0',
+                                mobile: toEnglishDigits(item.mobile || ''),
+                                altPhone: toEnglishDigits(item.altPhone || ''),
+                                isLocal: false,
+                                _normName: normalizeArabic(item.fullName)
+                            }));
+
+                        const chunkSize = 2000;
+                        for (let i = 0; i < initialItems.length; i += chunkSize) {
+                            await dbSaveMany(initialItems.slice(i, i + chunkSize));
+                        }
+                        stored = initialItems;
+                    }
+
                     allRecords = stored.map(item => ({
                         ...item,
                         nationalId: toEnglishDigits(item.nationalId),
                         _normName: item._normName || normalizeArabic(item.fullName)
                     }));
                     updateGlobalCounters();
-                    quickDeltaSync(true);
-                    setInterval(() => {
-                        if (document.visibilityState === 'visible') {
-                            quickDeltaSync(true);
-                            if (isAdminMode) refreshPendingBadgeCount();
-                        }
-                    }, 45000);
+
+                    getSenderDeviceId();
+                    checkMyRequestsUnread();
+
+                    // مزامنة التغييرات من مجموعة civil_updates فقط عند توفر الإنترنت
+                    if (navigator.onLine && isCloudConfigured()) {
+                        quickDeltaSync(true);
+                    }
                 } catch (err) {
                     showToast('تعذر فتح قاعدة البيانات المحلية');
                 }
