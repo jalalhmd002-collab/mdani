@@ -77,17 +77,17 @@
         }
 
         [data-theme="dark"] {
-            /* CYBER-TELEMETRY & BLUEPRINT IDENTITY (DARK MODE) */
-            --bg-canvas: #080E1A;
-            --surface-card: #0D1526;
-            --surface-elevated: #111C33;
-            --surface-subtle: #0B1220;
-            --surface-input: #0A111F;
-            --surface-hover: #13203A;
+            /* CYBER-TELEMETRY & BLUEPRINT IDENTITY (DARK MODE - BALANCED SLATE NAVY) */
+            --bg-canvas: #0F172A;
+            --surface-card: #1E293B;
+            --surface-elevated: #263449;
+            --surface-subtle: #162032;
+            --surface-input: #0F172A;
+            --surface-hover: #273549;
 
-            --border-ink: rgba(56, 189, 248, 0.32);
-            --border-subtle: rgba(56, 189, 248, 0.18);
-            --border-strong: rgba(56, 189, 248, 0.38);
+            --border-ink: rgba(56, 189, 248, 0.36);
+            --border-subtle: rgba(56, 189, 248, 0.24);
+            --border-strong: rgba(56, 189, 248, 0.44);
             --border-focus: #38BDF8;
 
             --brand-primary: #38BDF8;
@@ -206,7 +206,7 @@
         }
 
         [data-theme="dark"] .glass-header {
-            background: rgba(13, 21, 38, 0.88);
+            background: rgba(30, 41, 59, 0.92);
             border-color: var(--border-subtle);
             box-shadow: var(--shadow-sm);
         }
@@ -1996,11 +1996,13 @@
 
         .sync-stat-tile.danger .val { color: var(--danger); }
 
-        #requestsReportListBox {
+        #requestsReportListBox,
+        #myRequestsReportListBox {
             gap: 12px;
         }
 
-        #requestsReportListBox .req-card {
+        #requestsReportListBox .req-card,
+        #myRequestsReportListBox .req-card {
             background: var(--surface-card);
             border: 1.5px solid var(--border-strong);
             border-right: 4px solid var(--brand-primary);
@@ -2008,7 +2010,8 @@
             padding: 14px 16px;
         }
 
-        [data-theme="dark"] #requestsReportListBox .req-card {
+        [data-theme="dark"] #requestsReportListBox .req-card,
+        [data-theme="dark"] #myRequestsReportListBox .req-card {
             background: var(--surface-elevated);
             border-color: var(--border-strong);
             border-right: 4px solid var(--brand-primary);
@@ -2241,13 +2244,39 @@
             display: none;
             align-items: center;
             gap: 4px;
-            font-size: 11px;
+            font-size: 11.5px;
             font-weight: 600;
             color: var(--brand-primary);
-            border: 1px solid var(--brand-primary-tint);
-            background: var(--brand-primary-soft);
-            padding: 1px 8px;
-            border-radius: var(--radius-full);
+            border: none;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        .btn-dot-badge {
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #EF4444;
+            border: 1.5px solid var(--surface-card);
+            display: none;
+            pointer-events: none;
+        }
+
+        .btn-dot-badge.visible {
+            display: block;
+        }
+
+        .req-unread-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #EF4444;
+            flex-shrink: 0;
         }
 
         body.is-admin .admin-badge-pill {
@@ -2306,10 +2335,10 @@
 
         .jh-unread-dot {
             position: absolute;
-            top: 5px;
-            left: 5px;
-            width: 9px;
-            height: 9px;
+            top: -2px;
+            left: -2px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: #EF4444;
             border: 1.5px solid var(--surface-card);
@@ -3258,25 +3287,26 @@
     <div id="approvalsModalBackdrop" class="backdrop-overlay center-overlay">
         <div class="dialog-card fullscreen-dialog-card">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap;">
-                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                     <h3 style="margin:0;">الطلبات</h3>
                     <button type="button" id="openRequestsReportBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">سجل وتقارير الطلبات</button>
-                </div>
-                <div style="display:flex;gap:8px;align-items:center;">
                     <button type="button" id="refreshApprovalsBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
                 </div>
+                <button type="button" id="closeApprovalsBtn" class="btn-dialog-cancel" style="flex:0 0 auto;height:34px;padding:0 14px;">إغلاق</button>
             </div>
             <p class="sub" style="margin-bottom:12px;">مراجعة الطلبات المعلقة (قيد المراجعة) الواردة من المستخدمين، مع كتابة رسالة التوضيح واعتمادها أو رفضها.</p>
             <div id="approvalsListBox" class="modal-scroll-list"></div>
-            <button type="button" id="closeApprovalsBtn" class="btn-dialog-cancel" style="width:100%;flex-shrink:0;">إغلاق</button>
         </div>
     </div>
 
     <div id="requestsReportModalBackdrop" class="backdrop-overlay center-overlay">
         <div class="dialog-card fullscreen-dialog-card">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;flex-wrap:wrap;">
-                <h3 style="margin:0;">سجل وتقارير الطلبات</h3>
-                <button type="button" id="refreshRequestsReportBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <h3 style="margin:0;">سجل وتقارير الطلبات</h3>
+                    <button type="button" id="refreshRequestsReportBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
+                </div>
+                <button type="button" id="closeRequestsReportBtn" class="btn-dialog-cancel" style="flex:0 0 auto;height:34px;padding:0 14px;">رجوع</button>
             </div>
             <div class="report-stats-row" style="text-align:center;">
                 <div class="sync-stat-tile">
@@ -3306,19 +3336,61 @@
                 <button type="button" id="applyRequestsReportFilterBtn" class="btn-cloud-test" style="flex:0 0 auto;height:36px;padding:0 16px;">تصفية</button>
             </div>
             <div id="requestsReportListBox" class="modal-scroll-list"></div>
-            <button type="button" id="closeRequestsReportBtn" class="btn-dialog-cancel" style="width:100%;flex-shrink:0;">رجوع</button>
         </div>
     </div>
 
     <div id="myRequestsModalBackdrop" class="backdrop-overlay center-overlay">
         <div class="dialog-card fullscreen-dialog-card">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;">
-                <h3 style="margin:0;">طلباتي</h3>
-                <button type="button" id="refreshMyRequestsBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <h3 style="margin:0;">طلباتي</h3>
+                    <button type="button" id="openMyRequestsReportBtn" class="btn-cloud-test" style="position:relative;flex:0 0 auto;padding:0 12px;"><span>سجل وتقارير طلباتي</span><span id="myRequestsReportUnreadDot" class="btn-dot-badge" aria-hidden="true"></span></button>
+                    <button type="button" id="refreshMyRequestsBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
+                </div>
+                <button type="button" id="closeMyRequestsBtn" class="btn-dialog-cancel" style="flex:0 0 auto;height:34px;padding:0 14px;">إغلاق</button>
             </div>
-            <p class="sub" style="margin-bottom:12px;">سجل جميع الطلبات المرسلة من هذا الجهاز وحالة مراجعتها من الإدارة.</p>
+            <p class="sub" style="margin-bottom:12px;">الطلبات المعلقة (قيد المراجعة) المرسلة من هذا الجهاز قبل رد الإدارة.</p>
             <div id="myRequestsListBox" class="modal-scroll-list"></div>
-            <button type="button" id="closeMyRequestsBtn" class="btn-dialog-cancel" style="width:100%;flex-shrink:0;">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="myRequestsReportModalBackdrop" class="backdrop-overlay center-overlay">
+        <div class="dialog-card fullscreen-dialog-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <h3 style="margin:0;">سجل وتقارير طلباتي</h3>
+                    <button type="button" id="refreshMyRequestsReportBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
+                </div>
+                <button type="button" id="closeMyRequestsReportBtn" class="btn-dialog-cancel" style="flex:0 0 auto;height:34px;padding:0 14px;">رجوع</button>
+            </div>
+            <div class="report-stats-row" style="text-align:center;">
+                <div class="sync-stat-tile">
+                    <div class="lbl">إجمالي الطلبات</div>
+                    <div id="myReportStatTotal" class="val">0</div>
+                </div>
+                <div class="sync-stat-tile teal">
+                    <div class="lbl">المقبولة</div>
+                    <div id="myReportStatAccepted" class="val">0</div>
+                </div>
+                <div class="sync-stat-tile danger">
+                    <div class="lbl">المرفوضة</div>
+                    <div id="myReportStatRejected" class="val">0</div>
+                </div>
+                <div class="sync-stat-tile amber">
+                    <div class="lbl">قيد المراجعة</div>
+                    <div id="myReportStatPending" class="val">0</div>
+                </div>
+            </div>
+            <div class="audit-filter-row" style="align-items:center;">
+                <select id="myRequestsReportStatusFilter">
+                    <option value="all">كل الطلبات</option>
+                    <option value="accepted">تم القبول</option>
+                    <option value="rejected">تم الرفض</option>
+                    <option value="pending">قيد المراجعة</option>
+                </select>
+                <button type="button" id="applyMyRequestsReportFilterBtn" class="btn-cloud-test" style="flex:0 0 auto;height:36px;padding:0 16px;">تصفية</button>
+            </div>
+            <div id="myRequestsReportListBox" class="modal-scroll-list"></div>
         </div>
     </div>
 
@@ -4205,11 +4277,39 @@
                 }
             }
 
-            function setMyRequestsUnreadUI(hasUnread) {
+            const ADMIN_SEEN_REQS_KEY = 'civil_registry_admin_seen_reqs';
+            let userHasUnread = false;
+            let adminHasUnread = false;
+
+            function getAdminSeenIds() {
+                try {
+                    const raw = localStorage.getItem(ADMIN_SEEN_REQS_KEY);
+                    const arr = raw ? JSON.parse(raw) : [];
+                    return new Set(Array.isArray(arr) ? arr : []);
+                } catch (e) {
+                    return new Set();
+                }
+            }
+
+            function saveAdminSeenIds(seenSet) {
+                try {
+                    localStorage.setItem(ADMIN_SEEN_REQS_KEY, JSON.stringify(Array.from(seenSet).slice(-300)));
+                } catch (e) {}
+            }
+
+            function updateRoleUnreadDots() {
                 const jhDot = document.getElementById('jhUnreadDot');
                 const menuDot = document.getElementById('myRequestsUnreadDot');
-                if (jhDot) jhDot.classList.toggle('visible', hasUnread);
-                if (menuDot) menuDot.classList.toggle('visible', hasUnread);
+                const reportBtnDot = document.getElementById('myRequestsReportUnreadDot');
+                const active = isAdminMode ? adminHasUnread : userHasUnread;
+                if (jhDot) jhDot.classList.toggle('visible', active);
+                if (menuDot) menuDot.classList.toggle('visible', active);
+                if (reportBtnDot) reportBtnDot.classList.toggle('visible', !isAdminMode && userHasUnread);
+            }
+
+            function setMyRequestsUnreadUI(hasUnread) {
+                userHasUnread = Boolean(hasUnread);
+                updateRoleUnreadDots();
             }
 
             async function checkMyRequestsUnread() {
@@ -4251,9 +4351,10 @@
 
             async function refreshPendingBadgeCount() {
                 const badge = document.getElementById('pendingApprovalsBadge');
-                if (!badge) return;
-                if (!isAdminMode || !navigator.onLine) {
-                    badge.classList.remove('visible');
+                if (!navigator.onLine || !isCloudConfigured()) {
+                    adminHasUnread = false;
+                    if (badge) badge.classList.remove('visible');
+                    updateRoleUnreadDots();
                     return;
                 }
                 try {
@@ -4268,11 +4369,22 @@
                         },
                         limit: 100
                     });
-                    const count = docs.filter(d => !d.data || !d.data.hiddenByAdmin).length;
-                    badge.textContent = toEnglishDigits(count);
-                    badge.classList.toggle('visible', count > 0);
+                    const pendingDocs = docs.filter(d => !d.data || !d.data.hiddenByAdmin);
+                    const count = pendingDocs.length;
+                    const seenSet = getAdminSeenIds();
+                    adminHasUnread = pendingDocs.some(d => {
+                        const id = (d.data && d.data.requestId) || d.id;
+                        return id && !seenSet.has(id);
+                    });
+                    if (badge) {
+                        badge.textContent = toEnglishDigits(count);
+                        badge.classList.toggle('visible', isAdminMode && count > 0);
+                    }
+                    updateRoleUnreadDots();
                 } catch (e) {
-                    badge.classList.remove('visible');
+                    adminHasUnread = false;
+                    if (badge) badge.classList.remove('visible');
+                    updateRoleUnreadDots();
                 }
             }
 
@@ -5902,6 +6014,7 @@
                 document.body.classList.toggle('is-admin', isAdminMode);
                 const lbl = document.getElementById('openMyRequestsBtnLabel');
                 if (lbl) lbl.textContent = isAdminMode ? 'الطلبات' : 'طلباتي';
+                if (typeof updateRoleUnreadDots === 'function') updateRoleUnreadDots();
             }
 
             // Always start in normal User Mode on page load
@@ -6104,8 +6217,17 @@
             const openMyRequestsBtn = document.getElementById('openMyRequestsBtn');
             const myRequestsModalBackdrop = document.getElementById('myRequestsModalBackdrop');
             const myRequestsListBox = document.getElementById('myRequestsListBox');
+            const openMyRequestsReportBtn = document.getElementById('openMyRequestsReportBtn');
             const refreshMyRequestsBtn = document.getElementById('refreshMyRequestsBtn');
             const closeMyRequestsBtn = document.getElementById('closeMyRequestsBtn');
+
+            const myRequestsReportModalBackdrop = document.getElementById('myRequestsReportModalBackdrop');
+            const myRequestsReportStatusFilter = document.getElementById('myRequestsReportStatusFilter');
+            const applyMyRequestsReportFilterBtn = document.getElementById('applyMyRequestsReportFilterBtn');
+            const refreshMyRequestsReportBtn = document.getElementById('refreshMyRequestsReportBtn');
+            const myRequestsReportListBox = document.getElementById('myRequestsReportListBox');
+            const closeMyRequestsReportBtn = document.getElementById('closeMyRequestsReportBtn');
+            let cachedAllMyRequests = [];
 
             const openAuditLogBtn = document.getElementById('openAuditLogBtn');
             const auditLogModalBackdrop = document.getElementById('auditLogModalBackdrop');
@@ -6194,7 +6316,16 @@
                         })
                         .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
+                    const badge = document.getElementById('pendingApprovalsBadge');
+                    if (badge) {
+                        badge.textContent = toEnglishDigits(items.length);
+                        badge.classList.toggle('visible', isAdminMode && items.length > 0);
+                    }
+                    const seenSet = getAdminSeenIds();
+
                     if (items.length === 0) {
+                        adminHasUnread = false;
+                        updateRoleUnreadDots();
                         approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات معلقة (قيد المراجعة) حالياً.</div>';
                         return;
                     }
@@ -6202,6 +6333,8 @@
                     approvalsListBox.innerHTML = '';
                     items.forEach(req => {
                         const st = req.status === 'approved' ? 'accepted' : (req.status || 'pending');
+                        const isNewAdminReq = req.requestId && !seenSet.has(req.requestId);
+                        if (req.requestId) seenSet.add(req.requestId);
                         const card = document.createElement('div');
                         card.className = 'req-card';
                         const dateStr = toEnglishDigits((req.createdAt || '').replace('T', ' ').slice(0, 16));
@@ -6211,6 +6344,7 @@
                         card.innerHTML = `
                             <div class="req-card-head">
                                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                                    ${isNewAdminReq ? '<span class="req-unread-dot" title="طلب جديد"></span>' : ''}
                                     <span class="req-type-tag ${escapeHtml(req.actionType)}">${escapeHtml(formatActionLabel(req.actionType))}</span>
                                     <span class="req-type-tag req-status-badge ${escapeHtml(getStatusClass(st))}">${escapeHtml(getStatusLabelAr(st))}</span>
                                     <strong style="font-size:13.5px;">${escapeHtml(req.fullName || '')}</strong>
@@ -6247,6 +6381,9 @@
 
                         approvalsListBox.appendChild(card);
                     });
+                    saveAdminSeenIds(seenSet);
+                    adminHasUnread = false;
+                    updateRoleUnreadDots();
                 } catch (err) {
                     approvalsListBox.innerHTML = `<div class="req-meta" style="color:var(--danger);text-align:center;padding:16px;">${escapeHtml(err.message || 'تعذر جلب الطلبات.')}</div>`;
                 }
@@ -6500,10 +6637,6 @@
                         for (const d of docs) {
                             const r = d.data;
                             if (!r || !r.requestId) continue;
-                            if (r.isRead === false && (r.status === 'accepted' || r.status === 'approved' || r.status === 'rejected')) {
-                                r.isRead = true;
-                                fsSetDoc(PENDING_COLLECTION, r.requestId, r).catch(() => {});
-                            }
                             mergedMap.set(r.requestId, r);
                         }
                     } catch (e) {}
@@ -6511,28 +6644,35 @@
 
                 const allMine = Array.from(mergedMap.values());
                 saveMyRequestsCache(allMine);
-                setMyRequestsUnreadUI(false);
+                cachedAllMyRequests = allMine;
+                const hasUnreadReplies = allMine.some(r =>
+                    !r.hiddenByUser && r.isRead === false && (r.status === 'accepted' || r.status === 'approved' || r.status === 'rejected')
+                );
+                setMyRequestsUnreadUI(hasUnreadReplies);
 
                 const visibleItems = allMine
-                    .filter(r => !r.hiddenByUser)
+                    .filter(r => {
+                        if (!r || r.hiddenByUser) return false;
+                        const st = r.status === 'approved' ? 'accepted' : (r.status || 'pending');
+                        return st === 'pending';
+                    })
                     .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
                 if (visibleItems.length === 0) {
-                    myRequestsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لم تقم بإرسال أي طلبات من هذا الجهاز بعد.</div>';
+                    myRequestsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات معلقة (قيد المراجعة) حالياً.</div>';
                     return;
                 }
 
                 myRequestsListBox.innerHTML = '';
                 visibleItems.forEach(req => {
-                    const st = req.status === 'approved' ? 'accepted' : (req.status || 'pending');
                     const d = req.afterData || req.beforeData || {};
-                    const dateStr = toEnglishDigits((req.createdAt || '').replace('T', ' ').slice(0, 16).replace('T', ' '));
+                    const dateStr = toEnglishDigits((req.createdAt || '').replace('T', ' ').slice(0, 16));
                     const card = document.createElement('div');
                     card.className = 'req-card';
                     card.innerHTML = `
                         <div class="req-card-head">
                             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-                                <span class="req-type-tag ${escapeHtml(getStatusClass(st))}">${escapeHtml(getStatusLabelAr(st))}</span>
+                                <span class="req-type-tag pending">قيد المراجعة</span>
                                 <span class="req-type-tag ${escapeHtml(req.actionType)}">${escapeHtml(formatActionLabel(req.actionType))}</span>
                                 <strong style="font-size:13.5px;">${escapeHtml(req.fullName || d.full_name || '')}</strong>
                             </div>
@@ -6542,14 +6682,13 @@
                             <div>الجوال: ${escapeHtml(toEnglishDigits(d.mobile || '-'))} | الأفراد: ${escapeHtml(toEnglishDigits(d.family_count !== undefined && d.family_count !== null ? String(d.family_count) : '0'))} | الحالة: ${escapeHtml(d.marital_status || '-')}</div>
                             ${d.address ? `<div>العنوان: ${escapeHtml(d.address)}</div>` : ''}
                         </div>
-                        ${req.adminNote ? `<div class="req-admin-note-box"><b>رد الإدارة:</b> ${escapeHtml(req.adminNote)}</div>` : ''}
                         <div class="req-actions">
-                            ${st === 'accepted' ? `<button type="button" class="btn-approve-req btn-edit-accepted-req">تعديل الطلب</button>` : ''}
+                            <button type="button" class="btn-approve-req btn-edit-pending-req">تعديل الطلب</button>
                             <button type="button" class="btn-reject-req btn-delete-my-req">حذف</button>
                         </div>
                     `;
 
-                    const editBtn = card.querySelector('.btn-edit-accepted-req');
+                    const editBtn = card.querySelector('.btn-edit-pending-req');
                     if (editBtn) {
                         editBtn.addEventListener('click', () => {
                             closeMyRequestsModal();
@@ -6572,13 +6711,155 @@
                         }
                         card.remove();
                         if (!myRequestsListBox.children.length) {
-                            myRequestsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لم تقم بإرسال أي طلبات من هذا الجهاز بعد.</div>';
+                            myRequestsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات معلقة (قيد المراجعة) حالياً.</div>';
                         }
                         showToast('تم حذف الطلب من قائمتك');
                     });
 
                     myRequestsListBox.appendChild(card);
                 });
+            }
+
+            function renderMyRequestsReport() {
+                if (!myRequestsReportListBox) return;
+                const allItems = cachedAllMyRequests.filter(r => r && !r.hiddenByUser);
+                let acceptedCount = 0;
+                let rejectedCount = 0;
+                let pendingCount = 0;
+
+                allItems.forEach(r => {
+                    const st = r.status === 'approved' ? 'accepted' : (r.status || 'pending');
+                    if (st === 'accepted') acceptedCount++;
+                    else if (st === 'rejected') rejectedCount++;
+                    else pendingCount++;
+                });
+
+                const statTotal = document.getElementById('myReportStatTotal');
+                const statAcc = document.getElementById('myReportStatAccepted');
+                const statRej = document.getElementById('myReportStatRejected');
+                const statPen = document.getElementById('myReportStatPending');
+                if (statTotal) statTotal.textContent = toEnglishDigits(allItems.length);
+                if (statAcc) statAcc.textContent = toEnglishDigits(acceptedCount);
+                if (statRej) statRej.textContent = toEnglishDigits(rejectedCount);
+                if (statPen) statPen.textContent = toEnglishDigits(pendingCount);
+
+                const filterVal = myRequestsReportStatusFilter ? myRequestsReportStatusFilter.value : 'all';
+                const filtered = allItems
+                    .filter(r => {
+                        if (filterVal === 'all') return true;
+                        const st = r.status === 'approved' ? 'accepted' : (r.status || 'pending');
+                        return st === filterVal;
+                    })
+                    .sort((a, b) => ((b.reviewedAt || b.createdAt || '')).localeCompare((a.reviewedAt || a.createdAt || '')));
+
+                if (filtered.length === 0) {
+                    myRequestsReportListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات مطابقة للتصفية الحالية.</div>';
+                    return;
+                }
+
+                myRequestsReportListBox.innerHTML = '';
+                filtered.forEach(req => {
+                    const st = req.status === 'approved' ? 'accepted' : (req.status || 'pending');
+                    const d = req.afterData || req.beforeData || {};
+                    const createdStr = toEnglishDigits((req.createdAt || '').replace('T', ' ').slice(0, 16));
+                    const reviewedStr = req.reviewedAt ? toEnglishDigits(req.reviewedAt.replace('T', ' ').slice(0, 16)) : '';
+                    const dateLine = reviewedStr ? `تاريخ الطلب: ${createdStr} | الرد: ${reviewedStr}` : `تاريخ الطلب: ${createdStr}`;
+
+                    const finalStatusLabel = st === 'accepted' ? 'تم القبول' : (st === 'rejected' ? 'تم الرفض' : 'قيد المراجعة');
+                    const isNewReply = Boolean(req._justViewedUnread || (req.isRead === false && (st === 'accepted' || st === 'rejected')));
+                    const card = document.createElement('div');
+                    card.className = 'req-card';
+                    card.innerHTML = `
+                        <div class="req-card-head">
+                            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                                ${isNewReply ? '<span class="req-unread-dot" title="رد جديد"></span>' : ''}
+                                <span class="req-type-tag ${escapeHtml(getStatusClass(st))}">${escapeHtml(finalStatusLabel)}</span>
+                                <strong style="font-size:13.5px;">${escapeHtml(req.fullName || d.full_name || '')}</strong>
+                            </div>
+                            <span class="req-meta">هوية: ${escapeHtml(toEnglishDigits(req.newNationalId || req.nationalId || d.national_id || ''))} | ${escapeHtml(dateLine)}</span>
+                        </div>
+                        <div class="req-diff-list">
+                            <div>الجوال: ${escapeHtml(toEnglishDigits(d.mobile || '-'))} | الأفراد: ${escapeHtml(toEnglishDigits(d.family_count !== undefined && d.family_count !== null ? String(d.family_count) : '0'))} | الحالة: ${escapeHtml(d.marital_status || '-')}</div>
+                            ${d.address ? `<div>العنوان: ${escapeHtml(d.address)}</div>` : ''}
+                        </div>
+                        ${req.adminNote ? `<div class="req-admin-note-box"><b>رد الإدارة:</b> ${escapeHtml(req.adminNote)}</div>` : ''}
+                    `;
+                    myRequestsReportListBox.appendChild(card);
+                });
+            }
+
+            async function loadMyRequestsReport() {
+                if (!myRequestsReportListBox) return;
+                myRequestsReportListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">جاري تحميل سجل وتقارير طلباتك...</div>';
+                const deviceId = getSenderDeviceId();
+                const mergedMap = new Map();
+                getMyRequestsCache().forEach(r => {
+                    if (r && r.requestId) mergedMap.set(r.requestId, r);
+                });
+
+                if (navigator.onLine && isCloudConfigured()) {
+                    try {
+                        const docs = await fsRunQuery({
+                            from: [{ collectionId: PENDING_COLLECTION }],
+                            where: {
+                                fieldFilter: {
+                                    field: { fieldPath: 'senderDeviceId' },
+                                    op: 'EQUAL',
+                                    value: { stringValue: deviceId }
+                                }
+                            },
+                            limit: 200
+                        });
+                        for (const d of docs) {
+                            const r = d.data;
+                            if (!r || !r.requestId) continue;
+                            mergedMap.set(r.requestId, r);
+                        }
+                    } catch (e) {}
+                }
+
+                const allItems = Array.from(mergedMap.values());
+                allItems.forEach(r => {
+                    if (r && r.isRead === false && (r.status === 'accepted' || r.status === 'approved' || r.status === 'rejected')) {
+                        r._justViewedUnread = true;
+                        r.isRead = true;
+                        const cleanToSave = { ...r };
+                        delete cleanToSave._justViewedUnread;
+                        if (navigator.onLine && isCloudConfigured()) {
+                            fsSetDoc(PENDING_COLLECTION, r.requestId, cleanToSave).catch(() => {});
+                        }
+                    }
+                });
+
+                cachedAllMyRequests = allItems;
+                saveMyRequestsCache(allItems.map(r => {
+                    const c = { ...r };
+                    delete c._justViewedUnread;
+                    return c;
+                }));
+                setMyRequestsUnreadUI(false);
+                renderMyRequestsReport();
+            }
+
+            function openMyRequestsReportModal() {
+                if (!myRequestsReportModalBackdrop) return;
+                if (myRequestsReportStatusFilter) myRequestsReportStatusFilter.value = 'all';
+                document.body.style.overflow = 'hidden';
+                myRequestsReportModalBackdrop.classList.add('visible');
+                loadMyRequestsReport();
+            }
+
+            function closeMyRequestsReportModal() {
+                if (!myRequestsReportModalBackdrop) return;
+                if (myRequestsReportStatusFilter) myRequestsReportStatusFilter.value = 'all';
+                myRequestsReportModalBackdrop.classList.remove('visible');
+                if (myRequestsModalBackdrop) {
+                    myRequestsModalBackdrop.classList.add('visible');
+                    document.body.style.overflow = 'hidden';
+                    loadMyRequests();
+                } else {
+                    document.body.style.overflow = '';
+                }
             }
 
             function closeMyRequestsModal() {
@@ -6598,6 +6879,11 @@
                     }
                 });
             }
+            if (openMyRequestsReportBtn) openMyRequestsReportBtn.addEventListener('click', openMyRequestsReportModal);
+            if (refreshMyRequestsReportBtn) refreshMyRequestsReportBtn.addEventListener('click', loadMyRequestsReport);
+            if (myRequestsReportStatusFilter) myRequestsReportStatusFilter.addEventListener('change', renderMyRequestsReport);
+            if (applyMyRequestsReportFilterBtn) applyMyRequestsReportFilterBtn.addEventListener('click', renderMyRequestsReport);
+            if (closeMyRequestsReportBtn) closeMyRequestsReportBtn.addEventListener('click', closeMyRequestsReportModal);
             if (refreshMyRequestsBtn) refreshMyRequestsBtn.addEventListener('click', loadMyRequests);
             if (closeMyRequestsBtn) closeMyRequestsBtn.addEventListener('click', closeMyRequestsModal);
 
@@ -6734,6 +7020,11 @@
                     closeApprovalsModal();
                     return;
                 }
+                if (myRequestsReportModalBackdrop && myRequestsReportModalBackdrop.classList.contains('visible')) {
+                    pushNavigationTrap();
+                    closeMyRequestsReportModal();
+                    return;
+                }
                 if (myRequestsModalBackdrop && myRequestsModalBackdrop.classList.contains('visible')) {
                     pushNavigationTrap();
                     closeMyRequestsModal();
@@ -6825,6 +7116,7 @@
 
                     getSenderDeviceId();
                     checkMyRequestsUnread();
+                    refreshPendingBadgeCount();
 
                     // مزامنة التغييرات من مجموعة civil_updates فقط عند توفر الإنترنت
                     if (navigator.onLine && isCloudConfigured()) {
