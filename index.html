@@ -17,58 +17,59 @@
            ===================================================================== */
 
         :root {
-            /* 1. CLAUDE WARM PALETTE */
-            --bg-canvas: #FAF9F6;
+            /* CYBER-TELEMETRY & BLUEPRINT IDENTITY (LIGHT MODE) */
+            --bg-canvas: #F8FAFC;
             --surface-card: #FFFFFF;
             --surface-elevated: #FFFFFF;
-            --surface-subtle: #F6F5F1;
-            --surface-input: #F4F3EE;
-            --surface-hover: #EFEFEA;
+            --surface-subtle: #F1F5F9;
+            --surface-input: #F8FAFC;
+            --surface-hover: #F0F9FF;
 
-            --border-subtle: #E5E4DF;
-            --border-strong: #D5D4CE;
-            --border-focus: #D97757;
+            --border-ink: rgba(14, 165, 233, 0.35);
+            --border-subtle: rgba(14, 165, 233, 0.24);
+            --border-strong: rgba(2, 132, 199, 0.45);
+            --border-focus: #0284C7;
 
-            /* Claude Signature Terracotta / Warm Amber */
-            --brand-primary: #D97757;
-            --brand-primary-hover: #C66545;
-            --brand-primary-soft: rgba(217, 119, 87, 0.08);
-            --brand-primary-tint: rgba(217, 119, 87, 0.16);
+            /* Electric Sky / Cyan Accent */
+            --brand-primary: #0284C7;
+            --brand-primary-hover: #0369A1;
+            --brand-amber: #0EA5E9;
+            --brand-primary-soft: rgba(2, 132, 199, 0.08);
+            --brand-primary-tint: rgba(2, 132, 199, 0.20);
+            --brand-glow: 0 0 16px rgba(2, 132, 199, 0.32);
 
-            /* 2. AL JAZEERA EDITORIAL INKS & BADGES */
-            --ink-primary: #1A1A1A;     /* Editorial Dark Charcoal */
-            --ink-secondary: #525250;   /* Editorial Slate Neutral */
-            --ink-muted: #787774;       /* Subtle Metadata & Hints */
-            --ink-faint: #A5A49F;
+            --ink-primary: #0F172A;
+            --ink-secondary: #475569;
+            --ink-muted: #64748B;
+            --ink-faint: #94A3B8;
 
-            --badge-neutral-bg: transparent;
-            --badge-neutral-border: transparent;
+            --badge-neutral-bg: #F1F5F9;
+            --badge-neutral-border: rgba(14, 165, 233, 0.20);
             --badge-neutral-text: var(--ink-secondary);
 
-            --accent-emerald: #0F766E;
-            --accent-emerald-soft: #F0FDF4;
-            --accent-emerald-border: #BBF7D0;
+            --accent-emerald: #10B981;
+            --accent-emerald-soft: rgba(16, 185, 129, 0.10);
+            --accent-emerald-border: rgba(16, 185, 129, 0.30);
 
             --accent-amber: #D97706;
             --accent-amber-soft: #FFFBEB;
             --accent-amber-border: #FDE68A;
 
-            --danger: #DC2626;
-            --danger-soft: #FEF2F2;
-            --danger-border: #FECACA;
+            --danger: #EF4444;
+            --danger-soft: rgba(239, 68, 68, 0.08);
+            --danger-border: rgba(239, 68, 68, 0.28);
 
-            /* 3. APPLE GEOMETRY & SOFT DEPTH */
-            --radius-card: 14px;        /* 14px for main cards */
-            --radius-control: 10px;     /* 10px for buttons & inputs */
+            --radius-card: 12px;
+            --radius-control: 9px;
             --radius-badge: 6px;
             --radius-full: 9999px;
 
-            /* Apple Soft Depth */
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.03);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.06);
-            --shadow-floating: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
+            --shadow-sm: 0 2px 10px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 6px 20px rgba(2, 132, 199, 0.08);
+            --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.10);
+            --shadow-floating: 0 8px 24px rgba(15, 23, 42, 0.09);
 
+            --grid-line: rgba(14, 165, 233, 0.065);
             --font-sans: "Cairo", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
@@ -76,47 +77,53 @@
         }
 
         [data-theme="dark"] {
-            --bg-canvas: #161615;
-            --surface-card: #1F1F1E;
-            --surface-elevated: #282826;
-            --surface-subtle: #222220;
-            --surface-input: #292927;
-            --surface-hover: #333330;
+            /* CYBER-TELEMETRY & BLUEPRINT IDENTITY (DARK MODE) */
+            --bg-canvas: #080E1A;
+            --surface-card: #0D1526;
+            --surface-elevated: #111C33;
+            --surface-subtle: #0B1220;
+            --surface-input: #0A111F;
+            --surface-hover: #13203A;
 
-            --border-subtle: rgba(255, 255, 255, 0.09);
-            --border-strong: rgba(255, 255, 255, 0.16);
-            --border-focus: #E08264;
+            --border-ink: rgba(56, 189, 248, 0.32);
+            --border-subtle: rgba(56, 189, 248, 0.18);
+            --border-strong: rgba(56, 189, 248, 0.38);
+            --border-focus: #38BDF8;
 
-            --brand-primary: #E08264;
-            --brand-primary-hover: #EE9578;
-            --brand-primary-soft: rgba(224, 130, 100, 0.12);
-            --brand-primary-tint: rgba(224, 130, 100, 0.22);
+            --brand-primary: #38BDF8;
+            --brand-primary-hover: #7DD3FC;
+            --brand-amber: #22D3EE;
+            --brand-primary-soft: rgba(56, 189, 248, 0.12);
+            --brand-primary-tint: rgba(56, 189, 248, 0.25);
+            --brand-glow: 0 0 18px rgba(56, 189, 248, 0.42);
 
-            --ink-primary: #F5F4F0;
-            --ink-secondary: #B8B7B2;
-            --ink-muted: #888782;
-            --ink-faint: #605F5B;
+            --ink-primary: #F1F5F9;
+            --ink-secondary: #94A3B8;
+            --ink-muted: #64748B;
+            --ink-faint: #475569;
 
-            --badge-neutral-bg: transparent;
-            --badge-neutral-border: transparent;
+            --badge-neutral-bg: rgba(56, 189, 248, 0.08);
+            --badge-neutral-border: rgba(56, 189, 248, 0.20);
             --badge-neutral-text: var(--ink-secondary);
 
-            --accent-emerald: #34D399;
-            --accent-emerald-soft: rgba(52, 211, 153, 0.12);
-            --accent-emerald-border: rgba(52, 211, 153, 0.30);
+            --accent-emerald: #10B981;
+            --accent-emerald-soft: rgba(16, 185, 129, 0.12);
+            --accent-emerald-border: rgba(16, 185, 129, 0.32);
 
             --accent-amber: #FBBF24;
             --accent-amber-soft: rgba(251, 191, 36, 0.12);
-            --accent-amber-border: rgba(251, 191, 36, 0.30);
+            --accent-amber-border: rgba(251, 191, 36, 0.32);
 
             --danger: #F87171;
             --danger-soft: rgba(248, 113, 113, 0.12);
-            --danger-border: rgba(248, 113, 113, 0.30);
+            --danger-border: rgba(248, 113, 113, 0.32);
 
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
-            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.45);
-            --shadow-floating: 0 8px 24px rgba(0, 0, 0, 0.35);
+            --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.35);
+            --shadow-md: 0 6px 24px rgba(0, 0, 0, 0.45);
+            --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.55);
+            --shadow-floating: 0 8px 28px rgba(0, 0, 0, 0.50);
+
+            --grid-line: rgba(56, 189, 248, 0.055);
         }
 
         *, *::before, *::after {
@@ -128,6 +135,10 @@
 
         html, body {
             background-color: var(--bg-canvas);
+            background-image:
+                linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+            background-size: 24px 24px;
             color: var(--ink-primary);
             font-family: var(--font-sans);
             font-size: 15px;
@@ -168,22 +179,34 @@
         }
 
         .glass-header {
-            background: rgba(250, 249, 246, 0.85);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(255, 255, 255, 0.90);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-card);
-            padding: 10px 16px;
+            padding: 11px 18px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
             box-shadow: var(--shadow-sm);
+            position: relative;
             transition: border-color 0.2s ease, background 0.2s ease;
         }
 
+        .glass-header::after {
+            content: "";
+            position: absolute;
+            top: -1px;
+            left: 18px;
+            width: 24px;
+            height: 2.5px;
+            background: var(--brand-primary);
+            border-radius: 2px;
+        }
+
         [data-theme="dark"] .glass-header {
-            background: rgba(31, 31, 30, 0.85);
+            background: rgba(13, 21, 38, 0.88);
             border-color: var(--border-subtle);
             box-shadow: var(--shadow-sm);
         }
@@ -202,12 +225,12 @@
 
         .jh-settings-btn,
         .sync-orb-btn {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: var(--radius-control);
-            background: var(--surface-card);
-            border: 1px solid var(--border-subtle);
-            color: var(--ink-primary);
+            background: linear-gradient(135deg, #0284C7, #0EA5E9);
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            color: #FFFFFF;
             font-size: 14.5px;
             font-weight: 700;
             font-family: var(--font-sans);
@@ -215,17 +238,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+            box-shadow: var(--brand-glow);
             transition: var(--transition-apple);
             user-select: none;
+        }
+
+        [data-theme="dark"] .jh-settings-btn,
+        [data-theme="dark"] .sync-orb-btn {
+            background: linear-gradient(135deg, #38BDF8, #0EA5E9);
+            color: #080E1A;
+            border-color: rgba(125, 211, 252, 0.6);
         }
 
         .jh-settings-btn:hover,
         .jh-settings-btn.active,
         .sync-orb-btn:hover {
-            border-color: var(--brand-primary);
-            color: var(--brand-primary);
-            background: var(--brand-primary-soft);
+            transform: translateY(-1px);
+            filter: brightness(1.08);
+            box-shadow: 0 0 22px rgba(56, 189, 248, 0.55);
         }
 
         .jh-dropdown-menu {
@@ -584,9 +614,21 @@
             background: var(--surface-card);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-card);
-            padding: 20px 22px;
+            padding: 18px 20px;
             box-shadow: var(--shadow-sm);
+            position: relative;
             transition: var(--transition-apple);
+        }
+
+        .search-dock::after {
+            content: "";
+            position: absolute;
+            top: -1px;
+            left: 18px;
+            width: 24px;
+            height: 2.5px;
+            background: var(--brand-primary);
+            border-radius: 2px;
         }
 
         .search-inputs-row {
@@ -695,29 +737,36 @@
             min-width: 220px;
         }
 
-        /* Claude Signature Terracotta Primary Button */
+        /* Cyber-Telemetry Glowing Cyan Primary Button */
         .btn-primary-action {
             flex: 1;
             height: 42px;
             padding: 0 20px;
             border-radius: var(--radius-control);
-            background: var(--brand-primary);
-            border: 1px solid var(--brand-primary);
+            background: linear-gradient(135deg, #0284C7, #0EA5E9);
+            border: 1px solid rgba(14, 165, 233, 0.5);
             color: #FFFFFF;
             font-size: 14.5px;
-            font-weight: 600;
+            font-weight: 700;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            box-shadow: 0 1px 3px rgba(217, 119, 87, 0.25);
+            box-shadow: var(--brand-glow);
             transition: var(--transition-apple);
         }
 
         .btn-primary-action:hover {
-            background: var(--brand-primary-hover);
-            border-color: var(--brand-primary-hover);
-            box-shadow: 0 2px 8px rgba(217, 119, 87, 0.35);
+            transform: translateY(-1px);
+            filter: brightness(1.06);
+            box-shadow: 0 0 22px rgba(14, 165, 233, 0.45);
+        }
+
+        [data-theme="dark"] .btn-primary-action {
+            background: linear-gradient(135deg, #38BDF8, #0EA5E9);
+            border-color: #38BDF8;
+            color: #080E1A;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.45);
         }
 
         .btn-ghost {
@@ -1147,40 +1196,53 @@
             transition: var(--transition-apple);
         }
 
+        .id-pass-card::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 16px;
+            width: 18px;
+            height: 2.5px;
+            background: var(--brand-primary);
+            border-radius: 0 0 2px 2px;
+            opacity: 0.75;
+        }
+
         .id-pass-card:hover {
-            border-color: var(--border-strong);
+            border-color: var(--brand-primary);
+            background: var(--surface-hover);
             transform: translateY(-1px);
             box-shadow: var(--shadow-md);
         }
 
         .id-pass-card.is-selected {
-            background: #FAF8F5;
+            background: var(--brand-primary-soft);
             border-color: var(--brand-primary);
             box-shadow: 0 0 0 1px var(--brand-primary), var(--shadow-sm);
         }
 
-        /* Dark Mode High-Contrast Cards & Clear Borders */
+        /* Dark Mode Cyber-Telemetry Cards */
         [data-theme="dark"] .id-pass-card {
-            background: #2B2A27;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-sm);
         }
 
         [data-theme="dark"] .id-pass-card:hover {
-            background: #33322E;
-            border-color: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+            background: var(--surface-hover);
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.14);
         }
 
         [data-theme="dark"] .id-pass-card.is-selected {
-            background: #38342E;
+            background: rgba(56, 189, 248, 0.10);
             border-color: var(--brand-primary);
-            box-shadow: 0 0 0 1px var(--brand-primary), 0 2px 10px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 0 0 1px var(--brand-primary), var(--shadow-sm);
         }
 
         [data-theme="dark"] .table-responsive-card {
-            background: #2B2A27;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
         }
 
         /* Editorial vertical identity indicator */
@@ -1734,20 +1796,39 @@
             margin-bottom: 0;
         }
 
+        #citizenForm .form-grid-2 {
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        #citizenForm .form-grid-2:last-child {
+            margin-bottom: 0;
+        }
+
+        #citizenForm .field-wrap,
         .field-wrap.field-inline {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
+        #citizenForm .field-wrap label,
         .field-wrap.field-inline label {
-            width: 110px;
+            min-width: 122px;
+            width: 122px;
             flex-shrink: 0;
             margin-bottom: 0;
             text-align: right;
+            white-space: nowrap;
         }
 
-        .field-wrap.field-inline input {
+        #citizenForm .field-wrap input,
+        #citizenForm .field-wrap select,
+        #citizenForm .field-wrap textarea,
+        .field-wrap.field-inline input,
+        .field-wrap.field-inline select,
+        .field-wrap.field-inline textarea {
             flex: 1;
             min-width: 0;
         }
@@ -1898,6 +1979,39 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 8px;
             margin-bottom: 16px;
+        }
+
+        .report-stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 520px) {
+            .report-stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .sync-stat-tile.danger .val { color: var(--danger); }
+
+        #requestsReportListBox {
+            gap: 12px;
+        }
+
+        #requestsReportListBox .req-card {
+            background: var(--surface-card);
+            border: 1.5px solid var(--border-strong);
+            border-right: 4px solid var(--brand-primary);
+            box-shadow: var(--shadow-sm);
+            padding: 14px 16px;
+        }
+
+        [data-theme="dark"] #requestsReportListBox .req-card {
+            background: var(--surface-elevated);
+            border-color: var(--border-strong);
+            border-right: 4px solid var(--brand-primary);
         }
 
         .sync-stat-tile {
@@ -3144,20 +3258,55 @@
     <div id="approvalsModalBackdrop" class="backdrop-overlay center-overlay">
         <div class="dialog-card fullscreen-dialog-card">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap;">
-                <h3 style="margin:0;">الطلبات</h3>
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                    <h3 style="margin:0;">الطلبات</h3>
+                    <button type="button" id="openRequestsReportBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">سجل وتقارير الطلبات</button>
+                </div>
                 <div style="display:flex;gap:8px;align-items:center;">
-                    <select id="approvalsStatusFilter" style="height:34px;padding:0 10px;border-radius:var(--radius-control);border:1px solid var(--border-subtle);background:var(--surface-input);color:var(--ink-primary);font-size:12.5px;">
-                        <option value="all">كل الطلبات</option>
-                        <option value="pending">قيد المراجعة</option>
-                        <option value="accepted">مقبولة</option>
-                        <option value="rejected">مرفوضة</option>
-                    </select>
                     <button type="button" id="refreshApprovalsBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
                 </div>
             </div>
-            <p class="sub" style="margin-bottom:12px;">مراجعة التعديلات الواردة من المستخدمين، مع إمكانية كتابة رسالة توضيح والقبول أو الرفض أو التنظيف اليدوي.</p>
+            <p class="sub" style="margin-bottom:12px;">مراجعة الطلبات المعلقة (قيد المراجعة) الواردة من المستخدمين، مع كتابة رسالة التوضيح واعتمادها أو رفضها.</p>
             <div id="approvalsListBox" class="modal-scroll-list"></div>
             <button type="button" id="closeApprovalsBtn" class="btn-dialog-cancel" style="width:100%;flex-shrink:0;">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="requestsReportModalBackdrop" class="backdrop-overlay center-overlay">
+        <div class="dialog-card fullscreen-dialog-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px;flex-wrap:wrap;">
+                <h3 style="margin:0;">سجل وتقارير الطلبات</h3>
+                <button type="button" id="refreshRequestsReportBtn" class="btn-cloud-test" style="flex:0 0 auto;padding:0 12px;">تحديث</button>
+            </div>
+            <div class="report-stats-row" style="text-align:center;">
+                <div class="sync-stat-tile">
+                    <div class="lbl">إجمالي الطلبات</div>
+                    <div id="reportStatTotal" class="val">0</div>
+                </div>
+                <div class="sync-stat-tile teal">
+                    <div class="lbl">المقبولة</div>
+                    <div id="reportStatAccepted" class="val">0</div>
+                </div>
+                <div class="sync-stat-tile danger">
+                    <div class="lbl">المرفوضة</div>
+                    <div id="reportStatRejected" class="val">0</div>
+                </div>
+                <div class="sync-stat-tile amber">
+                    <div class="lbl">قيد المراجعة</div>
+                    <div id="reportStatPending" class="val">0</div>
+                </div>
+            </div>
+            <div class="audit-filter-row" style="align-items:center;">
+                <select id="requestsReportStatusFilter">
+                    <option value="all">كل الطلبات</option>
+                    <option value="accepted">مقبول</option>
+                    <option value="rejected">مرفوض</option>
+                    <option value="pending">قيد المراجعة</option>
+                </select>
+                <button type="button" id="applyRequestsReportFilterBtn" class="btn-cloud-test" style="flex:0 0 auto;height:36px;padding:0 16px;">تصفية</button>
+            </div>
+            <div id="requestsReportListBox" class="modal-scroll-list"></div>
+            <button type="button" id="closeRequestsReportBtn" class="btn-dialog-cancel" style="width:100%;flex-shrink:0;">رجوع</button>
         </div>
     </div>
 
@@ -5940,9 +6089,17 @@
             // -----------------------------------------------------------------
             const approvalsModalBackdrop = document.getElementById('approvalsModalBackdrop');
             const approvalsListBox = document.getElementById('approvalsListBox');
-            const approvalsStatusFilter = document.getElementById('approvalsStatusFilter');
+            const openRequestsReportBtn = document.getElementById('openRequestsReportBtn');
             const refreshApprovalsBtn = document.getElementById('refreshApprovalsBtn');
             const closeApprovalsBtn = document.getElementById('closeApprovalsBtn');
+
+            const requestsReportModalBackdrop = document.getElementById('requestsReportModalBackdrop');
+            const requestsReportStatusFilter = document.getElementById('requestsReportStatusFilter');
+            const applyRequestsReportFilterBtn = document.getElementById('applyRequestsReportFilterBtn');
+            const refreshRequestsReportBtn = document.getElementById('refreshRequestsReportBtn');
+            const requestsReportListBox = document.getElementById('requestsReportListBox');
+            const closeRequestsReportBtn = document.getElementById('closeRequestsReportBtn');
+            let cachedAllRequestsForReport = [];
 
             const openMyRequestsBtn = document.getElementById('openMyRequestsBtn');
             const myRequestsModalBackdrop = document.getElementById('myRequestsModalBackdrop');
@@ -6025,24 +6182,20 @@
             }
 
             async function loadPendingApprovals() {
-                approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">جاري تحميل طلبات التعديل...</div>';
+                approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">جاري تحميل الطلبات المعلقة...</div>';
                 try {
                     const page = await fsListPage(PENDING_COLLECTION, 300, '');
-                    const filterVal = approvalsStatusFilter ? approvalsStatusFilter.value : 'all';
-                    let items = (page.docs || [])
+                    const items = (page.docs || [])
                         .map(d => d.data)
-                        .filter(r => r && !r.hiddenByAdmin)
+                        .filter(r => {
+                            if (!r || r.hiddenByAdmin) return false;
+                            const st = r.status === 'approved' ? 'accepted' : (r.status || 'pending');
+                            return st === 'pending';
+                        })
                         .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
-                    if (filterVal !== 'all') {
-                        items = items.filter(r => {
-                            const st = r.status === 'approved' ? 'accepted' : (r.status || 'pending');
-                            return st === filterVal;
-                        });
-                    }
-
                     if (items.length === 0) {
-                        approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات مطابقة حالياً.</div>';
+                        approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات معلقة (قيد المراجعة) حالياً.</div>';
                         return;
                     }
 
@@ -6053,64 +6206,44 @@
                         card.className = 'req-card';
                         const dateStr = toEnglishDigits((req.createdAt || '').replace('T', ' ').slice(0, 16));
                         const initialNote = req.adminNote ? req.adminNote : 'تم مراجعة الطلب';
+                        const isPending = st === 'pending';
 
                         card.innerHTML = `
                             <div class="req-card-head">
                                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
                                     <span class="req-type-tag ${escapeHtml(req.actionType)}">${escapeHtml(formatActionLabel(req.actionType))}</span>
-                                    <span class="req-type-tag ${escapeHtml(getStatusClass(st))}">${escapeHtml(getStatusLabelAr(st))}</span>
+                                    <span class="req-type-tag req-status-badge ${escapeHtml(getStatusClass(st))}">${escapeHtml(getStatusLabelAr(st))}</span>
                                     <strong style="font-size:13.5px;">${escapeHtml(req.fullName || '')}</strong>
                                 </div>
                                 <span class="req-meta">هوية: ${escapeHtml(toEnglishDigits(req.newNationalId || req.nationalId))} | ${escapeHtml(dateStr)}</span>
                             </div>
                             <div class="req-diff-list">${buildDiffHtml(req)}</div>
-                            <textarea class="admin-note-textarea" placeholder="رسالة توضيح أو شكر للمستخدم...">${escapeHtml(initialNote)}</textarea>
-                            <div class="req-actions">
-                                <button type="button" class="btn-approve-req">قبول الطلب</button>
-                                <button type="button" class="btn-reject-req">رفض الطلب</button>
-                                <button type="button" class="btn-neutral-req btn-admin-archive-del">حذف</button>
-                            </div>
+                            ${isPending ? `
+                                <textarea class="admin-note-textarea" placeholder="رسالة توضيح أو شكر للمستخدم...">${escapeHtml(initialNote)}</textarea>
+                                <div class="req-actions">
+                                    <button type="button" class="btn-approve-req">قبول الطلب</button>
+                                    <button type="button" class="btn-reject-req">رفض الطلب</button>
+                                </div>
+                            ` : (req.adminNote ? `<div class="req-admin-note-box"><b>رد الإدارة:</b> ${escapeHtml(req.adminNote)}</div>` : '')}
                         `;
 
-                        const noteEl = card.querySelector('.admin-note-textarea');
-                        card.querySelector('.btn-approve-req').addEventListener('click', () => {
-                            const currentTxt = (noteEl.value || '').trim();
-                            if (!currentTxt || currentTxt === 'تم مراجعة الطلب' || currentTxt === 'البيانات المرسلة لم تكن مؤكدة') {
-                                noteEl.value = 'تم قبول الطلب';
-                            }
-                            handleApprovalDecision(req, true, noteEl.value.trim(), card);
-                        });
-                        card.querySelector('.btn-reject-req').addEventListener('click', () => {
-                            const currentTxt = (noteEl.value || '').trim();
-                            if (!currentTxt || currentTxt === 'تم مراجعة الطلب' || currentTxt === 'تم قبول الطلب') {
-                                noteEl.value = 'البيانات المرسلة لم تكن مؤكدة';
-                            }
-                            handleApprovalDecision(req, false, noteEl.value.trim(), card);
-                        });
-
-                        card.querySelector('.btn-admin-archive-del').addEventListener('click', async () => {
-                            const ok = await askConfirmation({
-                                title: 'حذف من سجل المدير',
-                                message: `هل تريد إزالة طلب "${req.fullName || ''}" من قائمة المدير؟ (سيبقى محفوظاً لدى المستخدم في قسم طلباتي)`,
-                                confirmText: 'حذف من سجل المدير',
-                                isDanger: true
-                            });
-                            if (!ok) return;
-                            try {
-                                await fsSetDoc(PENDING_COLLECTION, req.requestId, {
-                                    ...req,
-                                    hiddenByAdmin: true
-                                });
-                                card.remove();
-                                refreshPendingBadgeCount();
-                                if (!approvalsListBox.children.length) {
-                                    approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات مطابقة حالياً.</div>';
+                        if (isPending) {
+                            const noteEl = card.querySelector('.admin-note-textarea');
+                            card.querySelector('.btn-approve-req').addEventListener('click', () => {
+                                const currentTxt = (noteEl.value || '').trim();
+                                if (!currentTxt || currentTxt === 'تم مراجعة الطلب' || currentTxt === 'البيانات المرسلة لم تكن مؤكدة') {
+                                    noteEl.value = 'تم قبول الطلب';
                                 }
-                                showToast('تم حذف الطلب من سجل المدير');
-                            } catch (err) {
-                                showToast(err.message || 'تعذر الحذف من السحابة');
-                            }
-                        });
+                                handleApprovalDecision(req, true, noteEl.value.trim(), card);
+                            });
+                            card.querySelector('.btn-reject-req').addEventListener('click', () => {
+                                const currentTxt = (noteEl.value || '').trim();
+                                if (!currentTxt || currentTxt === 'تم مراجعة الطلب' || currentTxt === 'تم قبول الطلب') {
+                                    noteEl.value = 'البيانات المرسلة لم تكن مؤكدة';
+                                }
+                                handleApprovalDecision(req, false, noteEl.value.trim(), card);
+                            });
+                        }
 
                         approvalsListBox.appendChild(card);
                     });
@@ -6132,6 +6265,8 @@
                     const cfg = getCloudConfig();
                     const targetId = toEnglishDigits(req.nationalId || '').replace(/[^\d]/g, '');
                     const newId = toEnglishDigits(req.newNationalId || req.nationalId || '').replace(/[^\d]/g, '');
+                    const finalStatus = approve ? 'accepted' : 'rejected';
+                    const finalNote = adminNoteText || (approve ? 'تم قبول الطلب' : 'البيانات المرسلة لم تكن مؤكدة');
 
                     if (approve) {
                         const nowIso = new Date().toISOString();
@@ -6167,8 +6302,8 @@
 
                     await fsSetDoc(PENDING_COLLECTION, req.requestId, {
                         ...req,
-                        status: approve ? 'accepted' : 'rejected',
-                        adminNote: adminNoteText || (approve ? 'تم قبول الطلب' : 'البيانات المرسلة لم تكن مؤكدة'),
+                        status: finalStatus,
+                        adminNote: finalNote,
                         isRead: false,
                         reviewedAt: new Date().toISOString()
                     });
@@ -6179,15 +6314,128 @@
                         nationalId: newId || targetId,
                         fullName: req.fullName,
                         actorRole: 'admin',
-                        summary: `${approve ? 'تم قبول' : 'تم رفض'} ${formatActionLabel(req.actionType)}: ${adminNoteText}`
+                        summary: `${approve ? 'تم قبول' : 'تم رفض'} ${formatActionLabel(req.actionType)}: ${finalNote}`
                     });
 
                     updateGlobalCounters();
                     applySearchAndFilter(false, activeFilter !== 'all' || searchUnifiedInput.value.trim() !== '');
-                    await loadPendingApprovals();
+
+                    if (cardEl) {
+                        const statusBadge = cardEl.querySelector('.req-status-badge');
+                        if (statusBadge) {
+                            statusBadge.className = `req-type-tag req-status-badge ${getStatusClass(finalStatus)}`;
+                            statusBadge.textContent = getStatusLabelAr(finalStatus);
+                        }
+                        const actionsEl = cardEl.querySelector('.req-actions');
+                        if (actionsEl) actionsEl.remove();
+                        const textareaEl = cardEl.querySelector('.admin-note-textarea');
+                        if (textareaEl) {
+                            const noteBox = document.createElement('div');
+                            noteBox.className = 'req-admin-note-box';
+                            noteBox.innerHTML = `<b>رد الإدارة:</b> ${escapeHtml(finalNote)}`;
+                            textareaEl.replaceWith(noteBox);
+                        }
+                    }
+
                     showToast(approve ? 'تم قبول الطلب واعتماد البيانات' : 'تم رفض الطلب وحفظ التوضيح');
                 } catch (err) {
                     showToast(err.message || 'تعذر تنفيذ القرار');
+                }
+            }
+
+            function renderRequestsReport() {
+                if (!requestsReportListBox) return;
+                const allItems = cachedAllRequestsForReport;
+                let acceptedCount = 0;
+                let rejectedCount = 0;
+                let pendingCount = 0;
+
+                allItems.forEach(r => {
+                    const st = r.status === 'approved' ? 'accepted' : (r.status || 'pending');
+                    if (st === 'accepted') acceptedCount++;
+                    else if (st === 'rejected') rejectedCount++;
+                    else pendingCount++;
+                });
+
+                const statTotal = document.getElementById('reportStatTotal');
+                const statAcc = document.getElementById('reportStatAccepted');
+                const statRej = document.getElementById('reportStatRejected');
+                const statPen = document.getElementById('reportStatPending');
+                if (statTotal) statTotal.textContent = toEnglishDigits(allItems.length);
+                if (statAcc) statAcc.textContent = toEnglishDigits(acceptedCount);
+                if (statRej) statRej.textContent = toEnglishDigits(rejectedCount);
+                if (statPen) statPen.textContent = toEnglishDigits(pendingCount);
+
+                const filterVal = requestsReportStatusFilter ? requestsReportStatusFilter.value : 'all';
+                const filtered = allItems.filter(r => {
+                    if (filterVal === 'all') return true;
+                    const st = r.status === 'approved' ? 'accepted' : (r.status || 'pending');
+                    return st === filterVal;
+                });
+
+                if (filtered.length === 0) {
+                    requestsReportListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">لا توجد طلبات مطابقة للتصفية الحالية.</div>';
+                    return;
+                }
+
+                requestsReportListBox.innerHTML = '';
+                filtered.forEach(req => {
+                    const st = req.status === 'approved' ? 'accepted' : (req.status || 'pending');
+                    const card = document.createElement('div');
+                    card.className = 'req-card';
+                    const createdStr = toEnglishDigits((req.createdAt || '').replace('T', ' ').slice(0, 16));
+                    const reviewedStr = req.reviewedAt ? toEnglishDigits(req.reviewedAt.replace('T', ' ').slice(0, 16)) : '';
+                    const dateLine = reviewedStr ? `تاريخ الطلب: ${createdStr} | البت: ${reviewedStr}` : `تاريخ الطلب: ${createdStr}`;
+
+                    card.innerHTML = `
+                        <div class="req-card-head">
+                            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+                                <span class="req-type-tag ${escapeHtml(req.actionType)}">${escapeHtml(formatActionLabel(req.actionType))}</span>
+                                <span class="req-type-tag ${escapeHtml(getStatusClass(st))}">${escapeHtml(getStatusLabelAr(st))}</span>
+                                <strong style="font-size:13.5px;">${escapeHtml(req.fullName || '')}</strong>
+                            </div>
+                            <span class="req-meta">هوية: ${escapeHtml(toEnglishDigits(req.newNationalId || req.nationalId))} | ${escapeHtml(dateLine)}</span>
+                        </div>
+                        <div class="req-diff-list">${buildDiffHtml(req)}</div>
+                        ${req.adminNote ? `<div class="req-admin-note-box"><b>رسالة التوضيح:</b> ${escapeHtml(req.adminNote)}</div>` : ''}
+                    `;
+                    requestsReportListBox.appendChild(card);
+                });
+            }
+
+            async function loadRequestsReport() {
+                if (!requestsReportListBox) return;
+                requestsReportListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">جاري تحميل سجل وتقارير الطلبات...</div>';
+                try {
+                    const page = await fsListPage(PENDING_COLLECTION, 300, '');
+                    cachedAllRequestsForReport = (page.docs || [])
+                        .map(d => d.data)
+                        .filter(Boolean)
+                        .sort((a, b) => ((b.reviewedAt || b.createdAt || '')).localeCompare((a.reviewedAt || a.createdAt || '')));
+                    renderRequestsReport();
+                } catch (err) {
+                    requestsReportListBox.innerHTML = `<div class="req-meta" style="color:var(--danger);text-align:center;padding:16px;">${escapeHtml(err.message || 'تعذر جلب سجل الطلبات.')}</div>`;
+                }
+            }
+
+            function openRequestsReportModal() {
+                if (!requestsReportModalBackdrop) return;
+                if (requestsReportStatusFilter) requestsReportStatusFilter.value = 'all';
+                document.body.style.overflow = 'hidden';
+                requestsReportModalBackdrop.classList.add('visible');
+                loadRequestsReport();
+            }
+
+            function closeRequestsReportModal() {
+                if (!requestsReportModalBackdrop) return;
+                if (requestsReportStatusFilter) requestsReportStatusFilter.value = 'all';
+                requestsReportModalBackdrop.classList.remove('visible');
+                if (approvalsModalBackdrop) {
+                    approvalsModalBackdrop.classList.add('visible');
+                    document.body.style.overflow = 'hidden';
+                    loadPendingApprovals();
+                } else {
+                    document.body.style.overflow = '';
                 }
             }
 
@@ -6196,8 +6444,11 @@
                 document.body.style.overflow = '';
             }
 
-
-            if (approvalsStatusFilter) approvalsStatusFilter.addEventListener('change', loadPendingApprovals);
+            if (openRequestsReportBtn) openRequestsReportBtn.addEventListener('click', openRequestsReportModal);
+            if (refreshRequestsReportBtn) refreshRequestsReportBtn.addEventListener('click', loadRequestsReport);
+            if (requestsReportStatusFilter) requestsReportStatusFilter.addEventListener('change', renderRequestsReport);
+            if (applyRequestsReportFilterBtn) applyRequestsReportFilterBtn.addEventListener('click', renderRequestsReport);
+            if (closeRequestsReportBtn) closeRequestsReportBtn.addEventListener('click', closeRequestsReportModal);
             if (refreshApprovalsBtn) refreshApprovalsBtn.addEventListener('click', loadPendingApprovals);
             if (closeApprovalsBtn) closeApprovalsBtn.addEventListener('click', closeApprovalsModal);
 
@@ -6471,6 +6722,11 @@
                 if (adminPassModalBackdrop && adminPassModalBackdrop.classList.contains('visible')) {
                     pushNavigationTrap();
                     adminPassModalBackdrop.classList.remove('visible');
+                    return;
+                }
+                if (requestsReportModalBackdrop && requestsReportModalBackdrop.classList.contains('visible')) {
+                    pushNavigationTrap();
+                    closeRequestsReportModal();
                     return;
                 }
                 if (approvalsModalBackdrop && approvalsModalBackdrop.classList.contains('visible')) {
