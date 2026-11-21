@@ -1009,6 +1009,65 @@
             min-width: 240px;
         }
 
+        .records-data-table thead th.th-actions,
+        .records-data-table tbody td.td-actions {
+            width: 72px;
+            min-width: 72px;
+            text-align: center;
+            padding: 8px 10px;
+        }
+
+        .row-more-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-control);
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--ink-secondary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-apple);
+            flex-shrink: 0;
+        }
+
+        .row-more-btn:hover {
+            background: var(--surface-input);
+            border-color: var(--border-subtle);
+            color: var(--brand-primary);
+        }
+
+        .row-actions-floating-menu {
+            position: fixed;
+            min-width: 170px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-card);
+            padding: 6px;
+            box-shadow: var(--shadow-floating);
+            z-index: 95;
+            display: none;
+            animation: popDropdownApple 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .row-actions-floating-menu.open {
+            display: block;
+        }
+
+        .menu-item-action.danger {
+            color: var(--danger);
+        }
+
+        .menu-item-action.danger svg {
+            color: var(--danger);
+        }
+
+        .menu-item-action.danger:hover {
+            background: var(--danger-soft);
+            color: var(--danger);
+        }
+
         .records-data-table tbody td {
             padding: 12px 16px;
             border-bottom: 1px solid var(--border-subtle);
@@ -1706,6 +1765,38 @@
             font-size: 18px;
             font-weight: 700;
             color: var(--ink-primary);
+        }
+
+        .drawer-header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .record-more-wrap {
+            position: relative;
+        }
+
+        #citizenForm.is-readonly input,
+        #citizenForm.is-readonly select,
+        #citizenForm.is-readonly textarea {
+            background: var(--surface-subtle);
+            color: var(--ink-secondary);
+            cursor: default;
+            opacity: 0.92;
+        }
+
+        #citizenForm.is-readonly input:focus,
+        #citizenForm.is-readonly select:focus,
+        #citizenForm.is-readonly textarea:focus {
+            border-color: var(--border-subtle);
+            box-shadow: none;
+        }
+
+        .btn-save-record:disabled {
+            opacity: 0.48;
+            cursor: not-allowed;
+            filter: grayscale(0.2);
         }
 
         .close-circle-btn {
@@ -2995,6 +3086,7 @@
                             <th class="th-family">الأفراد</th>
                             <th class="th-mobile">الهاتف</th>
                             <th class="th-address">العنوان</th>
+                            <th class="th-actions">إجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="recordsTableBody"></tbody>
@@ -3430,6 +3522,27 @@
                 <button type="button" id="confirmNoBtn" class="btn-dialog-cancel">إلغاء الأمر</button>
             </div>
         </div>
+    </div>
+
+    <!-- Floating Row Actions Menu (⋮) -->
+    <div id="rowActionsMenu" class="row-actions-floating-menu" role="menu">
+        <button type="button" id="rowActionEditBtn" class="menu-item-action" role="menuitem">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+            <span>تعديل البيانات</span>
+        </button>
+        <button type="button" id="rowActionDeleteBtn" class="menu-item-action danger admin-only" role="menuitem">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                <path d="M10 11v6"></path>
+                <path d="M14 11v6"></path>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+            </svg>
+            <span>حذف السجل</span>
+        </button>
     </div>
 
     <!-- Toast Notification -->
@@ -4908,6 +5021,13 @@
                         </div>
                         <div class="pass-actions-end">
                             <input type="checkbox" class="modern-check row-cb" ${isSelected ? 'checked' : ''} aria-label="تحديد">
+                            <button type="button" class="row-more-btn card-more-btn" title="إجراءات" aria-label="إجراءات">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="5" r="2"></circle>
+                                    <circle cx="12" cy="12" r="2"></circle>
+                                    <circle cx="12" cy="19" r="2"></circle>
+                                </svg>
+                            </button>
                         </div>
                     `;
 
@@ -4928,9 +5048,17 @@
                         renderCurrentPage(true);
                     });
 
+                    const cardMoreBtn = card.querySelector('.card-more-btn');
+                    if (cardMoreBtn) {
+                        cardMoreBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            openRowActionsMenu(cardMoreBtn, person.nationalId);
+                        });
+                    }
+
                     card.addEventListener('click', (e) => {
-                        if (e.target.closest('.row-cb') || e.target.closest('.copy-id-btn')) return;
-                        openEditRecordModal(person.nationalId);
+                        if (e.target.closest('.row-cb') || e.target.closest('.copy-id-btn') || e.target.closest('.row-more-btn')) return;
+                        openEditRecordModal(person.nationalId, false);
                     });
 
                     cardsFrag.appendChild(card);
@@ -4971,6 +5099,15 @@
                         <td class="td-address">
                             <span class="table-cell-address" title="${escapeHtml(person.address || '')}">${escapeHtml(person.address || '—')}</span>
                         </td>
+                        <td class="td-actions">
+                            <button type="button" class="row-more-btn table-more-btn" title="إجراءات" aria-label="إجراءات">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="5" r="2"></circle>
+                                    <circle cx="12" cy="12" r="2"></circle>
+                                    <circle cx="12" cy="19" r="2"></circle>
+                                </svg>
+                            </button>
+                        </td>
                     `;
 
                     const tableCopyBtn = tr.querySelector('.copy-id-btn');
@@ -4990,9 +5127,17 @@
                         renderCurrentPage(true);
                     });
 
+                    const tableMoreBtn = tr.querySelector('.table-more-btn');
+                    if (tableMoreBtn) {
+                        tableMoreBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            openRowActionsMenu(tableMoreBtn, person.nationalId);
+                        });
+                    }
+
                     tr.addEventListener('click', (e) => {
-                        if (e.target.closest('.modern-check') || e.target.closest('.copy-id-btn')) return;
-                        openEditRecordModal(person.nationalId);
+                        if (e.target.closest('.modern-check') || e.target.closest('.copy-id-btn') || e.target.closest('.row-more-btn')) return;
+                        openEditRecordModal(person.nationalId, false);
                     });
 
                     tableFrag.appendChild(tr);
@@ -5082,6 +5227,173 @@
             const formModalTitle = document.getElementById('formModalTitle');
             const formErrorAlert = document.getElementById('formErrorAlert');
             const citizenForm = document.getElementById('citizenForm');
+            const saveFormBtn = document.getElementById('saveFormBtn');
+            const cancelFormBtn = document.getElementById('cancelFormBtn');
+            const rowActionsMenu = document.getElementById('rowActionsMenu');
+            const rowActionEditBtn = document.getElementById('rowActionEditBtn');
+            const rowActionDeleteBtn = document.getElementById('rowActionDeleteBtn');
+            let activeRowMenuNationalId = null;
+
+            function closeRowActionsMenu() {
+                if (rowActionsMenu) rowActionsMenu.classList.remove('open');
+                activeRowMenuNationalId = null;
+            }
+
+            function openRowActionsMenu(anchorBtn, nationalId) {
+                if (!rowActionsMenu || !anchorBtn) return;
+                if (activeRowMenuNationalId === nationalId && rowActionsMenu.classList.contains('open')) {
+                    closeRowActionsMenu();
+                    return;
+                }
+                activeRowMenuNationalId = nationalId;
+                rowActionsMenu.classList.add('open');
+                const rect = anchorBtn.getBoundingClientRect();
+                const menuW = rowActionsMenu.offsetWidth || 170;
+                const menuH = rowActionsMenu.offsetHeight || 90;
+                let top = rect.bottom + 6;
+                if (top + menuH > window.innerHeight - 12) {
+                    top = Math.max(12, rect.top - menuH - 6);
+                }
+                let left = rect.left;
+                if (left + menuW > window.innerWidth - 12) {
+                    left = window.innerWidth - menuW - 12;
+                }
+                if (left < 12) left = 12;
+                rowActionsMenu.style.top = `${top}px`;
+                rowActionsMenu.style.left = `${left}px`;
+            }
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#rowActionsMenu') && !e.target.closest('.row-more-btn')) {
+                    closeRowActionsMenu();
+                }
+            });
+            window.addEventListener('scroll', closeRowActionsMenu, true);
+
+            if (rowActionEditBtn) {
+                rowActionEditBtn.addEventListener('click', () => {
+                    const targetId = activeRowMenuNationalId;
+                    closeRowActionsMenu();
+                    if (targetId) openEditRecordModal(targetId, true);
+                });
+            }
+
+            if (rowActionDeleteBtn) {
+                rowActionDeleteBtn.addEventListener('click', async () => {
+                    const targetId = activeRowMenuNationalId;
+                    closeRowActionsMenu();
+                    if (!targetId || !isAdminMode) return;
+                    const person = allRecords.find(p => p.nationalId === targetId);
+                    if (!person) return;
+                    const ok = await askConfirmation({
+                        title: 'حذف السجل نهائياً',
+                        message: `هل أنت متأكد من حذف سجل "${person.fullName}" (هوية: ${toEnglishDigits(person.nationalId)})؟`,
+                        confirmText: 'حذف السجل',
+                        isDanger: true
+                    });
+                    if (!ok) return;
+                    await dbDeleteIds([targetId]);
+                    allRecords = allRecords.filter(p => p.nationalId !== targetId);
+                    selectedIds.delete(targetId);
+                    let cloudDeleted = false;
+                    if (navigator.onLine && isCloudConfigured()) {
+                        try {
+                            await cloudDeleteIds([targetId]);
+                            cloudDeleted = true;
+                        } catch (e) {
+                            addPendingDeletes([targetId]);
+                        }
+                    } else if (isCloudConfigured()) {
+                        addPendingDeletes([targetId]);
+                    }
+                    await recordActivityLog({
+                        actionType: 'delete',
+                        nationalId: targetId,
+                        fullName: person.fullName,
+                        actorRole: 'admin',
+                        summary: 'حذف السجل من قائمة الإجراءات'
+                    });
+                    updateGlobalCounters();
+                    applySearchAndFilter(false, true);
+                    showToast(cloudDeleted ? 'تم حذف السجل من الجهاز والسحابة' : 'تم حذف السجل محلياً');
+                });
+            }
+
+            const FORM_FIELD_IDS = [
+                'inpFullName', 'inpNationalId', 'inpGender', 'inpBirthDate',
+                'inpMaritalStatus', 'inpFamilyCount', 'inpMotherName', 'inpWifeName',
+                'inpWifeNationalId', 'inpMobile', 'inpAltPhone', 'inpAddress', 'inpNotes'
+            ];
+            let initialFormSnapshot = null;
+            let isFormReadOnly = false;
+
+            function getFormSnapshot() {
+                const snap = {};
+                FORM_FIELD_IDS.forEach(id => {
+                    const el = document.getElementById(id);
+                    snap[id] = el ? String(el.value ?? '') : '';
+                });
+                return snap;
+            }
+
+            function hasFormChanges() {
+                if (!initialFormSnapshot) return true;
+                const current = getFormSnapshot();
+                return FORM_FIELD_IDS.some(id => current[id] !== initialFormSnapshot[id]);
+            }
+
+            function syncSaveButtonState() {
+                if (!saveFormBtn) return;
+                const originalId = document.getElementById('editingOriginalId').value.trim();
+                const isEdit = originalId.length > 0;
+                if (isFormReadOnly) {
+                    saveFormBtn.style.display = 'none';
+                    saveFormBtn.disabled = true;
+                } else {
+                    saveFormBtn.style.display = '';
+                    saveFormBtn.textContent = isEdit
+                        ? (isAdminMode ? 'حفظ البيانات' : 'إرسال طلب التعديل')
+                        : 'حفظ البيانات';
+                    saveFormBtn.disabled = isEdit ? !hasFormChanges() : false;
+                }
+                if (cancelFormBtn) {
+                    cancelFormBtn.textContent = isFormReadOnly ? 'إغلاق' : 'إلغاء';
+                }
+            }
+
+            function setFormReadOnly(readonly) {
+                isFormReadOnly = Boolean(readonly);
+                citizenForm.classList.toggle('is-readonly', isFormReadOnly);
+                FORM_FIELD_IDS.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    if (el.tagName === 'SELECT' || el.type === 'date') {
+                        el.disabled = isFormReadOnly;
+                    } else {
+                        el.readOnly = isFormReadOnly;
+                    }
+                });
+                syncSaveButtonState();
+            }
+
+
+
+            FORM_FIELD_IDS.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener('input', () => {
+                    if (!isFormReadOnly) {
+                        hideFormAlert();
+                        syncSaveButtonState();
+                    }
+                });
+                el.addEventListener('change', () => {
+                    if (!isFormReadOnly) {
+                        hideFormAlert();
+                        syncSaveButtonState();
+                    }
+                });
+            });
 
             function showFormAlert(msg) {
                 formErrorAlert.textContent = toEnglishDigits(msg);
@@ -5096,25 +5408,30 @@
                 const el = document.getElementById(id);
                 el.addEventListener('input', () => {
                     el.value = toEnglishDigits(el.value).replace(/[^\d]/g, '');
+                    if (!isFormReadOnly) syncSaveButtonState();
                 });
             });
 
             function openAddRecordModal() {
                 citizenForm.reset();
                 hideFormAlert();
+                closeRowActionsMenu();
                 document.getElementById('editingOriginalId').value = '';
+                initialFormSnapshot = null;
                 formModalTitle.textContent = 'إضافة سجل جديد';
+                setFormReadOnly(false);
                 document.body.style.overflow = 'hidden';
                 formModalBackdrop.classList.add('visible');
             }
 
-            function openEditRecordModal(nationalId) {
+            function openEditRecordModal(nationalId, editable = false) {
                 const person = allRecords.find(p => p.nationalId === nationalId);
                 if (!person) return;
 
                 hideFormAlert();
+                closeRowActionsMenu();
                 document.getElementById('editingOriginalId').value = person.nationalId;
-                formModalTitle.textContent = 'تعديل بيانات السجل';
+                formModalTitle.textContent = editable ? 'تعديل بيانات السجل' : 'تفاصيل السجل';
 
                 document.getElementById('inpFullName').value = person.fullName || '';
                 document.getElementById('inpNationalId').value = toEnglishDigits(person.nationalId || '');
@@ -5129,6 +5446,9 @@
                 document.getElementById('inpAltPhone').value = toEnglishDigits(person.altPhone || '');
                 document.getElementById('inpAddress').value = person.address || '';
                 document.getElementById('inpNotes').value = person.notes || '';
+
+                initialFormSnapshot = getFormSnapshot();
+                setFormReadOnly(!editable);
 
                 document.body.style.overflow = 'hidden';
                 formModalBackdrop.classList.add('visible');
@@ -5145,9 +5465,15 @@
 
             document.getElementById('saveFormBtn').addEventListener('click', async () => {
                 hideFormAlert();
+                if (isFormReadOnly) return;
 
                 const originalId = document.getElementById('editingOriginalId').value.trim();
                 const isEdit = originalId.length > 0;
+
+                if (isEdit && !hasFormChanges()) {
+                    showFormAlert('لم يتم إجراء أي تعديل على البيانات');
+                    return;
+                }
 
                 const fullName = document.getElementById('inpFullName').value.replace(/\s+/g, ' ').trim();
                 const nationalId = toEnglishDigits(document.getElementById('inpNationalId').value).replace(/[^\d]/g, '');
@@ -5978,6 +6304,7 @@
             // J3. User / Admin Mode (5-Tap on Title) & Export to Documents
             // -----------------------------------------------------------------
             const ADMIN_PASS_KEY = 'civil_registry_admin_pass';
+            const ADMIN_SESSION_KEY = 'civil_registry_admin_session';
             const DEFAULT_ADMIN_PASS = '123456';
             let isAdminMode = false;
             let titleTapCount = 0;
@@ -6011,14 +6338,21 @@
 
             function setAdminMode(enabled) {
                 isAdminMode = Boolean(enabled);
+                try {
+                    localStorage.setItem(ADMIN_SESSION_KEY, isAdminMode ? '1' : '0');
+                } catch (e) {}
                 document.body.classList.toggle('is-admin', isAdminMode);
                 const lbl = document.getElementById('openMyRequestsBtnLabel');
                 if (lbl) lbl.textContent = isAdminMode ? 'الطلبات' : 'طلباتي';
                 if (typeof updateRoleUnreadDots === 'function') updateRoleUnreadDots();
             }
 
-            // Always start in normal User Mode on page load
-            setAdminMode(false);
+            // Restore saved Admin Mode session across page refresh (until explicit logout)
+            let savedAdminSession = false;
+            try {
+                savedAdminSession = localStorage.getItem(ADMIN_SESSION_KEY) === '1';
+            } catch (e) {}
+            setAdminMode(savedAdminSession);
 
             function openAdminLoginModal() {
                 if (adminPassInput) adminPassInput.value = '';
@@ -6609,6 +6943,8 @@
                 document.getElementById('inpAltPhone').value = toEnglishDigits(d.alt_phone || '');
                 document.getElementById('inpAddress').value = d.address || '';
                 document.getElementById('inpNotes').value = d.notes || '';
+                initialFormSnapshot = getFormSnapshot();
+                setFormReadOnly(false);
                 document.body.style.overflow = 'hidden';
                 formModalBackdrop.classList.add('visible');
             }
@@ -6653,8 +6989,8 @@
                 const visibleItems = allMine
                     .filter(r => {
                         if (!r || r.hiddenByUser) return false;
-                        const st = r.status === 'approved' ? 'accepted' : (r.status || 'pending');
-                        return st === 'pending';
+                        const rawSt = String(r.status || 'pending').trim().toLowerCase();
+                        return rawSt === 'pending' || rawSt === 'قيد المراجعة';
                     })
                     .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
