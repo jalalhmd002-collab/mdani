@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl" data-theme="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#0F172A">
     <title>السجل المدني — تصميم أبو حازم</title>
 
@@ -533,6 +533,49 @@
 
         .offline-pill.visible {
             display: inline-block;
+        }
+
+        .cloud-conn-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 1px 8px;
+            border-radius: var(--radius-badge);
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 1px solid var(--border-subtle);
+            color: var(--ink-muted);
+        }
+
+        .cloud-conn-pill::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .cloud-conn-pill.is-online {
+            color: var(--accent-emerald);
+            border-color: var(--accent-emerald-border);
+            background: var(--accent-emerald-soft);
+        }
+
+        .cloud-conn-pill.is-syncing {
+            color: var(--brand-primary);
+            border-color: var(--border-strong);
+            background: var(--brand-primary-soft);
+        }
+
+        .cloud-conn-pill.is-error {
+            color: var(--accent-amber);
+            border-color: var(--accent-amber-border);
+            background: var(--accent-amber-soft);
+        }
+
+        .cloud-conn-pill.is-hidden {
+            display: none;
         }
 
         .header-controls {
@@ -1443,17 +1486,38 @@
 
         .chip-mobile {
             background: transparent !important;
-            border: none;
+            border: 1px solid transparent;
+            border-radius: var(--radius-badge);
             color: var(--ink-secondary);
             font-size: 14.5px;
             font-weight: 600;
-            padding: 2px 4px;
+            padding: 2px 6px;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             font-family: var(--font-mono), var(--font-sans);
             font-variant-numeric: tabular-nums lining-nums;
             letter-spacing: 0.3px;
+            transition: var(--transition-apple);
+        }
+
+        .copy-mobile-btn {
+            cursor: pointer;
+        }
+
+        .copy-mobile-btn svg {
+            opacity: 0.65;
+            transition: opacity 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .copy-mobile-btn:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .copy-mobile-btn:hover svg {
+            opacity: 1;
         }
 
         .chip-neutral {
@@ -1465,6 +1529,26 @@
             padding: 2px 4px;
             display: inline-flex;
             align-items: center;
+        }
+
+        .chip-address {
+            gap: 4px;
+            max-width: 240px;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .chip-address svg {
+            flex-shrink: 0;
+            opacity: 0.75;
+        }
+
+        .chip-address-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+            min-width: 0;
         }
 
         .data-num {
@@ -1515,19 +1599,13 @@
             .pass-chips-row {
                 display: flex !important;
                 align-items: center !important;
-                flex-wrap: nowrap !important;
-                justify-content: space-between !important;
-                gap: 4px !important;
-                white-space: nowrap !important;
+                flex-wrap: wrap !important;
+                justify-content: flex-start !important;
+                gap: 5px 8px !important;
                 margin-top: 6px;
                 padding-top: 6px;
                 width: 100%;
-                overflow-x: auto;
-                scrollbar-width: none;
-            }
-
-            .pass-chips-row::-webkit-scrollbar {
-                display: none;
+                overflow-x: visible;
             }
 
             .pass-chips-row .chip-id {
@@ -1545,10 +1623,15 @@
 
             .pass-chips-row .chip-mobile {
                 font-size: 11.5px;
-                padding: 0;
-                gap: 2px;
+                padding: 1px 4px;
+                gap: 3px;
                 flex-shrink: 0;
                 white-space: nowrap;
+            }
+
+            .pass-chips-row .copy-mobile-btn svg {
+                width: 10px;
+                height: 10px;
             }
 
             .pass-chips-row .chip-neutral {
@@ -1556,6 +1639,17 @@
                 padding: 0;
                 flex-shrink: 0;
                 white-space: nowrap;
+            }
+
+            .pass-chips-row .chip-address {
+                max-width: 100%;
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+
+            .pass-chips-row .chip-address svg {
+                width: 10px;
+                height: 10px;
             }
 
             .pass-chips-row .data-num {
@@ -1604,12 +1698,31 @@
             cursor: not-allowed;
         }
 
-        .page-status {
-            font-size: 14.5px;
+        .page-select-dropdown {
+            height: 36px;
+            padding: 0 12px;
+            border-radius: var(--radius-control);
+            background: var(--surface-input);
+            border: 1px solid var(--border-subtle);
+            color: var(--ink-primary);
+            font-family: var(--font-sans);
+            font-size: 13.5px;
             font-weight: 600;
-            color: var(--ink-secondary);
-            font-family: var(--font-mono), var(--font-sans);
             font-variant-numeric: tabular-nums lining-nums;
+            cursor: pointer;
+            transition: var(--transition-apple);
+            text-align: center;
+        }
+
+        .page-select-dropdown:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-strong);
+        }
+
+        .page-select-dropdown:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-primary-soft);
         }
 
         /* =====================================================================
@@ -1730,8 +1843,9 @@
 
         .drawer-overlay {
             justify-content: center;
-            align-items: center;
-            padding: 16px;
+            align-items: flex-start;
+            padding: 24px 16px;
+            overflow-y: auto;
         }
 
         .drawer-panel {
@@ -1739,11 +1853,12 @@
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-card);
             width: 100%;
-            max-width: 540px;
-            max-height: 90vh;
+            max-width: 600px;
+            max-height: none;
+            margin: auto 0;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: visible;
             box-shadow: var(--shadow-lg);
             animation: popCenterIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -1754,7 +1869,7 @@
         }
 
         .drawer-header {
-            padding: 18px 22px;
+            padding: 14px 18px;
             border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
@@ -1818,10 +1933,10 @@
         }
 
         .drawer-body {
-            padding: 18px 22px;
-            overflow-y: auto;
-            overscroll-behavior: contain;
-            flex: 1;
+            padding: 14px 18px;
+            overflow-y: visible;
+            max-height: none;
+            flex: none;
         }
 
         .form-alert {
@@ -1844,15 +1959,19 @@
             background: var(--surface-subtle);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-control);
-            padding: 14px 16px;
-            margin-bottom: 14px;
+            padding: 11px 14px;
+            margin-bottom: 10px;
+        }
+
+        .form-group-card:last-child {
+            margin-bottom: 0;
         }
 
         .form-group-title {
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--ink-primary);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 7px;
@@ -1889,11 +2008,33 @@
 
         #citizenForm .form-grid-2 {
             grid-template-columns: 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        @media (min-width: 641px) {
+            #citizenForm .form-grid-2 {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px 12px;
+            }
+            #citizenForm .form-grid-2 .field-wrap {
+                margin-bottom: 0;
+            }
+            #citizenForm .form-grid-2 .field-wrap label {
+                min-width: 92px;
+                width: 92px;
+            }
         }
 
         #citizenForm .form-grid-2:last-child {
+            margin-bottom: 0;
+        }
+
+        #citizenForm .field-wrap {
+            margin-bottom: 8px;
+        }
+
+        #citizenForm .field-wrap:last-child {
             margin-bottom: 0;
         }
 
@@ -1901,17 +2042,25 @@
         .field-wrap.field-inline {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         #citizenForm .field-wrap label,
         .field-wrap.field-inline label {
-            min-width: 122px;
-            width: 122px;
+            min-width: 112px;
+            width: 112px;
             flex-shrink: 0;
             margin-bottom: 0;
             text-align: right;
             white-space: nowrap;
+        }
+
+        #citizenForm .field-wrap input,
+        #citizenForm .field-wrap select,
+        #citizenForm .field-wrap textarea {
+            min-height: 36px;
+            padding: 6px 10px;
+            font-size: 14px;
         }
 
         #citizenForm .field-wrap input,
@@ -1955,8 +2104,9 @@
         }
 
         .drawer-footer {
-            padding: 14px 22px;
+            padding: 12px 18px;
             border-top: 1px solid var(--border-subtle);
+            border-radius: 0 0 var(--radius-card) var(--radius-card);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -2866,7 +3016,7 @@
                     </div>
 
                     <div id="jhDropdownMenu" class="jh-dropdown-menu" role="menu">
-                        <div class="total-pill" title="مزامنة وتفاصيل السجلات" role="menuitem">
+                        <div id="openSyncModalBtn" class="total-pill" title="مزامنة وتفاصيل السجلات" role="menuitem" tabindex="0">
                             <span>السجلات:</span>
                             <span id="headerTotalCount">0</span>
                         </div>
@@ -2891,6 +3041,15 @@
                             <span id="openMyRequestsBtnLabel">طلباتي</span>
                             <span id="myRequestsUnreadDot" class="menu-unread-dot" aria-hidden="true"></span>
                             <span id="pendingApprovalsBadge" class="menu-badge-count admin-only">0</span>
+                        </button>
+
+                        <button type="button" id="openImportBtn" class="menu-item-action admin-only" role="menuitem">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <span>استيراد البيانات بصيغة JSON</span>
                         </button>
 
                         <button type="button" id="exportDocsBtn" class="menu-item-action admin-only" role="menuitem">
@@ -2971,6 +3130,7 @@
                     <div class="brand-sub">
                         <span>تصميم أبو حازم</span>
                         <span id="adminModeBadge" class="admin-badge-pill">وضع المدير</span>
+                        <span id="cloudStatusIndicator" class="cloud-conn-pill is-online">متصل بالسحابة</span>
                         <span id="offlineStatusTag" class="offline-pill">بدون نت</span>
                     </div>
                 </div>
@@ -3097,7 +3257,7 @@
         <!-- Pagination -->
         <div id="paginationBar" class="pagination-dock">
             <button type="button" id="prevPageBtn" class="page-nav-btn">السابق</button>
-            <div id="pageIndicator" class="page-status">صفحة 1 من 1</div>
+            <select id="pageIndicator" class="page-select-dropdown" aria-label="اختر الصفحة"><option value="1">صفحة 1 من 1</option></select>
             <button type="button" id="nextPageBtn" class="page-nav-btn">التالي</button>
         </div>
 
@@ -3113,7 +3273,7 @@
         </div>
         <div class="bulk-actions-row">
             <button type="button" id="bulkPrintBtn" class="btn-bulk-print">طباعة المحدد</button>
-            <button type="button" id="bulkDeleteBtn" class="btn-bulk-delete">حذف المحدد</button>
+            <button type="button" id="bulkDeleteBtn" class="btn-bulk-delete admin-only">حذف المحدد</button>
         </div>
     </div>
 
@@ -3132,6 +3292,8 @@
 
                 <form id="citizenForm" onsubmit="return false;">
                     <input type="hidden" id="editingOriginalId">
+                    <input type="hidden" id="editingRequestId">
+                    <input type="hidden" id="editingRequestType">
 
                     <div class="form-group-card tone-teal">
                         <div class="form-group-title">البيانات الأساسية</div>
@@ -3310,13 +3472,13 @@
                 </svg>
             </div>
 
-            <h3>استيراد كشف Excel / CSV</h3>
-            <p class="sub">اختر ملف الكشف (.xlsx أو .csv) لاستيراد السجلات وحفظها محلياً ورفعها مباشرة إلى Firebase Firestore.</p>
+            <h3>استيراد البيانات بصيغة JSON</h3>
+            <p class="sub">اختر ملف البيانات (.json) لاستيراد السجلات وحفظها محلياً ورفعها مباشرة إلى Firebase Firestore.</p>
 
-            <input type="file" id="importFileInput" accept=".xlsx,.xls,.csv" style="display:none;">
+            <input type="file" id="importFileInput" accept=".json,application/json" style="display:none;">
             <div id="importDropzone" class="import-dropzone" role="button" tabindex="0">
-                <div id="importFileTitle" class="import-dropzone-title">اضغط لاختيار ملف Excel أو CSV</div>
-                <div id="importFileSub" class="import-dropzone-sub">يدعم الأعمدة العربية أو الإنجليزية (13 عموداً)</div>
+                <div id="importFileTitle" class="import-dropzone-title">اضغط لاختيار ملف JSON</div>
+                <div id="importFileSub" class="import-dropzone-sub">يدعم مصفوفة سجلات بصيغة JSON (بأسماء الحقول العربية أو الإنجليزية)</div>
             </div>
 
             <div id="importProgressWrap" class="sync-progress-wrap">
@@ -3350,8 +3512,8 @@
                 </svg>
             </div>
             <h3>دخول وضع المدير</h3>
-            <p class="sub">أدخل كلمة مرور المدير لتفعيل خيارات الاستيراد والتصدير والإعدادات السحابية.</p>
-            <input type="password" id="adminPassInput" class="admin-pin-input" placeholder="••••••" autocomplete="off">
+            <p class="sub">أدخل كلمة مرور المدير لتفعيل الصلاحيات الإدارية والمزامنة الآمنة.</p>
+            <input type="password" id="adminPassInput" class="admin-pin-input" placeholder="••••••" autocomplete="current-password">
             <div id="adminLoginError" class="admin-login-error">كلمة المرور غير صحيحة.</div>
             <div class="dialog-actions-2">
                 <button type="button" id="submitAdminLoginBtn" class="btn-dialog-primary">دخول</button>
@@ -3363,9 +3525,9 @@
     <div id="adminPassModalBackdrop" class="backdrop-overlay center-overlay">
         <div class="dialog-card">
             <h3>تغيير كلمة مرور المدير</h3>
-            <p class="sub">أدخل كلمة المرور الجديدة للمدير لحفظها على هذا الجهاز.</p>
-            <input type="password" id="newAdminPassInput" class="admin-pin-input" placeholder="كلمة المرور الجديدة" autocomplete="off">
-            <div id="adminPassError" class="admin-login-error">يرجى إدخال كلمة مرور لا تقل عن 4 أحرف.</div>
+            <p class="sub">أدخل كلمة المرور الجديدة (6 أحرف على الأقل) لتحديثها في Firebase Auth.</p>
+            <input type="password" id="newAdminPassInput" class="admin-pin-input" placeholder="كلمة المرور الجديدة" autocomplete="new-password">
+            <div id="adminPassError" class="admin-login-error">يرجى إدخال كلمة مرور لا تقل عن 6 أحرف.</div>
             <div class="dialog-actions-2">
                 <button type="button" id="saveNewAdminPassBtn" class="btn-dialog-primary">حفظ</button>
                 <button type="button" id="closeAdminPassBtn" class="btn-dialog-cancel">إلغاء</button>
@@ -3582,10 +3744,16 @@
     <!-- =====================================================================
          8. APPLICATION ENGINE & EXTERNAL DATA
          ===================================================================== -->
-    <script src="data.js"></script>
     <script>
         (function () {
             'use strict';
+
+            // -----------------------------------------------------------------
+            // 0. إعدادات Firebase الافتراضية الثابتة لجميع الأجهزة
+            // -----------------------------------------------------------------
+            const FIREBASE_API_KEY = "AIzaSyAts7ke18fSHl7PuBQLIJRDVmSSTZj_8uA";
+            const FIREBASE_PROJECT_ID = "allname-d0436";
+            const FIREBASE_COLLECTION = "civil_updates";
 
             // -----------------------------------------------------------------
             // A. Theme Toggle (Light / Dark) & JH Settings Dropdown Menu
@@ -3694,31 +3862,33 @@
             // -----------------------------------------------------------------
             // B. Offline Service Worker & Network Detection
             // -----------------------------------------------------------------
-            if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
-                const swScript = `
-                    const CACHE_NAME = 'civil-registry-offline-v4';
-                    self.addEventListener('install', (e) => {
-                        self.skipWaiting();
-                        e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll([location.href, 'data.js']).catch(() => {})));
-                    });
-                    self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
-                    self.addEventListener('fetch', (e) => {
-                        if (e.request.url.includes('docs.google.com') || e.request.url.includes('googleapis.com') || e.request.url.includes('gstatic.com') || e.request.url.includes('firebase')) return;
-                        e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).catch(() => r)));
-                    });
-                `;
-                try {
-                    const swBlob = new Blob([swScript], { type: 'application/javascript' });
-                    navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
-                } catch (err) {}
+            if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
             }
 
             const offlineStatusTag = document.getElementById('offlineStatusTag');
+            const cloudStatusIndicator = document.getElementById('cloudStatusIndicator');
+
+            function setCloudConnectionStatus(state, label) {
+                if (!cloudStatusIndicator) return;
+                cloudStatusIndicator.classList.remove('is-online', 'is-syncing', 'is-error', 'is-hidden');
+                if (state === 'offline') {
+                    cloudStatusIndicator.classList.add('is-hidden');
+                    return;
+                }
+                if (state === 'syncing') cloudStatusIndicator.classList.add('is-syncing');
+                else if (state === 'error') cloudStatusIndicator.classList.add('is-error');
+                else cloudStatusIndicator.classList.add('is-online');
+                if (label) cloudStatusIndicator.textContent = label;
+            }
+
             function checkOnlineState() {
                 if (!navigator.onLine) {
                     offlineStatusTag.classList.add('visible');
+                    setCloudConnectionStatus('offline', '');
                 } else {
                     offlineStatusTag.classList.remove('visible');
+                    setCloudConnectionStatus('online', 'متصل بالسحابة');
                 }
             }
             window.addEventListener('online', checkOnlineState);
@@ -3884,20 +4054,19 @@
             const PAGE_SIZE = 10;
 
             const DEFAULT_FIREBASE_CONFIG = {
-                apiKey: "AIzaSyAts7ke18fSHl7PuBQLIJRDVmSSTZj_8uA",
-                authDomain: "allname-d0436.firebaseapp.com",
-                projectId: "allname-d0436",
-                storageBucket: "allname-d0436.firebasestorage.app",
+                apiKey: FIREBASE_API_KEY,
+                authDomain: `${FIREBASE_PROJECT_ID}.firebaseapp.com`,
+                projectId: FIREBASE_PROJECT_ID,
+                storageBucket: `${FIREBASE_PROJECT_ID}.firebasestorage.app`,
                 messagingSenderId: "848309496436",
                 appId: "1:848309496436:web:4e104240a7d374c68bff21",
-                collectionName: "civil_updates"
+                collectionName: FIREBASE_COLLECTION
             };
 
             let db = null;
             let allRecords = [];
             let currentFiltered = [];
             let currentPage = 1;
-            let activeFilter = 'all';
             let selectedIds = new Set();
             let lastLoadedFromSync = 0;
             let isDeltaSyncRunning = false;
@@ -4014,12 +4183,85 @@
                 return `خطأ Firebase (${status})`;
             }
 
+            const FB_TOKEN_KEY = 'civil_registry_fb_token';
+            const FB_REFRESH_KEY = 'civil_registry_fb_refresh';
+            const FB_EXP_KEY = 'civil_registry_fb_exp';
+            const ADMIN_AUTH_EMAIL = "admin@allname.com";
+
+            function storeAuthTokens(idToken, refreshToken, expiresInSec) {
+                try {
+                    if (idToken) sessionStorage.setItem(FB_TOKEN_KEY, idToken);
+                    if (refreshToken) sessionStorage.setItem(FB_REFRESH_KEY, refreshToken);
+                    const expMs = Date.now() + (Math.max(60, Number(expiresInSec) || 3600) - 60) * 1000;
+                    sessionStorage.setItem(FB_EXP_KEY, String(expMs));
+                } catch (e) {}
+            }
+
+            function clearAuthTokens() {
+                try {
+                    sessionStorage.removeItem(FB_TOKEN_KEY);
+                    sessionStorage.removeItem(FB_REFRESH_KEY);
+                    sessionStorage.removeItem(FB_EXP_KEY);
+                } catch (e) {}
+            }
+
+            let refreshTokenPromise = null;
+            async function ensureFreshAdminToken() {
+                let token = '';
+                let refreshToken = '';
+                let expMs = 0;
+                try {
+                    token = sessionStorage.getItem(FB_TOKEN_KEY) || '';
+                    refreshToken = sessionStorage.getItem(FB_REFRESH_KEY) || '';
+                    expMs = Number(sessionStorage.getItem(FB_EXP_KEY) || '0');
+                } catch (e) {}
+
+                if (token && expMs > Date.now()) return token;
+                if (!refreshToken || !navigator.onLine) return token;
+
+                if (!refreshTokenPromise) {
+                    refreshTokenPromise = (async () => {
+                        try {
+                            const cfg = getCloudConfig();
+                            const res = await fetch(`https://securetoken.googleapis.com/v1/token?key=${encodeURIComponent(cfg.apiKey)}`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(refreshToken)}`
+                            });
+                            if (!res.ok) throw new Error('TOKEN_REFRESH_FAILED');
+                            const data = await res.json();
+                            if (data && data.id_token) {
+                                storeAuthTokens(data.id_token, data.refresh_token || refreshToken, data.expires_in);
+                                return data.id_token;
+                            }
+                            return '';
+                        } catch (e) {
+                            return token;
+                        } finally {
+                            refreshTokenPromise = null;
+                        }
+                    })();
+                }
+                return await refreshTokenPromise;
+            }
+
+            function getFsHeaders(includeJson = true, overrideToken = '') {
+                const headers = {};
+                if (includeJson) headers['Content-Type'] = 'application/json';
+                try {
+                    const token = overrideToken || sessionStorage.getItem(FB_TOKEN_KEY) || '';
+                    if (token) headers['Authorization'] = `Bearer ${token}`;
+                } catch (e) {}
+                return headers;
+            }
+
             async function fsSetDoc(collection, docId, dataObj) {
                 const cfg = getCloudConfig();
+                const tok = isAdminMode ? await ensureFreshAdminToken() : '';
                 const url = `${fsBaseUrl(cfg)}/${encodeURIComponent(collection)}/${encodeURIComponent(docId)}?key=${encodeURIComponent(cfg.apiKey)}`;
                 const res = await fetch(url, {
                     method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getFsHeaders(true, tok),
                     body: JSON.stringify({ fields: toFsFields(dataObj) })
                 });
                 if (!res.ok) {
@@ -4031,8 +4273,9 @@
 
             async function fsDeleteDoc(collection, docId) {
                 const cfg = getCloudConfig();
+                const tok = isAdminMode ? await ensureFreshAdminToken() : '';
                 const url = `${fsBaseUrl(cfg)}/${encodeURIComponent(collection)}/${encodeURIComponent(docId)}?key=${encodeURIComponent(cfg.apiKey)}`;
-                const res = await fetch(url, { method: 'DELETE' });
+                const res = await fetch(url, { method: 'DELETE', headers: getFsHeaders(false, tok) });
                 if (!res.ok && res.status !== 404) {
                     const txt = await res.text().catch(() => '');
                     throw new Error(parseFsError(res.status, txt));
@@ -4043,13 +4286,14 @@
             async function fsCommitWrites(writes) {
                 if (!writes.length) return true;
                 const cfg = getCloudConfig();
+                const tok = isAdminMode ? await ensureFreshAdminToken() : '';
                 const url = `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(cfg.projectId)}/databases/(default)/documents:commit?key=${encodeURIComponent(cfg.apiKey)}`;
                 const chunkSize = 450;
                 for (let i = 0; i < writes.length; i += chunkSize) {
                     const chunk = writes.slice(i, i + chunkSize);
                     const res = await fetch(url, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: getFsHeaders(true, tok),
                         body: JSON.stringify({ writes: chunk })
                     });
                     if (!res.ok) {
@@ -4065,7 +4309,7 @@
                 const url = `https://firestore.googleapis.com/v1/projects/${encodeURIComponent(cfg.projectId)}/databases/(default)/documents:runQuery?key=${encodeURIComponent(cfg.apiKey)}`;
                 const res = await fetch(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getFsHeaders(true),
                     body: JSON.stringify({ structuredQuery })
                 });
                 if (!res.ok) {
@@ -4090,7 +4334,7 @@
                 const cfg = getCloudConfig();
                 let url = `${fsBaseUrl(cfg)}/${encodeURIComponent(collection)}?pageSize=${pageSize}&key=${encodeURIComponent(cfg.apiKey)}`;
                 if (pageToken) url += `&pageToken=${encodeURIComponent(pageToken)}`;
-                const res = await fetch(url);
+                const res = await fetch(url, { headers: getFsHeaders(false) });
                 if (!res.ok) {
                     const txt = await res.text().catch(() => '');
                     throw new Error(parseFsError(res.status, txt));
@@ -4101,6 +4345,18 @@
                     return { id: parts[parts.length - 1], data: fromFsDocFields(d.fields) };
                 });
                 return { docs, nextPageToken: json.nextPageToken || '' };
+            }
+
+            async function fsListAllPages(collection, pageSize = 300, maxPages = 15) {
+                const allDocs = [];
+                let pageToken = '';
+                for (let p = 0; p < maxPages; p++) {
+                    const page = await fsListPage(collection, pageSize, pageToken);
+                    if (page.docs.length) allDocs.push(...page.docs);
+                    if (!page.nextPageToken || page.docs.length === 0) break;
+                    pageToken = page.nextPageToken;
+                }
+                return allDocs;
             }
 
             function getPendingDeletes() {
@@ -4307,38 +4563,42 @@
             async function quickDeltaSync(silent = true) {
                 if (!navigator.onLine || !isCloudConfigured() || isDeltaSyncRunning) return 0;
                 isDeltaSyncRunning = true;
+                setCloudConnectionStatus('syncing', 'جاري المزامنة...');
                 try {
                     const cfg = getCloudConfig();
                     const lastSync = getLastSyncTime();
                     let docs = [];
 
                     if (lastSync) {
-                        docs = await fsRunQuery({
-                            from: [{ collectionId: cfg.collectionName }],
-                            where: {
-                                fieldFilter: {
-                                    field: { fieldPath: 'updated_at' },
-                                    op: 'GREATER_THAN',
-                                    value: { stringValue: lastSync }
-                                }
-                            },
-                            limit: 500
-                        });
-                    } else {
-                        let pageToken = '';
-                        while (true) {
-                            const page = await fsListPage(cfg.collectionName, 300, pageToken);
-                            if (page.docs.length) docs.push(...page.docs);
-                            if (!page.nextPageToken || page.docs.length === 0) break;
-                            pageToken = page.nextPageToken;
+                        let cursor = lastSync;
+                        for (let pageIdx = 0; pageIdx < 20; pageIdx++) {
+                            const batch = await fsRunQuery({
+                                from: [{ collectionId: cfg.collectionName }],
+                                where: {
+                                    fieldFilter: {
+                                        field: { fieldPath: 'updated_at' },
+                                        op: 'GREATER_THAN',
+                                        value: { stringValue: cursor }
+                                    }
+                                },
+                                orderBy: [{ field: { fieldPath: 'updated_at' }, direction: 'ASCENDING' }],
+                                limit: 500
+                            });
+                            if (!batch.length) break;
+                            docs.push(...batch);
+                            const lastItemTs = batch[batch.length - 1].data && batch[batch.length - 1].data.updated_at;
+                            if (!lastItemTs || lastItemTs <= cursor || batch.length < 500) break;
+                            cursor = lastItemTs;
                         }
+                    } else {
+                        docs = await fsListAllPages(cfg.collectionName, 300, 30);
                     }
 
                     if (docs.length > 0) {
                         const recordMap = new Map(allRecords.map(p => [p.nationalId, p]));
                         const toPersist = [];
                         const toDeleteIds = [];
-                        let maxUpdated = lastSync || new Date().toISOString();
+                        let maxUpdated = lastSync || '';
 
                         for (const item of docs) {
                             if (item.data && item.data.updated_at && item.data.updated_at > maxUpdated) {
@@ -4374,16 +4634,17 @@
                                 applySearchAndFilter(false, true);
                             }
                         }
-                        setLastSyncTime(maxUpdated);
+                        if (maxUpdated) setLastSyncTime(maxUpdated);
                         if (!silent && changedCount > 0) {
                             showToast(`تم تطبيق ${toEnglishDigits(changedCount)} تحديث من السحابة`);
                         }
+                        setCloudConnectionStatus('online', 'متصل ومحدّث');
                         return changedCount;
-                    } else if (!lastSync) {
-                        setLastSyncTime(new Date().toISOString());
                     }
+                    setCloudConnectionStatus('online', 'متصل ومحدّث');
                     return 0;
                 } catch (e) {
+                    setCloudConnectionStatus('error', 'تعذر الاتصال بالسحابة');
                     return 0;
                 } finally {
                     isDeltaSyncRunning = false;
@@ -4560,6 +4821,7 @@
                 const matched = [];
 
                 for (const d of docs) {
+                    if (d.data && d.data.action === 'delete') continue;
                     const personObj = cloudRowToPerson(d.data, d.id);
                     if (!personObj.fullName || !personObj.nationalId) continue;
                     const existing = recordMap.get(personObj.nationalId);
@@ -4680,8 +4942,6 @@
             // F. KPI Counters & Callout Badge
             // -----------------------------------------------------------------
             const headerTotalCount = document.getElementById('headerTotalCount');
-            const syncCalloutBadge = document.getElementById('syncCalloutBadge');
-            let calloutDismissed = false;
 
             function updateGlobalCounters() {
                 const total = allRecords.length;
@@ -4692,22 +4952,6 @@
                 document.getElementById('syncStatTotal').textContent = toEnglishDigits(total);
                 document.getElementById('syncStatLoaded').textContent = toEnglishDigits(lastLoadedFromSync);
                 document.getElementById('syncStatChanged').textContent = toEnglishDigits(localChangedCount);
-
-                if (syncCalloutBadge) {
-                    if (total === 0 && !calloutDismissed) {
-                        syncCalloutBadge.classList.add('visible');
-                    } else {
-                        syncCalloutBadge.classList.remove('visible');
-                    }
-                }
-            }
-
-            if (syncCalloutBadge) {
-                syncCalloutBadge.addEventListener('click', () => {
-                    calloutDismissed = true;
-                    syncCalloutBadge.classList.remove('visible');
-                    openSyncModal();
-                });
             }
 
 
@@ -4739,13 +4983,14 @@
             // View mode initialization:
             // Laptop/PC default: 'table' | Mobile default: 'cards'.
             // Persisted in localStorage if user manually clicks either button.
-            const savedViewPref = localStorage.getItem('civil_registry_view_mode');
+            let savedViewPref = null;
+            try { savedViewPref = localStorage.getItem('civil_registry_view_mode'); } catch (e) {}
             let currentViewMode = savedViewPref || (window.innerWidth > 768 ? 'table' : 'cards');
 
             function setViewMode(mode, savePref = false) {
                 currentViewMode = mode;
                 if (savePref) {
-                    localStorage.setItem('civil_registry_view_mode', mode);
+                    try { localStorage.setItem('civil_registry_view_mode', mode); } catch (e) {}
                 }
                 if (viewBtnTable) viewBtnTable.classList.toggle('active', mode === 'table');
                 if (viewBtnCards) viewBtnCards.classList.toggle('active', mode === 'cards');
@@ -4766,7 +5011,9 @@
             setViewMode(currentViewMode, false);
 
             window.addEventListener('resize', () => {
-                if (!localStorage.getItem('civil_registry_view_mode')) {
+                let storedPref = null;
+                try { storedPref = localStorage.getItem('civil_registry_view_mode'); } catch (e) {}
+                if (!storedPref) {
                     const autoMode = window.innerWidth > 768 ? 'table' : 'cards';
                     if (autoMode !== currentViewMode) {
                         setViewMode(autoMode, false);
@@ -4860,10 +5107,6 @@
 
                 function runLocalFilter() {
                     return allRecords.filter(person => {
-                        if (activeFilter === 'local' && !person.isLocal) return false;
-                        if (activeFilter === 'married' && person.maritalStatus !== 'متزوج') return false;
-                        if (activeFilter === 'single' && person.maritalStatus !== 'أعزب') return false;
-
                         if (hasTextQuery) {
                             if (isPureDigits) {
                                 if (!person.nationalId.includes(engDigits)) return false;
@@ -4992,9 +5235,11 @@
                     const idText = toEnglishDigits(person.nationalId);
                     const mobText = toEnglishDigits(person.mobile || '');
                     const famText = toEnglishDigits(person.familyCount || '0');
+                    const addrText = String(person.address || '').trim();
 
                     // 1. Digital Identity Card
                     const card = document.createElement('div');
+                    card.dataset.id = person.nationalId;
                     card.className = 'id-pass-card' + (person.isLocal ? ' is-local' : (person.gender === 'أنثى' ? ' is-female' : '')) + (isSelected ? ' is-selected' : '');
 
                     card.innerHTML = `
@@ -5013,9 +5258,10 @@
                                             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                                         </svg>
                                     </button>
-                                    ${mobText ? `<span class="chip-mobile">${escapeHtml(mobText)}</span>` : ''}
+                                    ${mobText ? `<button type="button" class="chip-mobile copy-mobile-btn" title="نسخ رقم الجوال"><span>${escapeHtml(mobText)}</span><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>` : ''}
                                     <span class="chip-neutral">الأفراد: <span class="data-num">${escapeHtml(famText)}</span></span>
                                     ${person.maritalStatus ? `<span class="chip-neutral">${escapeHtml(person.maritalStatus)}</span>` : ''}
+                                    ${addrText ? `<span class="chip-neutral chip-address" title="${escapeHtml(addrText)}"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span class="chip-address-text">${escapeHtml(addrText)}</span></span>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -5037,15 +5283,18 @@
                         copyTextSafely(idText, `تم نسخ رقم الهوية: ${idText}`);
                     });
 
+                    const cardCopyMobBtn = card.querySelector('.copy-mobile-btn');
+                    if (cardCopyMobBtn) {
+                        cardCopyMobBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            copyTextSafely(mobText, `تم نسخ رقم الجوال: ${mobText}`);
+                        });
+                    }
+
                     const cardCb = card.querySelector('.row-cb');
                     cardCb.addEventListener('change', (e) => {
                         e.stopPropagation();
-                        if (cardCb.checked) {
-                            selectedIds.add(person.nationalId);
-                        } else {
-                            selectedIds.delete(person.nationalId);
-                        }
-                        renderCurrentPage(true);
+                        toggleRowSelection(person.nationalId, cardCb.checked);
                     });
 
                     const cardMoreBtn = card.querySelector('.card-more-btn');
@@ -5057,7 +5306,7 @@
                     }
 
                     card.addEventListener('click', (e) => {
-                        if (e.target.closest('.row-cb') || e.target.closest('.copy-id-btn') || e.target.closest('.row-more-btn')) return;
+                        if (e.target.closest('.row-cb') || e.target.closest('.copy-id-btn') || e.target.closest('.copy-mobile-btn') || e.target.closest('.row-more-btn')) return;
                         openEditRecordModal(person.nationalId, false);
                     });
 
@@ -5065,6 +5314,7 @@
 
                     // 2. Structured Table Row
                     const tr = document.createElement('tr');
+                    tr.dataset.id = person.nationalId;
                     tr.className = 'table-row-item' + (isSelected ? ' is-selected' : '');
                     tr.innerHTML = `
                         <td class="td-cb">
@@ -5119,12 +5369,7 @@
                     const tableCb = tr.querySelector('.table-row-cb');
                     tableCb.addEventListener('change', (e) => {
                         e.stopPropagation();
-                        if (tableCb.checked) {
-                            selectedIds.add(person.nationalId);
-                        } else {
-                            selectedIds.delete(person.nationalId);
-                        }
-                        renderCurrentPage(true);
+                        toggleRowSelection(person.nationalId, tableCb.checked);
                     });
 
                     const tableMoreBtn = tr.querySelector('.table-more-btn');
@@ -5150,7 +5395,16 @@
                     paginationBar.classList.add('visible');
                     prevPageBtn.disabled = currentPage <= 1;
                     nextPageBtn.disabled = currentPage >= totalPages;
-                    pageIndicator.textContent = `صفحة ${toEnglishDigits(currentPage)} من ${toEnglishDigits(totalPages)}`;
+                    const optFrag = document.createDocumentFragment();
+                    for (let p = 1; p <= totalPages; p++) {
+                        const opt = document.createElement('option');
+                        opt.value = String(p);
+                        opt.textContent = `صفحة ${toEnglishDigits(p)} من ${toEnglishDigits(totalPages)}`;
+                        optFrag.appendChild(opt);
+                    }
+                    pageIndicator.innerHTML = '';
+                    pageIndicator.appendChild(optFrag);
+                    pageIndicator.value = String(currentPage);
                 } else {
                     paginationBar.classList.remove('visible');
                 }
@@ -5158,6 +5412,37 @@
                 const allChecked = pageSlice.length > 0 && pageSlice.every(p => selectedIds.has(p.nationalId));
                 selectPageCheckbox.checked = allChecked;
                 if (tableHeaderCheck) tableHeaderCheck.checked = allChecked;
+                updateBulkBar();
+            }
+
+            function syncPageHeaderCheckboxes() {
+                const startIdx = (currentPage - 1) * PAGE_SIZE;
+                const pageSlice = currentFiltered.slice(startIdx, startIdx + PAGE_SIZE);
+                const allChecked = pageSlice.length > 0 && pageSlice.every(p => selectedIds.has(p.nationalId));
+                selectPageCheckbox.checked = allChecked;
+                if (tableHeaderCheck) tableHeaderCheck.checked = allChecked;
+            }
+
+            function toggleRowSelection(nationalId, isChecked) {
+                if (isChecked) {
+                    selectedIds.add(nationalId);
+                } else {
+                    selectedIds.delete(nationalId);
+                }
+                const safeId = (window.CSS && CSS.escape) ? CSS.escape(nationalId) : nationalId.replace(/"/g, '\"');
+                const cardEl = cardsList.querySelector(`.id-pass-card[data-id="${safeId}"]`);
+                if (cardEl) {
+                    cardEl.classList.toggle('is-selected', isChecked);
+                    const cb = cardEl.querySelector('.row-cb');
+                    if (cb) cb.checked = isChecked;
+                }
+                const trEl = recordsTableBody.querySelector(`tr[data-id="${safeId}"]`);
+                if (trEl) {
+                    trEl.classList.toggle('is-selected', isChecked);
+                    const cb = trEl.querySelector('.table-row-cb');
+                    if (cb) cb.checked = isChecked;
+                }
+                syncPageHeaderCheckboxes();
                 updateBulkBar();
             }
 
@@ -5184,15 +5469,21 @@
                 }
             });
 
+            pageIndicator.addEventListener('change', () => {
+                const targetPage = parseInt(pageIndicator.value, 10);
+                const totalPages = Math.max(1, Math.ceil(currentFiltered.length / PAGE_SIZE));
+                if (!isNaN(targetPage) && targetPage >= 1 && targetPage <= totalPages) {
+                    currentPage = targetPage;
+                    renderCurrentPage(true);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+
             selectPageCheckbox.addEventListener('change', () => {
                 const startIdx = (currentPage - 1) * PAGE_SIZE;
                 const pageSlice = currentFiltered.slice(startIdx, startIdx + PAGE_SIZE);
-                if (selectPageCheckbox.checked) {
-                    pageSlice.forEach(p => selectedIds.add(p.nationalId));
-                } else {
-                    pageSlice.forEach(p => selectedIds.delete(p.nationalId));
-                }
-                renderCurrentPage(true);
+                const checked = selectPageCheckbox.checked;
+                pageSlice.forEach(p => toggleRowSelection(p.nationalId, checked));
             });
 
             if (tableHeaderCheck) {
@@ -5207,7 +5498,6 @@
             document.getElementById('clearSearchBtn').addEventListener('click', () => {
                 searchUnifiedInput.value = '';
                 clearUnifiedFieldBtn.classList.remove('visible');
-                activeFilter = 'all';
                 selectedIds.clear();
                 currentFiltered = [];
                 renderCurrentPage(false);
@@ -5268,7 +5558,7 @@
                     closeRowActionsMenu();
                 }
             });
-            window.addEventListener('scroll', closeRowActionsMenu, true);
+            window.addEventListener('scroll', () => { if (rowActionsMenu && rowActionsMenu.classList.contains('open')) closeRowActionsMenu(); }, { capture: true, passive: true });
 
             if (rowActionEditBtn) {
                 rowActionEditBtn.addEventListener('click', () => {
@@ -5417,6 +5707,8 @@
                 hideFormAlert();
                 closeRowActionsMenu();
                 document.getElementById('editingOriginalId').value = '';
+                document.getElementById('editingRequestId').value = '';
+                document.getElementById('editingRequestType').value = '';
                 initialFormSnapshot = null;
                 formModalTitle.textContent = 'إضافة سجل جديد';
                 setFormReadOnly(false);
@@ -5431,6 +5723,8 @@
                 hideFormAlert();
                 closeRowActionsMenu();
                 document.getElementById('editingOriginalId').value = person.nationalId;
+                document.getElementById('editingRequestId').value = '';
+                document.getElementById('editingRequestType').value = '';
                 formModalTitle.textContent = editable ? 'تعديل بيانات السجل' : 'تفاصيل السجل';
 
                 document.getElementById('inpFullName').value = person.fullName || '';
@@ -5468,9 +5762,12 @@
                 if (isFormReadOnly) return;
 
                 const originalId = document.getElementById('editingOriginalId').value.trim();
-                const isEdit = originalId.length > 0;
+                const editingRequestId = document.getElementById('editingRequestId').value.trim();
+                const editingRequestType = document.getElementById('editingRequestType').value.trim();
+                const isEditingPendingReq = editingRequestId.length > 0;
+                const isEdit = isEditingPendingReq ? (editingRequestType === 'edit') : (originalId.length > 0);
 
-                if (isEdit && !hasFormChanges()) {
+                if ((isEdit || isEditingPendingReq) && !hasFormChanges()) {
                     showFormAlert('لم يتم إجراء أي تعديل على البيانات');
                     return;
                 }
@@ -5504,13 +5801,13 @@
 
                 const cloudReady = navigator.onLine && isCloudConfigured();
                 const ok = await askConfirmation({
-                    title: isEdit ? 'تأكيد تعديل السجل' : 'تأكيد إضافة سجل جديد',
+                    title: isEditingPendingReq ? 'تأكيد تحديث الطلب' : (isEdit ? 'تأكيد تعديل السجل' : 'تأكيد إضافة سجل جديد'),
                     message: isAdminMode
                         ? (cloudReady
                             ? `الاسم: ${fullName} — رقم الهوية: ${nationalId}. سيتم الاعتماد والحفظ في السحابة مباشرة.`
                             : `الاسم: ${fullName} — رقم الهوية: ${nationalId}. سيتم الحفظ محلياً الآن ورفعه عند المزامنة.`)
-                        : `الاسم: ${fullName} — رقم الهوية: ${nationalId}. سيتم الحفظ محلياً وإرسال طلب اعتماد للمدير.`,
-                    confirmText: isEdit ? 'حفظ التعديل' : 'إضافة السجل',
+                        : `الاسم: ${fullName} — رقم الهوية: ${nationalId}. سيتم إرسال الطلب للمدير للمراجعة دون تغيير السجل الرسمي قبل الاعتماد.`,
+                    confirmText: isEditingPendingReq ? 'تحديث الطلب' : (isEdit ? 'حفظ التعديل' : 'إضافة السجل'),
                     isDanger: false
                 });
 
@@ -5531,34 +5828,28 @@
                     altPhone,
                     address: document.getElementById('inpAddress').value.trim(),
                     notes: document.getElementById('inpNotes').value.trim(),
-                    isLocal: true,
+                    isLocal: isAdminMode,
                     _normName: normalizeArabic(fullName)
                 };
 
-                // 1) الحفظ المحلي وتحديث الواجهة وإغلاق البطاقة فوراً
-                await dbSaveOne(recordData, isEdit ? originalId : null);
-
-                if (isEdit) {
-                    const idx = allRecords.findIndex(p => p.nationalId === originalId);
-                    if (idx !== -1) {
-                        allRecords[idx] = recordData;
+                if (isAdminMode) {
+                    await dbSaveOne(recordData, isEdit ? originalId : null);
+                    if (isEdit) {
+                        const idx = allRecords.findIndex(p => p.nationalId === originalId);
+                        if (idx !== -1) allRecords[idx] = recordData;
+                        else allRecords.unshift(recordData);
+                        if (selectedIds.has(originalId)) {
+                            selectedIds.delete(originalId);
+                            selectedIds.add(nationalId);
+                        }
                     } else {
                         allRecords.unshift(recordData);
                     }
-                    if (selectedIds.has(originalId)) {
-                        selectedIds.delete(originalId);
-                        selectedIds.add(nationalId);
-                    }
-                } else {
-                    allRecords.unshift(recordData);
-                }
 
-                closeFormModal();
-                updateGlobalCounters();
-                applySearchAndFilter(false, true);
+                    closeFormModal();
+                    updateGlobalCounters();
+                    applySearchAndFilter(false, true);
 
-                // 2) الإرسال للسحابة: المدير يعتمد مباشرة، والمستخدم يرسل طلب مراجعة
-                if (isAdminMode) {
                     let syncedToCloud = false;
                     let cloudErr = '';
                     if (navigator.onLine && isCloudConfigured()) {
@@ -5569,7 +5860,6 @@
                             await cloudUpsertBatch([recordData]);
                             recordData.isLocal = false;
                             await dbSaveOne(recordData);
-                            setLastSyncTime(new Date().toISOString());
                             updateGlobalCounters();
                             syncedToCloud = true;
                         } catch (err) {
@@ -5591,25 +5881,57 @@
                         showToast(isEdit ? 'تم حفظ التعديلات محلياً (بانتظار المزامنة)' : 'تمت إضافة السجل محلياً (بانتظار المزامنة)');
                     }
                 } else {
-                    const res = await submitPendingRequest({
-                        actionType: isEdit ? 'edit' : 'add',
-                        nationalId: isEdit ? originalId : nationalId,
-                        newNationalId: nationalId,
-                        fullName,
-                        beforeData: previousRecord ? personToCloudRow(previousRecord) : null,
-                        afterData: personToCloudRow(recordData)
-                    });
-                    await recordActivityLog({
-                        actionType: isEdit ? 'edit' : 'add',
-                        nationalId,
-                        fullName,
-                        actorRole: 'user',
-                        summary: isEdit ? 'طلب تعديل مرسل للمراجعة' : 'طلب إضافة مرسل للمراجعة'
-                    });
-                    if (res.sent) {
-                        showToast('تم الحفظ محلياً وإرسال الطلب لاعتماد المدير');
+                    closeFormModal();
+                    if (isEditingPendingReq) {
+                        const existingReq = getMyRequestsCache().find(r => r.requestId === editingRequestId) || {};
+                        const updatedReq = {
+                            ...existingReq,
+                            requestId: editingRequestId,
+                            senderDeviceId: existingReq.senderDeviceId || getSenderDeviceId(),
+                            actionType: editingRequestType || existingReq.actionType || (isEdit ? 'edit' : 'add'),
+                            nationalId: originalId || nationalId,
+                            newNationalId: nationalId,
+                            fullName,
+                            beforeData: existingReq.beforeData !== undefined ? existingReq.beforeData : (previousRecord ? personToCloudRow(previousRecord) : null),
+                            afterData: personToCloudRow(recordData),
+                            status: 'pending',
+                            updatedAt: new Date().toISOString()
+                        };
+                        upsertMyRequestCache(updatedReq);
+                        let sent = false;
+                        if (navigator.onLine && isCloudConfigured()) {
+                            try {
+                                await fsSetDoc(PENDING_COLLECTION, updatedReq.requestId, updatedReq);
+                                sent = true;
+                            } catch (e) {}
+                        }
+                        if (!sent) {
+                            const q = getLocalPendingQueue().filter(x => x.requestId !== updatedReq.requestId);
+                            q.push(updatedReq);
+                            saveLocalPendingQueue(q);
+                        }
+                        showToast(sent ? 'تم تحديث الطلب المعلق بنجاح' : 'تم تحديث الطلب محلياً وسيُرفع عند المزامنة');
                     } else {
-                        showToast(`حُفظ محلياً (${res.error || 'سيُرسل عند المزامنة'})`);
+                        const res = await submitPendingRequest({
+                            actionType: isEdit ? 'edit' : 'add',
+                            nationalId: isEdit ? originalId : nationalId,
+                            newNationalId: nationalId,
+                            fullName,
+                            beforeData: previousRecord ? personToCloudRow(previousRecord) : null,
+                            afterData: personToCloudRow(recordData)
+                        });
+                        await recordActivityLog({
+                            actionType: isEdit ? 'edit' : 'add',
+                            nationalId,
+                            fullName,
+                            actorRole: 'user',
+                            summary: isEdit ? 'طلب تعديل مرسل للمراجعة' : 'طلب إضافة مرسل للمراجعة'
+                        });
+                        if (res.sent) {
+                            showToast('تم إرسال الطلب لاعتماد المدير ويمكنك متابعته من «طلباتي»');
+                        } else {
+                            showToast(`تم حفظ الطلب في قائمة الانتظار (${res.error || 'سيُرسل عند المزامنة'})`);
+                        }
                     }
                 }
             });
@@ -5617,6 +5939,10 @@
 
 
             document.getElementById('bulkDeleteBtn').addEventListener('click', async () => {
+                if (!isAdminMode) {
+                    showToast('صلاحية الحذف محصورة بوضع المدير');
+                    return;
+                }
                 const count = selectedIds.size;
                 if (count === 0) return;
 
@@ -5647,6 +5973,13 @@
                     addPendingDeletes(idsToRemove);
                 }
 
+                await recordActivityLog({
+                    actionType: 'delete',
+                    nationalId: idsToRemove.slice(0, 3).join(', '),
+                    fullName: `حذف جماعي (${toEnglishDigits(count)} سجل)`,
+                    actorRole: 'admin',
+                    summary: `حذف ${toEnglishDigits(count)} سجل محدد`
+                });
                 updateGlobalCounters();
                 applySearchAndFilter(false, true);
                 showToast(cloudBulkDeleted
@@ -5806,8 +6139,6 @@
             }
 
             function openSyncModal() {
-                calloutDismissed = true;
-                if (syncCalloutBadge) syncCalloutBadge.classList.remove('visible');
                 syncReportBox.classList.remove('visible', 'error');
                 if (syncProgressWrap) syncProgressWrap.classList.remove('visible');
                 closeSyncBtn.textContent = 'إلغاء الأمر';
@@ -5820,7 +6151,17 @@
                 syncModalBackdrop.classList.remove('visible');
             }
 
-
+            const openSyncModalBtn = document.getElementById('openSyncModalBtn');
+            if (openSyncModalBtn) {
+                openSyncModalBtn.addEventListener('click', () => {
+                    if (jhDropdownMenu) jhDropdownMenu.classList.remove('open');
+                    if (jhSettingsBtn) {
+                        jhSettingsBtn.classList.remove('active');
+                        jhSettingsBtn.setAttribute('aria-expanded', 'false');
+                    }
+                    openSyncModal();
+                });
+            }
             closeSyncBtn.addEventListener('click', closeSyncModal);
 
             startSyncBtn.addEventListener('click', async () => {
@@ -5877,25 +6218,32 @@
                         }
                     }
 
-                    // 3) مزامنة تفاضلية سريعة إذا كانت البيانات موجودة محلياً، أو جلب كامل لأول مرة
+                    // 3) مزامنة تفاضلية مرتبة ومقسمة لصفحات أو جلب كامل لأول مرة
                     let allRemoteRows = [];
                     const lastSync = getLastSyncTime();
                     if (allRecords.length > 0 && lastSync) {
-                        syncProgressLabel.textContent = 'جاري جلب التحديثات الجديدة بسرعة...';
-                        allRemoteRows = await fsRunQuery({
-                            from: [{ collectionId: cfg.collectionName }],
-                            where: {
-                                fieldFilter: {
-                                    field: { fieldPath: 'updated_at' },
-                                    op: 'GREATER_THAN',
-                                    value: { stringValue: lastSync }
-                                }
-                            },
-                            limit: 1000
-                        });
-                    }
-
-                    if (allRemoteRows.length === 0 && (allRecords.length === 0 || !lastSync)) {
+                        syncProgressLabel.textContent = 'جاري جلب التحديثات الجديدة...';
+                        let cursor = lastSync;
+                        for (let pageIdx = 0; pageIdx < 30; pageIdx++) {
+                            const batch = await fsRunQuery({
+                                from: [{ collectionId: cfg.collectionName }],
+                                where: {
+                                    fieldFilter: {
+                                        field: { fieldPath: 'updated_at' },
+                                        op: 'GREATER_THAN',
+                                        value: { stringValue: cursor }
+                                    }
+                                },
+                                orderBy: [{ field: { fieldPath: 'updated_at' }, direction: 'ASCENDING' }],
+                                limit: 500
+                            });
+                            if (!batch.length) break;
+                            allRemoteRows.push(...batch);
+                            const lastTs = batch[batch.length - 1].data && batch[batch.length - 1].data.updated_at;
+                            if (!lastTs || lastTs <= cursor || batch.length < 500) break;
+                            cursor = lastTs;
+                        }
+                    } else {
                         let pageToken = '';
                         while (true) {
                             const page = await fsListPage(cfg.collectionName, 300, pageToken);
@@ -5907,7 +6255,12 @@
                             pageToken = page.nextPageToken;
                         }
                     }
-                    setLastSyncTime(new Date().toISOString());
+                    let maxRemoteTs = lastSync || '';
+                    allRemoteRows.forEach(item => {
+                        const ts = item.data && item.data.updated_at;
+                        if (ts && ts > maxRemoteTs) maxRemoteTs = ts;
+                    });
+                    if (maxRemoteTs) setLastSyncTime(maxRemoteTs);
 
                     syncProgressFill.style.width = '96%';
                     syncProgressLabel.textContent = 'جاري حفظ البيانات في الذاكرة المحلية...';
@@ -5972,7 +6325,7 @@
                     lastLoadedFromSync = loadedFromCloud;
 
                     updateGlobalCounters();
-                    applySearchAndFilter(false, activeFilter !== 'all' || searchUnifiedInput.value.trim() !== '');
+                    applySearchAndFilter(false, searchUnifiedInput.value.trim() !== '');
 
                     const reportLines = [
                         `اكتملت المزامنة مع Firebase Firestore:`,
@@ -6019,8 +6372,8 @@
             function openImportModal() {
                 parsedImportRecords = [];
                 if (importFileInput) importFileInput.value = '';
-                importFileTitle.textContent = 'اضغط لاختيار ملف Excel أو CSV';
-                importFileSub.textContent = 'يدعم الأعمدة العربية أو الإنجليزية (13 عموداً)';
+                importFileTitle.textContent = 'اضغط لاختيار ملف JSON';
+                importFileSub.textContent = 'يدعم مصفوفة سجلات بصيغة JSON (بأسماء الحقول العربية أو الإنجليزية)';
                 importReportBox.classList.remove('visible', 'error');
                 importProgressWrap.classList.remove('visible');
                 startImportUploadBtn.disabled = true;
@@ -6032,7 +6385,8 @@
                 importModalBackdrop.classList.remove('visible');
             }
 
-
+            const openImportBtn = document.getElementById('openImportBtn');
+            if (openImportBtn) openImportBtn.addEventListener('click', openImportModal);
             if (closeImportBtn) closeImportBtn.addEventListener('click', closeImportModal);
             if (importDropzone) {
                 importDropzone.addEventListener('click', () => importFileInput.click());
@@ -6193,6 +6547,62 @@
                 return { valid: Array.from(seen.values()), skipped };
             }
 
+            function mapJsonRecordsToPersons(rawItems) {
+                const seen = new Map();
+                let skipped = 0;
+                const pick = (obj, keys) => {
+                    for (const k of keys) {
+                        if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') {
+                            return obj[k];
+                        }
+                    }
+                    return '';
+                };
+
+                for (const item of rawItems) {
+                    if (!item || typeof item !== 'object') {
+                        skipped++;
+                        continue;
+                    }
+                    const fullName = String(pick(item, ['fullName', 'full_name', 'الاسم الكامل', 'الاسم'])).replace(/\s+/g, ' ').trim();
+                    const nationalId = toEnglishDigits(pick(item, ['nationalId', 'national_id', 'رقم الهوية', 'الهوية'])).replace(/[^\d]/g, '');
+
+                    if (!fullName || !nationalId) {
+                        skipped++;
+                        continue;
+                    }
+
+                    let gender = String(pick(item, ['gender', 'الجنس'])).trim();
+                    if (gender === 'انثى') gender = 'أنثى';
+                    if (!gender) gender = 'ذكر';
+
+                    let maritalStatus = String(pick(item, ['maritalStatus', 'marital_status', 'الحالة الاجتماعية'])).trim();
+                    if (maritalStatus === 'اعزب') maritalStatus = 'أعزب';
+                    if (maritalStatus === 'ارمل') maritalStatus = 'أرمل';
+                    if (!maritalStatus) maritalStatus = 'أعزب';
+
+                    const personObj = {
+                        fullName,
+                        nationalId,
+                        gender,
+                        birthDate: normalizeImportDate(pick(item, ['birthDate', 'birth_date', 'تاريخ الميلاد'])),
+                        maritalStatus,
+                        motherName: String(pick(item, ['motherName', 'mother_name', 'اسم الأم', 'اسم الام'])).trim(),
+                        wifeName: String(pick(item, ['wifeName', 'wife_name', 'اسم الزوجة'])).trim(),
+                        wifeNationalId: toEnglishDigits(pick(item, ['wifeNationalId', 'wife_national_id', 'رقم هوية الزوجة'])).replace(/[^\d]/g, ''),
+                        familyCount: toEnglishDigits(pick(item, ['familyCount', 'family_count', 'عدد أفراد الأسرة', 'عدد افراد الاسرة'])).replace(/[^\d]/g, '') || '0',
+                        mobile: normalizeImportPhone(pick(item, ['mobile', 'رقم الجوال', 'الجوال'])),
+                        altPhone: normalizeImportPhone(pick(item, ['altPhone', 'alt_phone', 'هاتف بديل', 'الهاتف البديل'])),
+                        address: String(pick(item, ['address', 'العنوان التفصيلي', 'العنوان'])).trim(),
+                        notes: String(pick(item, ['notes', 'ملاحظات', 'الملاحظات'])).trim(),
+                        isLocal: true,
+                        _normName: normalizeArabic(fullName)
+                    };
+                    seen.set(nationalId, personObj);
+                }
+                return { valid: Array.from(seen.values()), skipped };
+            }
+
             if (importFileInput) {
                 importFileInput.addEventListener('change', async (e) => {
                     const file = e.target.files && e.target.files[0];
@@ -6202,35 +6612,33 @@
                     startImportUploadBtn.disabled = true;
                     importReportBox.classList.remove('visible', 'error');
                     importFileTitle.textContent = file.name;
-                    importFileSub.textContent = 'جاري قراءة وتحليل الملف...';
+                    importFileSub.textContent = 'جاري قراءة وتحليل ملف JSON...';
 
                     try {
-                        let matrix = [];
-                        const lowerName = file.name.toLowerCase();
-                        if (lowerName.endsWith('.csv')) {
-                            const text = await file.text();
-                            matrix = parseCsvMatrix(text);
-                        } else {
-                            if (typeof XLSX === 'undefined') {
-                                throw new Error('مكتبة قراءة الإكسل (SheetJS) غير محملة. يرجى استخدام ملف CSV أو التأكد من الإنترنت.');
-                            }
-                            const buf = await file.arrayBuffer();
-                            const wb = XLSX.read(buf, { type: 'array', cellDates: true });
-                            const firstSheet = wb.Sheets[wb.SheetNames[0]];
-                            matrix = XLSX.utils.sheet_to_json(firstSheet, { header: 1, defval: '' });
+                        if (!file.name.toLowerCase().endsWith('.json')) {
+                            throw new Error('يرجى اختيار ملف بصيغة JSON (.json) فقط.');
+                        }
+                        const text = await file.text();
+                        const parsed = JSON.parse(text.replace(/^\uFEFF/, ''));
+                        const itemsArray = Array.isArray(parsed)
+                            ? parsed
+                            : (parsed && Array.isArray(parsed.records) ? parsed.records : (parsed && Array.isArray(parsed.data) ? parsed.data : null));
+
+                        if (!itemsArray) {
+                            throw new Error('تنسيق ملف JSON غير صالح. يجب أن يحتوي الملف على مصفوفة من السجلات.');
                         }
 
-                        const { valid, skipped } = mapMatrixToPersons(matrix);
+                        const { valid, skipped } = mapJsonRecordsToPersons(itemsArray);
                         if (valid.length === 0) {
                             throw new Error('لم يتم العثور على سجلات صالحة تحتوي على الاسم ورقم الهوية.');
                         }
 
                         parsedImportRecords = valid;
-                        importFileSub.textContent = `جاهز: ${toEnglishDigits(valid.length)} سجل صالح (تجاهل ${toEnglishDigits(skipped)} صف)`;
+                        importFileSub.textContent = `جاهز: ${toEnglishDigits(valid.length)} سجل صالح (تجاهل ${toEnglishDigits(skipped)} سجل)`;
                         startImportUploadBtn.disabled = false;
                     } catch (err) {
                         importFileSub.textContent = 'تعذر قراءة الملف';
-                        importReportBox.textContent = toEnglishDigits(err.message || 'حدث خطأ أثناء قراءة الملف.');
+                        importReportBox.textContent = toEnglishDigits(err.message || 'حدث خطأ أثناء قراءة ملف JSON.');
                         importReportBox.classList.add('visible', 'error');
                     }
                 });
@@ -6281,7 +6689,7 @@
                         importProgressFill.style.width = '100%';
                         importProgressLabel.textContent = 'اكتمل الاستيراد بنجاح';
                         updateGlobalCounters();
-                        applySearchAndFilter(false, activeFilter !== 'all' || searchUnifiedInput.value.trim() !== '');
+                        applySearchAndFilter(false, searchUnifiedInput.value.trim() !== '');
 
                         importReportBox.innerHTML = navigator.onLine
                             ? `تم استيراد ورفع <b>${toEnglishDigits(uploadedToCloud)}</b> سجل إلى Firebase Firestore وحفظها محلياً بنجاح.`
@@ -6303,9 +6711,7 @@
             // -----------------------------------------------------------------
             // J3. User / Admin Mode (5-Tap on Title) & Export to Documents
             // -----------------------------------------------------------------
-            const ADMIN_PASS_KEY = 'civil_registry_admin_pass';
             const ADMIN_SESSION_KEY = 'civil_registry_admin_session';
-            const DEFAULT_ADMIN_PASS = '123456';
             let isAdminMode = false;
             let titleTapCount = 0;
             let titleTapTimer = null;
@@ -6323,18 +6729,9 @@
             const saveNewAdminPassBtn = document.getElementById('saveNewAdminPassBtn');
             const closeAdminPassBtn = document.getElementById('closeAdminPassBtn');
 
-
             const exportDocsBtn = document.getElementById('exportDocsBtn');
             const changeAdminPassBtn = document.getElementById('changeAdminPassBtn');
             const exitAdminModeBtn = document.getElementById('exitAdminModeBtn');
-
-            function getAdminPassword() {
-                try {
-                    return localStorage.getItem(ADMIN_PASS_KEY) || DEFAULT_ADMIN_PASS;
-                } catch (e) {
-                    return DEFAULT_ADMIN_PASS;
-                }
-            }
 
             function setAdminMode(enabled) {
                 isAdminMode = Boolean(enabled);
@@ -6347,10 +6744,10 @@
                 if (typeof updateRoleUnreadDots === 'function') updateRoleUnreadDots();
             }
 
-            // Restore saved Admin Mode session across page refresh (until explicit logout)
             let savedAdminSession = false;
             try {
-                savedAdminSession = localStorage.getItem(ADMIN_SESSION_KEY) === '1';
+                const hasTok = Boolean(sessionStorage.getItem(FB_TOKEN_KEY) || sessionStorage.getItem(FB_REFRESH_KEY));
+                savedAdminSession = localStorage.getItem(ADMIN_SESSION_KEY) === '1' && hasTok;
             } catch (e) {}
             setAdminMode(savedAdminSession);
 
@@ -6358,7 +6755,9 @@
                 if (adminPassInput) adminPassInput.value = '';
                 if (adminLoginError) adminLoginError.classList.remove('visible');
                 adminLoginBackdrop.classList.add('visible');
-                setTimeout(() => { if (adminPassInput) adminPassInput.focus(); }, 100);
+                setTimeout(() => {
+                    if (adminPassInput) adminPassInput.focus();
+                }, 100);
             }
 
             function closeAdminLoginModal() {
@@ -6385,17 +6784,67 @@
                 });
             }
 
-            function tryAdminLogin() {
-                const entered = (adminPassInput.value || '').trim();
-                if (entered === getAdminPassword()) {
+            function mapFirebaseAuthError(code) {
+                const msgMap = {
+                    INVALID_EMAIL: 'صيغة البريد الإلكتروني غير صحيحة.',
+                    EMAIL_NOT_FOUND: 'لا يوجد حساب مدير بهذا البريد الإلكتروني.',
+                    INVALID_PASSWORD: 'كلمة المرور غير صحيحة.',
+                    INVALID_LOGIN_CREDENTIALS: 'البريد الإلكتروني أو كلمة المرور غير صحيحة.',
+                    USER_DISABLED: 'تم تعطيل هذا الحساب.',
+                    TOO_MANY_ATTEMPTS_TRY_LATER: 'محاولات دخول كثيرة، يرجى الانتظار قليلاً ثم المحاولة.',
+                    WEAK_PASSWORD: 'كلمة المرور ضعيفة، يجب أن تكون 6 أحرف على الأقل.',
+                    CREDENTIAL_TOO_OLD_LOGIN_AGAIN: 'يرجى تسجيل الخروج والدخول مجدداً قبل تغيير كلمة المرور.',
+                    INVALID_ID_TOKEN: 'انتهت جلسة المدير، يرجى تسجيل الدخول مجدداً.'
+                };
+                return msgMap[code] || 'تعذر التحقق من بيانات الدخول عبر Firebase Auth.';
+            }
+
+            async function tryAdminLogin() {
+                const email = ADMIN_AUTH_EMAIL;
+                const password = (adminPassInput ? adminPassInput.value : '').trim();
+
+                if (!password) {
+                    adminLoginError.textContent = 'يرجى إدخال كلمة مرور المدير.';
+                    adminLoginError.classList.add('visible');
+                    return;
+                }
+                if (!navigator.onLine) {
+                    adminLoginError.textContent = 'يتطلب تسجيل دخول المدير اتصالاً بالإنترنت.';
+                    adminLoginError.classList.add('visible');
+                    return;
+                }
+
+                submitAdminLoginBtn.disabled = true;
+                submitAdminLoginBtn.textContent = 'جاري التحقق...';
+                adminLoginError.classList.remove('visible');
+
+                try {
+                    const cfg = getCloudConfig();
+                    const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${encodeURIComponent(cfg.apiKey)}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password, returnSecureToken: true })
+                    });
+                    const data = await res.json();
+                    if (!res.ok || !data.idToken) {
+                        const errCode = data && data.error && data.error.message ? String(data.error.message).split(' ')[0] : '';
+                        throw new Error(mapFirebaseAuthError(errCode));
+                    }
+
+                    storeAuthTokens(data.idToken, data.refreshToken, data.expiresIn);
+
                     setAdminMode(true);
                     closeAdminLoginModal();
                     refreshPendingBadgeCount();
                     quickDeltaSync(true);
-                    showToast('تم تفعيل وضع المدير بنجاح');
-                } else {
+                    showToast('تم تفعيل وضع المدير عبر Firebase Auth');
+                } catch (err) {
+                    adminLoginError.textContent = err.message || 'تعذر تسجيل الدخول.';
                     adminLoginError.classList.add('visible');
-                    adminPassInput.select();
+                    if (adminPassInput) adminPassInput.select();
+                } finally {
+                    submitAdminLoginBtn.disabled = false;
+                    submitAdminLoginBtn.textContent = 'دخول';
                 }
             }
 
@@ -6412,8 +6861,9 @@
 
             const headerExitAdminBtn = document.getElementById('headerExitAdminBtn');
             function handleExitAdminMode() {
+                clearAuthTokens();
                 setAdminMode(false);
-                showToast('تم العودة إلى واجهة المستخدم العادي');
+                showToast('تم تسجيل الخروج من وضع المدير');
             }
             if (exitAdminModeBtn) {
                 exitAdminModeBtn.addEventListener('click', handleExitAdminMode);
@@ -6438,17 +6888,48 @@
             }
 
             if (saveNewAdminPassBtn) {
-                saveNewAdminPassBtn.addEventListener('click', () => {
+                saveNewAdminPassBtn.addEventListener('click', async () => {
                     const nextPass = (newAdminPassInput.value || '').trim();
-                    if (nextPass.length < 4) {
+                    if (nextPass.length < 6) {
+                        adminPassError.textContent = 'يرجى إدخال كلمة مرور لا تقل عن 6 أحرف.';
                         adminPassError.classList.add('visible');
                         return;
                     }
+                    if (!navigator.onLine) {
+                        adminPassError.textContent = 'يتطلب تحديث كلمة المرور اتصالاً بالإنترنت.';
+                        adminPassError.classList.add('visible');
+                        return;
+                    }
+
+                    saveNewAdminPassBtn.disabled = true;
+                    saveNewAdminPassBtn.textContent = 'جاري التحديث...';
+                    adminPassError.classList.remove('visible');
+
                     try {
-                        localStorage.setItem(ADMIN_PASS_KEY, nextPass);
-                    } catch (e) {}
-                    adminPassModalBackdrop.classList.remove('visible');
-                    showToast('تم تحديث كلمة مرور المدير بنجاح');
+                        const cfg = getCloudConfig();
+                        const idToken = await ensureFreshAdminToken();
+                        if (!idToken) throw new Error('انتهت جلسة المدير، يرجى تسجيل الدخول مجدداً.');
+
+                        const res = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:update?key=${encodeURIComponent(cfg.apiKey)}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ idToken, password: nextPass, returnSecureToken: true })
+                        });
+                        const data = await res.json();
+                        if (!res.ok || !data.idToken) {
+                            const errCode = data && data.error && data.error.message ? String(data.error.message).split(' ')[0] : '';
+                            throw new Error(mapFirebaseAuthError(errCode));
+                        }
+                        storeAuthTokens(data.idToken, data.refreshToken, data.expiresIn);
+                        adminPassModalBackdrop.classList.remove('visible');
+                        showToast('تم تحديث كلمة مرور المدير في Firebase Auth بنجاح');
+                    } catch (err) {
+                        adminPassError.textContent = err.message || 'تعذر تحديث كلمة المرور.';
+                        adminPassError.classList.add('visible');
+                    } finally {
+                        saveNewAdminPassBtn.disabled = false;
+                        saveNewAdminPassBtn.textContent = 'حفظ';
+                    }
                 });
             }
 
@@ -6640,8 +7121,8 @@
             async function loadPendingApprovals() {
                 approvalsListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">جاري تحميل الطلبات المعلقة...</div>';
                 try {
-                    const page = await fsListPage(PENDING_COLLECTION, 300, '');
-                    const items = (page.docs || [])
+                    const allPendingDocs = await fsListAllPages(PENDING_COLLECTION, 300, 15);
+                    const items = allPendingDocs
                         .map(d => d.data)
                         .filter(r => {
                             if (!r || r.hiddenByAdmin) return false;
@@ -6789,7 +7270,7 @@
                     });
 
                     updateGlobalCounters();
-                    applySearchAndFilter(false, activeFilter !== 'all' || searchUnifiedInput.value.trim() !== '');
+                    applySearchAndFilter(false, searchUnifiedInput.value.trim() !== '');
 
                     if (cardEl) {
                         const statusBadge = cardEl.querySelector('.req-status-badge');
@@ -6878,8 +7359,8 @@
                 if (!requestsReportListBox) return;
                 requestsReportListBox.innerHTML = '<div class="req-meta" style="text-align:center;padding:18px;">جاري تحميل سجل وتقارير الطلبات...</div>';
                 try {
-                    const page = await fsListPage(PENDING_COLLECTION, 300, '');
-                    cachedAllRequestsForReport = (page.docs || [])
+                    const allReportDocs = await fsListAllPages(PENDING_COLLECTION, 300, 15);
+                    cachedAllRequestsForReport = allReportDocs
                         .map(d => d.data)
                         .filter(Boolean)
                         .sort((a, b) => ((b.reviewedAt || b.createdAt || '')).localeCompare((a.reviewedAt || a.createdAt || '')));
@@ -6928,8 +7409,10 @@
                 const d = req.afterData || req.beforeData || {};
                 hideFormAlert();
                 const natId = toEnglishDigits(d.national_id || req.newNationalId || req.nationalId || '').replace(/[^\d]/g, '');
-                document.getElementById('editingOriginalId').value = natId;
-                formModalTitle.textContent = 'تعديل الطلب';
+                document.getElementById('editingOriginalId').value = toEnglishDigits(req.nationalId || natId).replace(/[^\d]/g, '');
+                document.getElementById('editingRequestId').value = req.requestId || '';
+                document.getElementById('editingRequestType').value = req.actionType || 'edit';
+                formModalTitle.textContent = 'تعديل الطلب المعلق';
                 document.getElementById('inpFullName').value = d.full_name || req.fullName || '';
                 document.getElementById('inpNationalId').value = natId;
                 document.getElementById('inpGender').value = d.gender || 'ذكر';
@@ -7040,8 +7523,12 @@
                             isDanger: true
                         });
                         if (!ok) return;
+                        req.status = 'cancelled';
                         req.hiddenByUser = true;
+                        req.hiddenByAdmin = true;
                         upsertMyRequestCache(req);
+                        const qAfter = getLocalPendingQueue().filter(x => x.requestId !== req.requestId);
+                        saveLocalPendingQueue(qAfter);
                         if (navigator.onLine && isCloudConfigured()) {
                             fsSetDoc(PENDING_COLLECTION, req.requestId, req).catch(() => {});
                         }
@@ -7267,8 +7754,8 @@
 
                 if (navigator.onLine) {
                     try {
-                        const page = await fsListPage(AUDIT_COLLECTION, 200, '');
-                        page.docs.forEach(d => {
+                        const auditDocs = await fsListAllPages(AUDIT_COLLECTION, 200, 10);
+                        auditDocs.forEach(d => {
                             const data = d.data;
                             if (data && data.logId) mergedMap.set(data.logId, data);
                         });
@@ -7421,7 +7908,19 @@
                     await migrateFromLocalStorage();
                     let stored = await dbFetchAll();
 
-                    // استيراد تلقائي وصامت من data.js عند أول فتح (IndexedDB فارغة)
+                    // تحميل data.js خارجياً بأمان عند التشغيل المحلي (إن وُجد)
+                    if (stored.length === 0 && !Array.isArray(window.INITIAL_CIVIL_DATA)) {
+                        if (window.location.protocol === 'http:' || window.location.protocol === 'https:' || window.location.protocol === 'file:') {
+                            await new Promise((resolve) => {
+                                const sc = document.createElement('script');
+                                sc.src = './data.js';
+                                sc.onload = resolve;
+                                sc.onerror = resolve;
+                                document.body.appendChild(sc);
+                            });
+                        }
+                    }
+                    // استيراد تلقائي وصامت عند أول فتح (IndexedDB فارغة)
                     if (stored.length === 0 && Array.isArray(window.INITIAL_CIVIL_DATA) && window.INITIAL_CIVIL_DATA.length > 0) {
                         const initialItems = window.INITIAL_CIVIL_DATA
                             .filter(item => item && item.fullName && item.nationalId)
@@ -7454,9 +7953,14 @@
                     checkMyRequestsUnread();
                     refreshPendingBadgeCount();
 
-                    // مزامنة التغييرات من مجموعة civil_updates فقط عند توفر الإنترنت
+                    // مزامنة التغييرات من مجموعة civil_updates تلقائياً في الخلفية عند توفر الإنترنت
                     if (navigator.onLine && isCloudConfigured()) {
+                        if (isAdminMode) {
+                            ensureFreshAdminToken().catch(() => {});
+                        }
                         quickDeltaSync(true);
+                    } else if (!navigator.onLine) {
+                        setCloudConnectionStatus('offline', '');
                     }
                 } catch (err) {
                     showToast('تعذر فتح قاعدة البيانات المحلية');
