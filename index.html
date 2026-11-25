@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#0F172A">
+    <meta name="theme-color" content="#0284c7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="السجل المدني">
     <title>السجل المدني — تصميم أبو حازم</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-
-    <!-- Inline PWA Manifest -->
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D8%A7%D9%84%D8%B3%D8%AC%D9%84%20%D8%A7%D9%84%D9%85%D8%AF%D9%86%D9%8A%22%2C%22short_name%22%3A%22%D8%A7%D9%84%D8%B3%D8%AC%D9%84%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23F3F5F8%22%2C%22theme_color%22%3A%22%230F172A%22%7D">
+    <link rel="icon" type="image/png" href="./icon.png">
+    <link rel="apple-touch-icon" href="./icon.png">
+    <link rel="manifest" href="./manifest.json">
 
 <style>
         /* =====================================================================
@@ -3104,6 +3107,16 @@
                             <span id="themeToggleText">الوضع المظلم / الفاتح</span>
                         </button>
 
+                        <button type="button" id="installPwaBtn" class="menu-item-action" role="menuitem" style="display:none;">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                <path d="M12 7v6"></path>
+                                <polyline points="9 10 12 13 15 10"></polyline>
+                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                            </svg>
+                            <span>تثبيت التطبيق على الهاتف</span>
+                        </button>
+
                         <div class="menu-divider admin-only"></div>
 
                         <button type="button" id="changeAdminPassBtn" class="menu-item-action admin-only" role="menuitem">
@@ -3864,6 +3877,36 @@
             // -----------------------------------------------------------------
             if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
                 navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
+
+            // PWA Install Prompt Handling
+            let deferredInstallPrompt = null;
+            const installPwaBtn = document.getElementById('installPwaBtn');
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+                if (installPwaBtn) installPwaBtn.style.display = 'flex';
+            });
+
+            window.addEventListener('appinstalled', () => {
+                deferredInstallPrompt = null;
+                if (installPwaBtn) installPwaBtn.style.display = 'none';
+                showToast('تم تثبيت التطبيق على جهازك بنجاح');
+            });
+
+            if (installPwaBtn) {
+                installPwaBtn.addEventListener('click', async () => {
+                    if (!deferredInstallPrompt) return;
+                    try {
+                        await deferredInstallPrompt.prompt();
+                        const choiceResult = await deferredInstallPrompt.userChoice;
+                        if (choiceResult && choiceResult.outcome === 'accepted') {
+                            installPwaBtn.style.display = 'none';
+                        }
+                    } catch (err) {}
+                    deferredInstallPrompt = null;
+                });
             }
 
             const offlineStatusTag = document.getElementById('offlineStatusTag');
