@@ -647,6 +647,148 @@
         }
 
         /* =====================================================================
+           1B. FLOATING PWA INSTALL BANNER & iOS GUIDE
+           ===================================================================== */
+        .pwa-install-banner {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-card);
+            padding: 10px 14px;
+            margin-bottom: 14px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            animation: floatInHint 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .pwa-install-banner.visible {
+            display: flex;
+        }
+
+        .pwa-banner-lead {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .pwa-banner-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-control);
+            background: linear-gradient(135deg, #0284C7, #0EA5E9);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: var(--brand-glow);
+        }
+
+        .pwa-banner-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .pwa-banner-text {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--ink-primary);
+            line-height: 1.45;
+        }
+
+        .pwa-banner-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-pwa-install-now {
+            height: 36px;
+            padding: 0 14px;
+            border-radius: var(--radius-control);
+            background: linear-gradient(135deg, #0284C7, #0EA5E9);
+            border: 1px solid rgba(14, 165, 233, 0.5);
+            color: #FFFFFF;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            box-shadow: var(--brand-glow);
+        }
+
+        [data-theme="dark"] .btn-pwa-install-now {
+            background: linear-gradient(135deg, #38BDF8, #0EA5E9);
+            color: #080E1A;
+        }
+
+        .btn-pwa-dismiss {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--surface-input);
+            border: 1px solid var(--border-subtle);
+            color: var(--ink-muted);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .btn-pwa-dismiss:hover {
+            color: var(--ink-primary);
+            background: var(--surface-hover);
+        }
+
+        .ios-guide-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 14px 0 18px;
+            text-align: right;
+        }
+
+        .ios-guide-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-control);
+            padding: 10px 12px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--ink-primary);
+        }
+
+        .ios-guide-step svg {
+            color: var(--brand-primary);
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 520px) {
+            .pwa-install-banner {
+                padding: 10px 12px;
+                gap: 8px;
+            }
+            .pwa-banner-text {
+                font-size: 12.5px;
+            }
+            .btn-pwa-install-now {
+                height: 34px;
+                padding: 0 11px;
+                font-size: 12.5px;
+            }
+        }
+
+        /* =====================================================================
            2. MAIN APP CONTAINER & SEARCH DOCK
            ===================================================================== */
         .app-container {
@@ -3166,6 +3308,24 @@
          ===================================================================== -->
     <main class="app-container">
 
+        <!-- Prominent PWA Install Banner -->
+        <div id="pwaInstallBanner" class="pwa-install-banner" role="region" aria-label="تثبيت التطبيق">
+            <div class="pwa-banner-lead">
+                <div class="pwa-banner-icon" aria-hidden="true">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                        <path d="M12 7v6"></path>
+                        <polyline points="9 10 12 13 15 10"></polyline>
+                    </svg>
+                </div>
+                <div class="pwa-banner-text">تثبيت برنامج السجل المدني على هاتفك للوصول السريع</div>
+            </div>
+            <div class="pwa-banner-actions">
+                <button type="button" id="pwaInstallNowBtn" class="btn-pwa-install-now">تثبيت الآن</button>
+                <button type="button" id="pwaDismissBannerBtn" class="btn-pwa-dismiss" title="إخفاء" aria-label="إخفاء">×</button>
+            </div>
+        </div>
+
         <!-- Search & Action Dock -->
         <section class="search-dock">
             <div class="search-inputs-row">
@@ -3686,6 +3846,41 @@
     </div>
 
     <!-- =====================================================================
+         5E. iOS SAFARI MANUAL INSTALL GUIDE MODAL
+         ===================================================================== -->
+    <div id="iosInstallGuideBackdrop" class="backdrop-overlay center-overlay">
+        <div class="dialog-card">
+            <div class="dialog-icon-ring">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                </svg>
+            </div>
+            <h3>تثبيت التطبيق على آيفون (Safari)</h3>
+            <p class="sub">لتثبيت برنامج السجل المدني على شاشتك الرئيسية، اتبع الخطوتين التاليتين:</p>
+            <div class="ios-guide-steps">
+                <div class="ios-guide-step">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                        <polyline points="16 6 12 2 8 6"></polyline>
+                        <line x1="12" y1="2" x2="12" y2="15"></line>
+                    </svg>
+                    <span>1. اضغط على زر المشاركة (Share) في أسفل المتصفح</span>
+                </div>
+                <div class="ios-guide-step">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="3" ry="3"></rect>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                    <span>2. اختر «إضافة إلى الصفحة الرئيسية»</span>
+                </div>
+            </div>
+            <button type="button" id="closeIosInstallGuideBtn" class="btn-dialog-primary" style="width:100%;">فهمت</button>
+        </div>
+    </div>
+
+    <!-- =====================================================================
          6. CUSTOM CONFIRMATION DIALOG
          ===================================================================== -->
     <div id="confirmModalBackdrop" class="backdrop-overlay center-overlay">
@@ -3879,33 +4074,80 @@
                 navigator.serviceWorker.register('./sw.js').catch(() => {});
             }
 
-            // PWA Install Prompt Handling
+            // PWA Install Prompt & iOS Safari Guide Handling
             let deferredInstallPrompt = null;
             const installPwaBtn = document.getElementById('installPwaBtn');
+            const pwaInstallBanner = document.getElementById('pwaInstallBanner');
+            const pwaInstallNowBtn = document.getElementById('pwaInstallNowBtn');
+            const pwaDismissBannerBtn = document.getElementById('pwaDismissBannerBtn');
+            const iosInstallGuideBackdrop = document.getElementById('iosInstallGuideBackdrop');
+            const closeIosInstallGuideBtn = document.getElementById('closeIosInstallGuideBtn');
 
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredInstallPrompt = e;
+            const isStandaloneMode = Boolean(
+                (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+                window.navigator.standalone === true
+            );
+            const isIosDevice = /iphone|ipad|ipod/i.test(navigator.userAgent || '');
+            const isIosSafari = isIosDevice && /safari/i.test(navigator.userAgent || '') && !/crios|fxios|edgios|opios/i.test(navigator.userAgent || '');
+
+            function showPwaInstallOptions() {
+                if (isStandaloneMode) return;
+                if (pwaInstallBanner) pwaInstallBanner.classList.add('visible');
                 if (installPwaBtn) installPwaBtn.style.display = 'flex';
-            });
+            }
 
-            window.addEventListener('appinstalled', () => {
-                deferredInstallPrompt = null;
+            function hidePwaInstallOptions() {
+                if (pwaInstallBanner) pwaInstallBanner.classList.remove('visible');
                 if (installPwaBtn) installPwaBtn.style.display = 'none';
-                showToast('تم تثبيت التطبيق على جهازك بنجاح');
-            });
+            }
 
-            if (installPwaBtn) {
-                installPwaBtn.addEventListener('click', async () => {
-                    if (!deferredInstallPrompt) return;
+            async function triggerPwaInstall() {
+                if (deferredInstallPrompt) {
                     try {
                         await deferredInstallPrompt.prompt();
                         const choiceResult = await deferredInstallPrompt.userChoice;
                         if (choiceResult && choiceResult.outcome === 'accepted') {
-                            installPwaBtn.style.display = 'none';
+                            hidePwaInstallOptions();
                         }
                     } catch (err) {}
                     deferredInstallPrompt = null;
+                    return;
+                }
+                if (isIosSafari && !isStandaloneMode && iosInstallGuideBackdrop) {
+                    iosInstallGuideBackdrop.classList.add('visible');
+                }
+            }
+
+            if (isIosSafari && !isStandaloneMode) {
+                showPwaInstallOptions();
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+                showPwaInstallOptions();
+            });
+
+            window.addEventListener('appinstalled', () => {
+                deferredInstallPrompt = null;
+                hidePwaInstallOptions();
+                showToast('تم تثبيت التطبيق على جهازك بنجاح');
+            });
+
+            if (pwaInstallNowBtn) {
+                pwaInstallNowBtn.addEventListener('click', triggerPwaInstall);
+            }
+            if (installPwaBtn) {
+                installPwaBtn.addEventListener('click', triggerPwaInstall);
+            }
+            if (pwaDismissBannerBtn) {
+                pwaDismissBannerBtn.addEventListener('click', () => {
+                    if (pwaInstallBanner) pwaInstallBanner.classList.remove('visible');
+                });
+            }
+            if (closeIosInstallGuideBtn && iosInstallGuideBackdrop) {
+                closeIosInstallGuideBtn.addEventListener('click', () => {
+                    iosInstallGuideBackdrop.classList.remove('visible');
                 });
             }
 
@@ -7823,6 +8065,11 @@
                     closeAdminLoginModal();
                     return;
                 }
+                if (iosInstallGuideBackdrop && iosInstallGuideBackdrop.classList.contains('visible')) {
+                    pushNavigationTrap();
+                    iosInstallGuideBackdrop.classList.remove('visible');
+                    return;
+                }
                 if (adminPassModalBackdrop && adminPassModalBackdrop.classList.contains('visible')) {
                     pushNavigationTrap();
                     adminPassModalBackdrop.classList.remove('visible');
@@ -7965,5 +8212,12 @@
             boot();
         })();
     </script>
+	<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
 </body>
 </html>
