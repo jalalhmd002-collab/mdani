@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#EEF2F6"/>
+    </linearGradient>
+
+    <!-- Outer Border Shadow -->
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0F172A" flood-opacity="0.08"/>
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0F172A" flood-opacity="0.05"/>
+    </filter>
+
+    <filter id="shieldShadow" x="-20%" y="-15%" width="140%" height="135%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0F172A" flood-opacity="0.25"/>
+    </filter>
+
+    <!-- Shield Gradient -->
+    <linearGradient id="shieldGradL" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#0369A1"/>
+    </linearGradient>
+    <linearGradient id="shieldGradR" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0369A1"/>
+      <stop offset="100%" stop-color="#075985"/>
+    </linearGradient>
+
+    <!-- Gold Border Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+
+    <!-- Book Page Gradient -->
+    <linearGradient id="pageGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Base App Card Squircle -->
+  <rect x="24" y="24" width="464" height="464" rx="100" fill="url(#bgGrad)" filter="url(#cardShadow)" stroke="#E2E8F0" stroke-width="4"/>
+  <rect x="36" y="36" width="440" height="440" rx="90" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.8"/>
+
+  <!-- BOOK SECTION -->
+  <g id="open-book">
+    <!-- Book Shadow & Outer Cover -->
+    <path d="M 108 140 C 170 140, 230 155, 256 168 C 282 155, 342 140, 404 140 C 418 140, 424 148, 424 162 L 424 330 C 424 342, 416 348, 404 348 C 342 348, 282 333, 256 320 C 230 333, 170 348, 108 348 C 96 348, 88 342, 88 330 L 88 162 C 88 148, 94 140, 108 140 Z" fill="#1E293B" opacity="0.95"/>
+    <path d="M 112 145 C 172 145, 230 160, 256 172 C 282 160, 340 145, 400 145 C 412 145, 418 152, 418 164 L 418 322 C 418 332, 412 338, 400 338 C 340 338, 282 323, 256 312 C 230 323, 172 338, 112 338 C 100 338, 94 332, 94 322 L 94 164 C 94 152, 100 145, 112 145 Z" fill="#0F172A"/>
+
+    <!-- Left Page -->
+    <path d="M 116 150 C 170 150, 225 163, 254 175 L 254 313 C 225 301, 170 288, 116 288 C 105 288, 100 282, 100 272 L 100 166 C 100 156, 105 150, 116 150 Z" fill="#FFFFFF"/>
+    <!-- Right Page -->
+    <path d="M 396 150 C 342 150, 287 163, 258 175 L 258 313 C 287 301, 342 288, 396 288 C 407 288, 412 282, 412 272 L 412 166 C 412 156, 407 150, 396 150 Z" fill="#FFFFFF"/>
+
+    <!-- Left Page Details (ID details & photo placeholder) -->
+    <!-- Avatar circle -->
+    <circle cx="140" cy="182" r="13" fill="#1E293B"/>
+    <!-- Avatar shoulder -->
+    <path d="M 124 207 C 124 197, 131 195, 140 195 C 149 195, 156 197, 156 207 Z" fill="#1E293B"/>
+    <!-- Text Lines Left -->
+    <rect x="166" y="174" width="46" height="5" rx="2.5" fill="#3B82F6" opacity="0.8"/>
+    <rect x="166" y="186" width="34" height="4" rx="2" fill="#94A3B8"/>
+    <rect x="124" y="222" width="76" height="4" rx="2" fill="#CBD5E1"/>
+    <rect x="124" y="234" width="76" height="4" rx="2" fill="#CBD5E1"/>
+    <rect x="124" y="246" width="60" height="4" rx="2" fill="#CBD5E1"/>
+    <rect x="124" y="258" width="70" height="4" rx="2" fill="#CBD5E1"/>
+    <rect x="124" y="270" width="45" height="4" rx="2" fill="#CBD5E1"/>
+
+    <!-- Right Page Details -->
+    <rect x="306" y="172" width="55" height="5" rx="2.5" fill="#0D9488"/>
+    <rect x="276" y="186" width="116" height="4" rx="2" fill="#CBD5E1"/>
+    <rect x="276" y="198" width="116" height="4" rx="2" fill="#CBD5E1"/>
+    <rect x="276" y="210" width="116" height="4" rx="2" fill="#CBD5E1"/>
+    <rect x="312" y="222" width="80" height="4" rx="2" fill="#CBD5E1"/>
+    <rect x="312" y="234" width="80" height="4" rx="2" fill="#CBD5E1"/>
+    <rect x="312" y="246" width="80" height="4" rx="2" fill="#CBD5E1"/>
+
+    <!-- Certificate Seal Ribbon -->
+    <g id="ribbon" transform="translate(378, 290)">
+      <polygon points="0,0 -8,22 0,18 8,22" fill="#0D9488"/>
+      <circle cx="0" cy="0" r="16" fill="url(#goldGrad)" stroke="#B45309" stroke-width="1.5"/>
+      <circle cx="0" cy="0" r="12" fill="none" stroke="#FDE68A" stroke-width="1.5" stroke-dasharray="3,2"/>
+    </g>
+  </g>
+
+  <!-- SHIELD SECTION -->
+  <g id="shield" filter="url(#shieldShadow)">
+    <!-- Outer Gold Frame -->
+    <path d="M 256 172 C 304 195, 346 198, 354 212 C 354 278, 308 340, 256 364 C 204 340, 158 278, 158 212 C 166 198, 208 195, 256 172 Z" fill="url(#goldGrad)" stroke="#B45309" stroke-width="2"/>
+
+    <!-- Left Shield Body -->
+    <path d="M 256 182 C 220 200, 178 206, 170 217 C 170 269, 212 324, 256 348 L 256 182 Z" fill="url(#shieldGradL)"/>
+    <!-- Right Shield Body -->
+    <path d="M 256 182 L 256 348 C 300 324, 342 269, 342 217 C 334 206, 292 200, 256 182 Z" fill="url(#shieldGradR)"/>
+
+    <!-- Inner Protective Arc -->
+    <path d="M 198 250 C 204 215, 230 200, 256 200 C 282 200, 308 215, 314 250" fill="none" stroke="#FFFFFF" stroke-width="4.5" stroke-linecap="round" opacity="0.9"/>
+
+    <!-- FAMILY SILHOUETTE (Clean white vectors) -->
+    <g id="family" fill="#FFFFFF">
+      <!-- FATHER (Left Center) -->
+      <circle cx="236" cy="235" r="7.5"/>
+      <path d="M 226 250 C 226 246, 230 245, 236 245 C 242 245, 246 246, 246 250 L 244 276 L 241 276 L 240 300 L 235 300 L 234 276 L 232 276 L 231 300 L 226 300 L 225 276 L 223 250 Z"/>
+
+      <!-- MOTHER (Right Center) -->
+      <circle cx="274" cy="236" r="7.5"/>
+      <!-- Dress silhouette -->
+      <path d="M 265 250 C 265 246, 269 245, 274 245 C 279 245, 283 246, 283 250 L 285 270 L 288 288 L 260 288 L 263 270 Z"/>
+      <!-- Legs -->
+      <rect x="267" y="288" width="4.5" height="12" rx="2"/>
+      <rect x="277" y="288" width="4.5" height="12" rx="2"/>
+
+      <!-- DAUGHTER (Far Left) -->
+      <circle cx="210" cy="254" r="5.5"/>
+      <path d="M 203 266 C 203 263, 206 262, 210 262 C 214 262, 217 263, 217 266 L 219 284 L 201 284 Z"/>
+      <rect x="204" y="284" width="3.5" height="12" rx="1.5"/>
+      <rect x="212" y="284" width="3.5" height="12" rx="1.5"/>
+
+      <!-- SON (Far Right) -->
+      <circle cx="300" cy="254" r="5.5"/>
+      <path d="M 293 266 C 293 263, 296 262, 300 262 C 304 262, 307 263, 307 266 L 305 282 L 295 282 Z"/>
+      <rect x="295" y="282" width="3.5" height="14" rx="1.5"/>
+      <rect x="301" y="282" width="3.5" height="14" rx="1.5"/>
+    </g>
+  </g>
+
+  <!-- ARABIC TYPOGRAPHY: "السجل المدني" -->
+  <text x="256" y="420" text-anchor="middle" font-family="'Cairo', 'Segoe UI', 'Tajawal', sans-serif" font-size="38" font-weight="800" fill="#0F172A" letter-spacing="-0.5">السجل المدني</text>
+</svg>
