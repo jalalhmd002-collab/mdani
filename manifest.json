@@ -1,24 +1,24 @@
 {
   "name": "السجل المدني — تصميم أبو حازم",
   "short_name": "السجل المدني",
-  "description": "منظومة السجل المدني والبحث السريع — تصميم أبو حازم",
+  "description": "منظومة السجل المدني والبحث السريع",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#FAF9F6",
-  "theme_color": "#0F172A",
+  "background_color": "#f8fafc",
+  "theme_color": "#0284c7",
   "dir": "rtl",
   "lang": "ar",
   "icons": [
     {
-      "src": "./icon-192.png",
+      "src": "./icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "./icon-512.png",
+      "src": "./icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
